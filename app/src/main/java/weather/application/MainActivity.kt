@@ -7,11 +7,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import weather.application.R
 import androidx.appcompat.widget.Toolbar
 import weather.application.alerts.view.AlertFragment
 import weather.application.fav.view.FavouriteFragment
-import weather.application.home.HomeFragment
+import weather.application.home.view.HomeFragment
 import weather.application.setting.SettingFragment
 
 

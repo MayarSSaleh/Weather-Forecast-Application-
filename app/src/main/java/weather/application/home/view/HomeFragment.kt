@@ -1,4 +1,4 @@
-package weather.application.home
+package weather.application.home.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
