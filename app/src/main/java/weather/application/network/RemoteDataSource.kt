@@ -9,8 +9,8 @@ class RemoteDataSource {
         RetrofitHelper.retrofit.create(WeatherService::class.java)
     }
 
-    suspend fun getWeather() : Response<WeatherResponse> {
-        val result = weatherService.getWeather()
-        return result
+    suspend fun getWeather(latitude:Double , longitude:Double) : Response<WeatherResponse> {
+        return weatherService.getWeatherDetails(latitude,longitude)
     }
+
 }

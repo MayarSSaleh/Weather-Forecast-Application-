@@ -1,6 +1,7 @@
 package weather.application.model
 
 import android.content.Context
+import retrofit2.Response
 import weather.application.localDataBase.LocalDataSource
 import weather.application.network.RemoteDataSource
 
@@ -23,11 +24,11 @@ class Repositry private constructor(
             }
         }
     }
-//
-//    suspend fun getAllProducts(): ProductsResponse? {
-//        return productRemoteDataSource.getProdcuts()
-//    }
-//
+
+    suspend fun getWeather(latitude:Double ,longitude:Double) : Response<WeatherResponse> {
+        return productRemoteDataSource.getWeather(latitude,longitude)
+    }
+
 
 }
 

@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import weather.application.alerts.view.AlertFragment
 import weather.application.fav.view.FavouriteFragment
 import weather.application.home.view.HomeFragment
@@ -34,6 +35,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment()).commit()
+
     }
 
     override fun onBackPressed() {
@@ -49,7 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.home -> {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, HomeFragment()).commit()
-                drawerLayout.closeDrawer(GravityCompat.START) // Close the drawer
+                drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }
 
@@ -73,7 +78,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }
-
             else -> return false
         }
     }

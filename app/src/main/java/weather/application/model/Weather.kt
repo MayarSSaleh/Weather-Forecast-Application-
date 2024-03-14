@@ -2,23 +2,46 @@ package weather.application.model
 
 import java.io.Serializable
 
-data class Weather(
-    private var dataAndTime: Long,
-    private var main: Main,
-    private var dataTime: Long
-    private var dataTime: Long
-    private var dataTime: Long
-    private var dataTime: Long
-    private var dataTime: Long
+//response <List<MainWeather>> list
+//list[0]
+
+data class WeatherResponse(
+    val list: List<WeatherItem>,
+    val city: City
 ) : Serializable
 
-data class Main(
-    var temp: Double,
-    var pressure: Int,
-    var seaLevel: Int,
-    var humidity: Int,
+data class WeatherItem(
+    val dt:String,
+    val main: Main,
+    val weather: List<weather>,
+    val clouds: Clouds,
+    val wind: Wind,
+    val dt_txt: String,
 )
-The current temperature
+
+data class weather(
+    val description: String,
+    val icon: String
+)
+
+data class Clouds(
+    val all: Int
+)
+
+data class Wind(
+    val speed: Double
+)
+
+
+data class City(private val name: String)
+
+data class Main(
+    val temp: Double,
+    val pressure: Int,
+    val humidity: Int,
+)
+
+/*The current temperature
 ● Current date
 ● Current time
 ● Humidity
@@ -31,17 +54,4 @@ The current temperature
 ● All the past hourly for the current date
 ● All past features for 5 days
 }
-
-class WeatherResponse {
-    lateinit var city: String
-
-    var list = listOf<Weather>()
-
-}
-
-/*
-*  class WeatherResponse{
-     var meals: ArrayList<Weather>? = null
-
- }
- * */
+*/
