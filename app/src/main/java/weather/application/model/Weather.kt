@@ -14,24 +14,19 @@ data class WeatherItem(
     val wind: Wind,
     val dt_txt: String,
 )
-
-data class weather(
-    val description: String,
-    val icon: String
-)
-
-data class Clouds(val all: Int)
-
-data class Wind(val speed: Double)
-
-
-data class City(private val name: String)
-
 data class Main(
     val temp: Double,
     val pressure: Int,
     val humidity: Int,
 )
+data class weather(
+    val description: String,
+    val icon: String
+)
+data class Clouds(val all: Int)
+data class Wind(val speed: Double)
+
+data class City( val name: String)
 
 /*The current temperature
 ● Current date

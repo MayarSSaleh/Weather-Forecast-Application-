@@ -3,115 +3,227 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".home.view.HomeFragment">
-<data>
-    <variable
-        name="currentWeather"
-        type="weather.application.model.WeatherResponse" />
 
-</data>
+    <data>
+
+        <variable
+            name="currentWeather"
+            type="weather.application.model.WeatherResponse" />
+
+    </data>
+
     <androidx.core.widget.NestedScrollView
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginHorizontal="15dp"
-            android:layout_marginVertical="15dp"
+            android:layout_marginVertical="0dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/city_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="35dp"
-                android:textStyle="bold"
                 android:gravity="center"
-                android:text="@{currentWeather.city.toString()}"
+                android:textSize="30dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
+            <!--            android:text='@{currentWeather.city.name}'-->
             <TextView
                 android:id="@+id/time_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:text="@{currentWeather.list.get(0).dt_txt}"
-                android:textSize="28sp"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/city_name" />
+            <!--            android:text="@{currentWeather.list.get(0).dt_txt}"-->
+
+            <TextView
+                android:id="@+id/tv_wind_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="wind"
+                android:textSize="17dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/imageView"
+                app:layout_constraintVertical_bias="0.571" />
 
             <ImageView
                 android:id="@+id/icon_image"
-                android:layout_width="103dp"
-                android:layout_height="80dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_Weather_description"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_data"
                 tools:srcCompat="@tools:sample/avatars"></ImageView>
 
-<!--            ● The current temperature-->
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="31dp"
+                android:layout_height="37dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/wind"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
-<!--            ● Humidity icon and value-->
-<!--            ● Wind speed-->
-<!--            ● Pressure-->
-<!--            ● Clouds-->
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="31dp"
+                android:layout_height="37dp"
+                android:src="@drawable/humidity"
+                android:layout_marginStart="30dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/tv_pressure"
+                app:layout_constraintTop_toTopOf="@+id/imageView6" />
 
+            <TextView
+                android:id="@+id/tv_humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="humidity"
+                android:textSize="17dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                app:layout_constraintVertical_bias="0.642" />
 
             <TextView
                 android:id="@+id/tv_Weather_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:textSize="28sp"
-                app:layout_constraintBottom_toBottomOf="@+id/icon_image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/time_data"
-                app:layout_constraintVertical_bias="0.488" />
-<!--            android:text="@{currentWeather.list.get(0).weather.get(0).description}"-->
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/icon_image"
+                app:layout_constraintStart_toStartOf="@+id/icon_image"
+                app:layout_constraintTop_toBottomOf="@+id/icon_image" />
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="60dp"
+                android:text="@string/TheweatherToday"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_hours"
                 android:layout_width="wrap_content"
-                android:layout_height="57dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="68dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/icon_image" />
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <TextView
+                android:id="@+id/days_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/theWeatherAnotherDays"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView_hours" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_days"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView_hours" />
+                app:layout_constraintTop_toBottomOf="@+id/days_weather" />
+
+            <TextView
+                android:id="@+id/tv_pressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="pressure"
+                android:textSize="17dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintTop_toTopOf="@+id/imageView6"
+                app:layout_constraintVertical_bias="0.642" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="31dp"
+                android:layout_height="37dp"
+                android:layout_marginStart="24dp"
+                android:src="@drawable/pressure"
+                app:layout_constraintBottom_toTopOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/tv_temp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_Weather_description"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="31dp"
+                android:layout_height="37dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/cloud"
+                app:layout_constraintEnd_toEndOf="@+id/imageView6"
+                app:layout_constraintStart_toStartOf="@+id/imageView6"
+                app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+            <TextView
+                android:id="@+id/tv_cloud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="cloud"
+                android:textSize="17dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+                app:layout_constraintStart_toEndOf="@+id/imageView7"
+                app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                app:layout_constraintVertical_bias="0.636" />
+
+            <TextView
+                android:id="@+id/tv_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="tempureture"
+                android:textSize="17dp"
+                app:layout_constraintBottom_toTopOf="@+id/tv_wind_speed"
+                app:layout_constraintStart_toEndOf="@+id/imageView9"
+                app:layout_constraintTop_toTopOf="@+id/imageView9"
+                app:layout_constraintVertical_bias="0.3" />
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="31dp"
+                android:layout_height="37dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/img"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_Weather_description" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
-
-    <!-- one related to specification is binding or view model-->
-    <!--one adaptor of remain the day show  time , icon , temp-->
-    <!--one adaptor of remain the days show  day , icon,weather descr , temp-->
-
-    <!--have 5 days every one have 8 time-->
-    <!--// day descrption first one in list:0-->
-    <!--// remain day at 3 hours remain 4 : 1.2.3.4.5.6.7-->
-    <!--remain week:-->
-    <!--    take(8)// descard 9.10.11.12.13.14.15-->
-    <!--    take (16) descard 17.18.19.20.21.22.23-->
-    <!--take(24)//25.26.27.28.29.30.31-->
-    <!--take(32) //33.34.35.36.37.38.39-->
-

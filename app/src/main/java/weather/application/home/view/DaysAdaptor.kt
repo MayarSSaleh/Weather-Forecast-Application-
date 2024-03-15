@@ -1,33 +1,62 @@
 package weather.application.home.view
 
-class DaysAdaptor {
-}
-/*
+import android.os.Build
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import weather.application.R
+import weather.application.model.WeatherItem
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.TextStyle
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
-class RecyclerAdapter (private val onClick:(Product) -> Unit) : ListAdapter<Product, ProductViewHolder>(ProductDiffUtil()) {
-    lateinit var binding: DayItemBinding
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val inflater =LayoutInflater.from(parent.context)
-        binding=DataBindingUtil.inflate(inflater,R.layout.day_item,parent,false)
-        return ProductViewHolder(binding) }
+class DaysAdaptor : ListAdapter<WeatherItem, DaysViewHolder>(DaysDiffUtil()) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DaysViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.day_item, parent, false)
+        return DaysViewHolder(view)
+    }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val currentObj = getItem(position)
-        binding.product=currentObj
-        binding.imageProduct.setOnClickListener { onClick(currentObj)}
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onBindViewHolder(holder: DaysViewHolder, position: Int) {
+        val current = getItem(position)
+        holder.temp.text = current.main.temp.toString()
+        Picasso.get()
+            .load("https://openweathermap.org/img/wn/" + current.weather.get(0).icon + "@2x.png")
+            .into(holder.icon)
+        holder.dayWeatherDesc.text = current.weather.get(0).description
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(current.dt.toLong()), ZoneOffset.UTC)
+        holder.tv_day.text= dateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+//        holder.tv_day.text= dateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale("ar"))
+
     }
 }
 
-class ProductViewHolder(binding: ProdcutItemBinding) : RecyclerView.ViewHolder(binding.root)
+class DaysViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val tv_day: TextView = itemView.findViewById(R.id.tv_day)
+    val icon: ImageView = itemView.findViewById(R.id.image_day_icon)
+    val dayWeatherDesc: TextView = itemView.findViewById(R.id.tv_day_weather_des)
+    val temp: TextView = itemView.findViewById(R.id.tv_day_tem)
+}
 
-class ProductDiffUtil : DiffUtil.ItemCallback<Product>() {
-    override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
-        return oldItem.id == newItem.id
+class DaysDiffUtil : DiffUtil.ItemCallback<WeatherItem>() {
+    override fun areItemsTheSame(oldItem: WeatherItem, newItem: WeatherItem): Boolean {
+        return oldItem.dt_txt == newItem.dt_txt
     }
 
-    override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+    override fun areContentsTheSame(oldItem: WeatherItem, newItem: WeatherItem): Boolean {
         return oldItem == newItem
     }
 }
-
- */
