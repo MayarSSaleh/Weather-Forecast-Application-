@@ -1,28 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".home.view.HomeFragment">
+<data>
+    <variable
+        name="currentWeather"
+        type="weather.application.model.WeatherResponse" />
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+</data>
+    <androidx.core.widget.NestedScrollView
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="15dp"
+            android:orientation="vertical">
 
-<!-- one related to specification is binding or view model-->
-<!--one adaptor of remain the day show  time , icon , temp-->
+            <TextView
+                android:id="@+id/city_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="35dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="@{currentWeather.city.toString()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+            <TextView
+                android:id="@+id/time_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:text="@{currentWeather.list.get(0).dt_txt}"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/city_name" />
+
+            <ImageView
+                android:id="@+id/icon_image"
+                android:layout_width="103dp"
+                android:layout_height="80dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_Weather_description"
+                app:layout_constraintTop_toBottomOf="@+id/time_data"
+                tools:srcCompat="@tools:sample/avatars"></ImageView>
+
+<!--            ● The current temperature-->
+
+<!--            ● Humidity icon and value-->
+<!--            ● Wind speed-->
+<!--            ● Pressure-->
+<!--            ● Clouds-->
+
+
+            <TextView
+                android:id="@+id/tv_Weather_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="28sp"
+                app:layout_constraintBottom_toBottomOf="@+id/icon_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/time_data"
+                app:layout_constraintVertical_bias="0.488" />
+<!--            android:text="@{currentWeather.list.get(0).weather.get(0).description}"-->
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="57dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="68dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/icon_image" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_days"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView_hours" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>
+
+    <!-- one related to specification is binding or view model-->
+    <!--one adaptor of remain the day show  time , icon , temp-->
     <!--one adaptor of remain the days show  day , icon,weather descr , temp-->
 
-<!--have 5 days every one have 8 time-->
-<!--// day descrption first one in list:0-->
-<!--// remain day at 3 hours remain 4 : 1.2.3.4.5.6.7-->
-<!--remain week:-->
-<!--    take(8)// descard 9.10.11.12.13.14.15-->
-<!--    take (16) descard 17.18.19.20.21.22.23-->
-<!--take(24)//25.26.27.28.29.30.31-->
-<!--take(32) //33.34.35.36.37.38.39-->
+    <!--have 5 days every one have 8 time-->
+    <!--// day descrption first one in list:0-->
+    <!--// remain day at 3 hours remain 4 : 1.2.3.4.5.6.7-->
+    <!--remain week:-->
+    <!--    take(8)// descard 9.10.11.12.13.14.15-->
+    <!--    take (16) descard 17.18.19.20.21.22.23-->
+    <!--take(24)//25.26.27.28.29.30.31-->
+    <!--take(32) //33.34.35.36.37.38.39-->
 

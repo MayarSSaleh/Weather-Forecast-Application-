@@ -1,17 +1,13 @@
 package weather.application.model
 
-import java.io.Serializable
-
-//response <List<MainWeather>> list
-//list[0]
 
 data class WeatherResponse(
     val list: List<WeatherItem>,
     val city: City
-) : Serializable
+)
 
 data class WeatherItem(
-    val dt:String,
+    val dt: String,
     val main: Main,
     val weather: List<weather>,
     val clouds: Clouds,
@@ -24,13 +20,9 @@ data class weather(
     val icon: String
 )
 
-data class Clouds(
-    val all: Int
-)
+data class Clouds(val all: Int)
 
-data class Wind(
-    val speed: Double
-)
+data class Wind(val speed: Double)
 
 
 data class City(private val name: String)
