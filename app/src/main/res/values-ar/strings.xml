@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
@@ -6,18 +7,24 @@
     <string name="app_name"> الطقس </string>
     <string name="CityName">أسم المدينة</string>
     <string name="TheweatherToday">الطقس على مدار اليوم: </string>
-    <string name="theWeatherAnotherDays">الطقس الأيام القادمة:</string>
-    <string name="Setting">Setting</string>
-    <string name="units">Units:</string>
-    <string name="temperature">Temperature:</string>
-    <string name="windspeed">Wind Speed:</string>
-    <string name="language">Language:</string>
-    <string name="Kelvin">Kelvin</string>
-    <string name="Celsius">Celsius</string>
-    <string name="Fahrenheit">Fahrenheit</string>
-    <string name="meter_sec">meter/sec</string>
-    <string name="miles_hour">miles/hour</string>
-    <string name="Arabic">Arabic</string>
-    <string name="English">English</string>
+    <string name="theWeatherAnotherDays">الطقس الأيام المقبلة:</string>
+    <string name="Setting">الإعدادت</string>
+    <string name="units">الوحدة:</string>
+    <string name="Location">التعرف على المكان من خلال:</string>
+    <string name="temperature">درجة الحرارة:</string>
+    <string name="windspeed">سرعة الرياح:</string>
+    <string name="language">اللغة:</string>
+    <string name="Kelvin">كيلفين</string>
+    <string name="Celsius">درجة مئوية</string>
+    <string name="Fahrenheit">فهرنهايت</string>
+    <string name="meter_sec">متر/ثانية</string>
+    <string name="miles_hour">ميل/ساعة</string>
+    <string name="Arabic">اللغة العربية</string>
+    <string name="English">اللغة الإنجليزية</string>
+    <string name="GPS">نظام تحديد المواقع</string>
+    <string name="MAP">الخريطة</string>
+    <string name="Home">الصفحة الرئيسية</string>
+    <string name="Favourite">الإماكن المفضلة</string>
+    <string name="Alert">التنبيهات</string>
 
 </resources>

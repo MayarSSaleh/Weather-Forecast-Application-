@@ -5,18 +5,22 @@
     tools:showIn= "navigation_view">
 
    <group android:checkableBehavior="single">
-       <item android:id="@+id/home"
+       <item
+           android:id="@+id/home"
            android:icon="@drawable/home"
-           android:title="Home"/>
-       <item android:id="@+id/fav"
+           android:title="@string/Home" />
+       <item
+           android:id="@+id/fav"
            android:icon="@drawable/fav_icon"
-           android:title="Favourite "/>
-       <item android:id="@+id/alert"
+           android:title="@string/Favourite" />
+       <item
+           android:id="@+id/alert"
            android:icon="@drawable/alart"
-           android:title="Alert"/>
-       <item android:id="@+id/setting"
+           android:title="@string/Alert" />
+       <item
+           android:id="@+id/setting"
            android:icon="@drawable/setting"
-           android:title="Setting"/>
+           android:title="@string/Setting" />
    </group>
 
 </menu>

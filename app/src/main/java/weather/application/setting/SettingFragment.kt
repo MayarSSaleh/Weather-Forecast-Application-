@@ -24,11 +24,11 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("TAG", "Setting OnCheckedChangeListener")
 
-        binding.radioGroupGender.setOnCheckedChangeListener { group, checkedId ->
+        binding.radioGroupLocation.setOnCheckedChangeListener { group, checkedId ->
             val location: String = when (checkedId) {
                 R.id.map_button -> "Map"
                 R.id.gpsButton -> "Gps"
-                else -> "default"
+                else -> "Gps"
             }
             when (location) {
                 "Map" -> {
@@ -39,6 +39,8 @@ class SettingFragment : Fragment() {
                 }
             }
         }
+
+
 
 
 

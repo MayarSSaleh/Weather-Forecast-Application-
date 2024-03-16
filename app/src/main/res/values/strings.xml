@@ -15,8 +15,14 @@
     <string name="Kelvin">Kelvin</string>
     <string name="Celsius">Celsius</string>
     <string name="Fahrenheit">Fahrenheit</string>
-    <string name="meter_sec">meter/sec</string>
-    <string name="miles_hour">miles/hour</string>
+    <string name="meter_sec">Meter/sec</string>
+    <string name="miles_hour">Miles/hour</string>
     <string name="Arabic">Arabic</string>
     <string name="English">English</string>
+    <string name="GPS">GPS</string>
+    <string name="MAP">MAP</string>
+    <string name="Home">Home</string>
+    <string name="Favourite">Favourite</string>
+    <string name="Alert">Alert</string>
+
 </resources>
