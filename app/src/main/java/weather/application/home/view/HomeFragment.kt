@@ -113,7 +113,7 @@ class HomeFragment : Fragment() {
 
     private fun submitToDaysAdapterList(list: List<WeatherItem>) {
         var dayList = mutableListOf<WeatherItem>()
-        for (i in 8..32 step 8) {        //        dayList.add(list.get(8), list.get(16), list.get(24), list.get(32))
+        for (i in 8..32 step 8) {        //  dayList.add(list.get(8), list.get(16), list.get(24), list.get(32))
             dayList.add(list[i])
         }
         daylayoutManager = LinearLayoutManager(requireContext())

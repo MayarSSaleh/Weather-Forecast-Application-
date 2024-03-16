@@ -6,4 +6,17 @@
     <string name="CityName">cityName</string>
     <string name="TheweatherToday">The weather today:</string>
     <string name="theWeatherAnotherDays">The weather next days:</string>
+    <string name="Setting">Setting</string>
+    <string name="Location">Location:</string>
+    <string name="units">Units:</string>
+    <string name="temperature">Temperature:</string>
+    <string name="windspeed">Wind Speed:</string>
+    <string name="language">Language:</string>
+    <string name="Kelvin">Kelvin</string>
+    <string name="Celsius">Celsius</string>
+    <string name="Fahrenheit">Fahrenheit</string>
+    <string name="meter_sec">meter/sec</string>
+    <string name="miles_hour">miles/hour</string>
+    <string name="Arabic">Arabic</string>
+    <string name="English">English</string>
 </resources>
