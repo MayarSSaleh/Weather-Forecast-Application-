@@ -5,10 +5,7 @@ data class WeatherResponse(
     val list: List<WeatherItem>,
     val city: City
 )
-data class CustomedSetting(var language:String, var location :String, var tempUnit:String, var windUnit:String)
-{
-    constructor():this("","","","")
-}
+
 data class WeatherItem(
     val dt: String,
     val main: Main,

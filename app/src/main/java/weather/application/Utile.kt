@@ -11,3 +11,11 @@ fun loadImage(view: ImageView, url: String?, myError: Drawable) {
         Picasso.get().load(it).error(myError).into(view)
     }
 }
+object MyConstant{
+    const val SHARED_PREFS = "sharedPreferences"
+    const val  location="location"
+    const val  wind_unit="wind_unit"
+    const val  temp_unit="temp_unit"
+    const val  lan="lan"
+
+}

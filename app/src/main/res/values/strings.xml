@@ -24,5 +24,6 @@
     <string name="Home">Home</string>
     <string name="Favourite">Favourite</string>
     <string name="Alert">Alert</string>
+    <string name="hPa">hPa</string>
 
 </resources>

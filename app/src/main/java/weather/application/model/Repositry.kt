@@ -25,10 +25,9 @@ class Repositry private constructor(
         }
     }
 
-    suspend fun getWeather(latitude:Double ,longitude:Double) : Response<WeatherResponse> {
-        return productRemoteDataSource.getWeather(latitude,longitude)
+    suspend fun getWeather(latitude:Double , longitude:Double,units:String?,lang: String?) : Response<WeatherResponse> {
+        return productRemoteDataSource.getWeather(latitude,longitude,units, lang)
     }
-
 
 }
 

@@ -7,21 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
+import weather.application.MyConstant
+import weather.application.MyConstant.SHARED_PREFS
 import weather.application.R
 import weather.application.databinding.FragmentSettingBinding
 import weather.application.home.viewModel.HomeViewModel
 import weather.application.model.Repositry
 
 class SettingFragment : Fragment() {
-    private lateinit var homeviewModel: HomeViewModel
 
+    private lateinit var homeviewModel: HomeViewModel
     private lateinit var binding: FragmentSettingBinding
     private lateinit var location: String
     lateinit var sharedPreferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
+
     companion object {
-        const val SHARED_PREFS = "sharedPreferences"
         private const val KEY_LOCATION_RADIO_BUTTON_ID = "locationRadioButtonId"
         private const val KEY_WIND_RADIO_BUTTON_ID = "windRadioButtonId"
         private const val KEY_TEMPERATURE_RADIO_BUTTON_ID = "temperatureRadioButtonId"
@@ -32,15 +34,35 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeviewModel= HomeViewModel(Repositry.getInstance(requireContext()))
+        homeviewModel = HomeViewModel(Repositry.getInstance(requireContext()))
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()
 
-        binding.root.findViewById<RadioButton>(sharedPreferences.getInt(KEY_LOCATION_RADIO_BUTTON_ID, 0))?.isChecked = true
-        binding.root.findViewById<RadioButton>(sharedPreferences.getInt(KEY_TEMPERATURE_RADIO_BUTTON_ID, 0))?.isChecked = true
-        binding.root.findViewById<RadioButton>(sharedPreferences.getInt(KEY_LANGUAGE_RADIO_BUTTON_ID, 0))?.isChecked = true
-        binding.root.findViewById<RadioButton>(sharedPreferences.getInt(KEY_WIND_RADIO_BUTTON_ID, 0))?.isChecked = true
+        binding.root.findViewById<RadioButton>(
+            sharedPreferences.getInt(
+                KEY_LOCATION_RADIO_BUTTON_ID,
+                0
+            )
+        )?.isChecked = true
+        binding.root.findViewById<RadioButton>(
+            sharedPreferences.getInt(
+                KEY_TEMPERATURE_RADIO_BUTTON_ID,
+                0
+            )
+        )?.isChecked = true
+        binding.root.findViewById<RadioButton>(
+            sharedPreferences.getInt(
+                KEY_LANGUAGE_RADIO_BUTTON_ID,
+                0
+            )
+        )?.isChecked = true
+        binding.root.findViewById<RadioButton>(
+            sharedPreferences.getInt(
+                KEY_WIND_RADIO_BUTTON_ID,
+                0
+            )
+        )?.isChecked = true
 
         return binding.root
     }
@@ -55,12 +77,8 @@ class SettingFragment : Fragment() {
                 else -> "Gps"
             }
             when (location) {
-                "Map" -> {
-                    homeviewModel.customizedSetting.location="Map"
-                }
-                "Gps" -> {
-                    homeviewModel.customizedSetting.location="default"
-                }
+                "Map" -> editor.putString(MyConstant.location, "Map")
+                "Gps" -> editor.putString(MyConstant.location, "Gps")
             }
             editor.putInt(KEY_LOCATION_RADIO_BUTTON_ID, checkedId)
             editor.apply()
@@ -74,11 +92,12 @@ class SettingFragment : Fragment() {
             }
             when (language) {
                 "Arabic" -> {
-                    homeviewModel.customizedSetting.language="Arabic"
+                    editor.putString(MyConstant.lan, "Arabic")
+                    homeviewModel.setLocale("ar",requireContext())
                 }
-
                 "English" -> {
-                    homeviewModel.customizedSetting.language="default"
+                    editor.putString(MyConstant.lan, "English")
+                    homeviewModel.setLocale("en",requireContext())
                 }
             }
             editor.putInt(KEY_LANGUAGE_RADIO_BUTTON_ID, checkedId)
@@ -91,12 +110,8 @@ class SettingFragment : Fragment() {
                 else -> "meter_sec"
             }
             when (windUnit) {
-                "meter_sec" -> {
-                    homeviewModel.customizedSetting.windUnit="meter_sec"
-                }
-                "miles_hour" -> {
-                    homeviewModel.customizedSetting.windUnit="miles_hour"
-                }
+                "meter_sec" -> editor.putString(MyConstant.wind_unit, "meter_sec")
+                "miles_hour" -> editor.putString(MyConstant.wind_unit, "miles_hour")
             }
             editor.putInt(KEY_WIND_RADIO_BUTTON_ID, checkedId)
             editor.apply()
@@ -110,16 +125,9 @@ class SettingFragment : Fragment() {
                 else -> "Kelvin"
             }
             when (temperature) {
-                "Celsius" -> {
-                    homeviewModel.customizedSetting.tempUnit="Celsius"
-                }
-
-                "Fahrenheit" -> {
-                    homeviewModel.customizedSetting.tempUnit="Fahrenheit"
-                }
-                "Kelvin" -> {
-                    homeviewModel.customizedSetting.tempUnit="default"
-                }
+                "Celsius" -> editor.putString(MyConstant.temp_unit, "Celsius")
+                "Fahrenheit" -> editor.putString(MyConstant.temp_unit, "Fahrenheit")
+                "Kelvin" -> editor.putString(MyConstant.temp_unit, "Kelvin")
             }
             editor.putInt(KEY_TEMPERATURE_RADIO_BUTTON_ID, checkedId)
             editor.apply()

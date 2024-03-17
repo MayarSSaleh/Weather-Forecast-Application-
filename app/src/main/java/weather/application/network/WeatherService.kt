@@ -14,14 +14,9 @@ interface WeatherService {
     suspend fun getWeatherDetails(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("appid") appid: String = API_KEY
+        @Query("appid") appid: String = API_KEY,
+        @Query("units") units: String? = null,
+        @Query("lang") lang: String? = null
     ): Response<WeatherResponse>
-
-
-//    @Query("lat") lat: Double,
-//    @Query("lon") lon: Double,
-//    @Query("units") units: String,
-//    @Query("exclude") exclude: String="minutely",
-//    @Query("lang") lang: String
 
 }

@@ -44,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/GPS"
+            android:checked="true"
             android:textSize="15dp" />
 
         <RadioButton
@@ -90,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/Kelvin"
+            android:checked="true"
             android:textSize="15dp" />
 
         <RadioButton
@@ -132,6 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/meter_sec"
+            android:checked="true"
             android:textSize="15dp" />
 
         <RadioButton
@@ -175,6 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="@string/English"
+            android:checked="true"
             android:textSize="15dp" />
     </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>

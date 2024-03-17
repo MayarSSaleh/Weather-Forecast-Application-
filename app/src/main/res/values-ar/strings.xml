@@ -26,5 +26,6 @@
     <string name="Home">الصفحة الرئيسية</string>
     <string name="Favourite">الإماكن المفضلة</string>
     <string name="Alert">التنبيهات</string>
+    <string name="hPa">هكتوباسكال</string>
 
 </resources>
