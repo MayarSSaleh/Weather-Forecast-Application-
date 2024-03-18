@@ -14,6 +14,7 @@ data class WeatherItem(
     val wind: Wind,
     val dt_txt: String,
 )
+data class FavLocation(val long:Double,val lot:Double,val locationName:String)
 data class Main(
     val temp: Double,
     val pressure: Int,

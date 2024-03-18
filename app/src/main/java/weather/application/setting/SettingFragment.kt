@@ -76,7 +76,6 @@ class SettingFragment : Fragment() {
             }
             when (location) {
                 "Map" -> {
-
                     val transaction = activity?.supportFragmentManager?.beginTransaction()
                     transaction?.replace(R.id.fragment_container, MapFragment(KEY_LOCATION_RADIO_BUTTON_ID, checkedId))
                     transaction?.addToBackStack(null)
