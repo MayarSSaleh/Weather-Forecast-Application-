@@ -1,11 +1,13 @@
 <resources>
+
+    <string name="google_maps_api_key" translatable="false">AIzaSyDkw32e4ITS7RP9A0A1HQCnxKGP7CUGzbc</string>
     <string name="app_name">The Weather</string>
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="CityName">cityName</string>
-    <string name="TheweatherToday">The weather today:</string>
-    <string name="theWeatherAnotherDays">The weather next days:</string>
+    <string name="city_name">cityName</string>
+    <string name="the_weather_today">The weather today:</string>
+    <string name="the_weather_another_days">The weather next days:</string>
     <string name="Setting">Setting</string>
     <string name="Location">Location:</string>
     <string name="units">Units:</string>
@@ -13,8 +15,8 @@
     <string name="windspeed">Wind Speed:</string>
     <string name="language">Language:</string>
     <string name="Kelvin">Kelvin</string>
-    <string name="Celsius">Celsius</string>
-    <string name="Fahrenheit">Fahrenheit</string>
+    <string name="celsius">Celsius</string>
+    <string name="fahrenheit">Fahrenheit</string>
     <string name="meter_sec">Meter/sec</string>
     <string name="miles_hour">Miles/hour</string>
     <string name="Arabic">Arabic</string>
@@ -25,5 +27,10 @@
     <string name="Favourite">Favourite</string>
     <string name="Alert">Alert</string>
     <string name="hPa">hPa</string>
+    <string name="add_to_faviourt_locations">Favourite location</string>
+    <string name="set_as_my_location">My location</string>
+    <string name="pick_place_then_choose">Click on place then choose to set as:</string>
+    <string name="Not_selected_place_yet"> Not selected place yet </string>
+    <string name="added_as_your_current_location">Added as your current location</string>
 
 </resources>

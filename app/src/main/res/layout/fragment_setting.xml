@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="@string/Celsius"
+            android:text="@string/celsius"
             android:textSize="15dp" />
 
         <RadioButton
@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="@string/Fahrenheit" />
+            android:text="@string/fahrenheit" />
     </RadioGroup>
 
     <TextView

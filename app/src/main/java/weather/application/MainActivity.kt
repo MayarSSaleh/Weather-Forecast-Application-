@@ -3,7 +3,6 @@ package weather.application
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import weather.application.alerts.view.AlertFragment
 import weather.application.fav.view.FavouriteFragment
 import weather.application.home.view.HomeFragment
 import weather.application.home.viewModel.HomeViewModel
@@ -89,7 +87,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.alert -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MapFragment()).commit()
+                    .replace(R.id.fragment_container, MapFragment("",0)).commit()
                 drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }

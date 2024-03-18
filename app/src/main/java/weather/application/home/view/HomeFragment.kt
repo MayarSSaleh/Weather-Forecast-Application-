@@ -61,6 +61,7 @@ class HomeFragment : Fragment() {
     private lateinit var geocoder: Geocoder
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationProviderClient: FusedLocationProviderClient
+    var requestrefused = 0
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -76,11 +77,20 @@ class HomeFragment : Fragment() {
         daysAdaptor = DaysAdaptor(requireContext())
         geocoder = Geocoder(requireContext())
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
-        getGpsLocationPermision()
-        getFreshLocation()
+        if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
+            homeViewModel.getWeather(
+                requireContext(),
+                sharedPreferences.getString(MyConstant.latitude, "0.0")!!
+                    .toDouble(),
+                sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble()
+            )
+        } else {
+            getGpsLocationPermision()
+            getFreshLocation()
+        }
+
 
         homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner) { weatherResponse ->
-
             setCurrentWeather(weatherResponse)
             submitTOHoursAdapterList(weatherResponse.list)
             submitToDaysAdapterList(weatherResponse.list)
@@ -105,29 +115,41 @@ class HomeFragment : Fragment() {
         if (sharedPreferences.getString(MyConstant.temp_unit, "Kelvin") != "Kelvin") {
             tv_temp_unit.text = sharedPreferences.getString(MyConstant.temp_unit, " Kelvin")
         }
-        when (sharedPreferences.getString(MyConstant.temp_unit, " Kelvin")) {
-            "Kelvin", "Celsius" -> {                // Meter unit
-                if (sharedPreferences.getString(MyConstant.wind_unit, "meter_sec") == "miles_hour"
-                ) {
+        var savedTmepUnit =sharedPreferences.getString(MyConstant.temp_unit,"Kelvin")
+        when (savedTmepUnit) {
+            "Kelvin"->
+            {       // Meter unit
+                    if (sharedPreferences.getString(MyConstant.wind_unit,"meter_sec" ) == "miles_hour") {
                     tv_wind_speed.text = "miles/hour"
-                    tv_wind.text = convertMetersPerSecondToMilesPerHour(weatherItem.wind.speed)
+                    var value =convertMetersPerSecondToMilesPerHour(weatherItem.wind.speed)
+                    tv_wind.text = value
                 } else {
                     tv_wind_speed.text = "meter/sec"
                     tv_wind.text = weatherItem.wind.speed.toString()
                 }
             }
-
-            "Fahrenheit" -> {                // Miles/hour
-                if (sharedPreferences.getString(MyConstant.wind_unit, "meter_sec") == "meter_sec") {
+            "Celsius" -> {
+                 // Meter unit
+                 if (sharedPreferences.getString(MyConstant.wind_unit,"meter_sec" ) == "miles_hour") {
+                    tv_wind_speed.text = "miles/hour"
+                    var value =convertMetersPerSecondToMilesPerHour(weatherItem.wind.speed)
+                    tv_wind.text = value
+                } else {
                     tv_wind_speed.text = "meter/sec"
-                    tv_wind.text = convertMilesPerHourToMetersPerSecond(weatherItem.wind.speed)
+                    tv_wind.text = weatherItem.wind.speed.toString()
+                }
+            }
+            "Fahrenheit" -> {                // Miles/hour
+                  if (sharedPreferences.getString( MyConstant.wind_unit,"meter_sec") == "meter_sec") {
+                    tv_wind_speed.text = "meter/sec"
+                    var value=convertMilesPerHourToMetersPerSecond(weatherItem.wind.speed)
+                    tv_wind.text = value
                 } else {
                     tv_wind_speed.text = "miles/hour"
                     tv_wind.text = weatherItem.wind.speed.toString()
                 }
             }
         }
-
     }
 
     private fun convertMetersPerSecondToMilesPerHour(metersPerSecond: Double): String {
@@ -165,7 +187,8 @@ class HomeFragment : Fragment() {
         for (x in 1 until 8) {
             hoursList.add(weatherItemList[x])
         }
-        layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerView_hours.adapter = hoursAdapterList
         recyclerView_hours.layoutManager = layoutManager
         hoursAdapterList.submitList(hoursList)
@@ -209,8 +232,6 @@ class HomeFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // sure at some point we stop request the permission
-        Log.d("d", " 1111111111111in response not get the permsision")
-
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -220,14 +241,22 @@ class HomeFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            requestrefused++
+            if (requestrefused < 2) {
+                getGpsLocationPermision()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "sorry the app will can not work probably without location permission ",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
             Toast.makeText(
                 requireContext(),
-                "chosse the location through the map",
+                "Be sure you open your location",
                 Toast.LENGTH_SHORT
             ).show()
-        } else {
-            Toast.makeText(requireContext(), "Be sure you open your location", Toast.LENGTH_SHORT)
-                .show()
             getFreshLocation()
         }
     }
@@ -236,7 +265,8 @@ class HomeFragment : Fragment() {
     fun getFreshLocation() {
         var longitudinalValue = 0.0
         var latitudeValue = 0.0
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationRequest: LocationRequest = LocationRequest.Builder(1000).apply {
             setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
         }.build()
@@ -245,7 +275,6 @@ class HomeFragment : Fragment() {
                 val location = locationResult.lastLocation ?: return
                 longitudinalValue = location.longitude
                 latitudeValue = location.latitude
-                Log.d("d", " long $longitudinalValue and the lati $latitudeValue")
                 if (isAdded) {
                     homeViewModel.getWeather(requireContext(), latitudeValue, longitudinalValue)
                     locationProviderClient.removeLocationUpdates(this)
@@ -259,8 +288,4 @@ class HomeFragment : Fragment() {
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-    }
 }

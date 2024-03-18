@@ -23,14 +23,7 @@
 //
 //
 //class FirstFragment : Fragment() {
-//    lateinit var binding:FragmentListBinding
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
-////
+//
 ////        if (isNetworkAvailable(context)) {
 //////            var workManger = WorkManager.getInstance(requireActivity().application)
 //////            val request = OneTimeWorkRequestBuilder<DownloadWorker>()

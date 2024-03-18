@@ -1,12 +1,16 @@
 package weather.application.setting
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import weather.application.MapFragment
 import weather.application.MyConstant
 import weather.application.MyConstant.SHARED_PREFS
 import weather.application.R
@@ -38,19 +42,13 @@ class SettingFragment : Fragment() {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()
-
-        binding.root.findViewById<RadioButton>(
-            sharedPreferences.getInt(
-                KEY_LOCATION_RADIO_BUTTON_ID,
-                0
-            )
-        )?.isChecked = true
-        binding.root.findViewById<RadioButton>(
-            sharedPreferences.getInt(
-                KEY_TEMPERATURE_RADIO_BUTTON_ID,
-                0
-            )
-        )?.isChecked = true
+        if (sharedPreferences.getInt("mapButtonId", 0) == 1) {
+            Log.d("what","trrrrrrrrrrrrrrrrrrrrrrrue")
+          binding.mapButton.isChecked=true
+        }else{
+            binding.root.findViewById<RadioButton>(sharedPreferences.getInt(KEY_LOCATION_RADIO_BUTTON_ID, 0 ))?.isChecked = true
+        }
+        binding.root.findViewById<RadioButton>(sharedPreferences.getInt( KEY_TEMPERATURE_RADIO_BUTTON_ID,0))?.isChecked = true
         binding.root.findViewById<RadioButton>(
             sharedPreferences.getInt(
                 KEY_LANGUAGE_RADIO_BUTTON_ID,
@@ -77,7 +75,13 @@ class SettingFragment : Fragment() {
                 else -> "Gps"
             }
             when (location) {
-                "Map" -> editor.putString(MyConstant.location, "Map")
+                "Map" -> {
+
+                    val transaction = activity?.supportFragmentManager?.beginTransaction()
+                    transaction?.replace(R.id.fragment_container, MapFragment(KEY_LOCATION_RADIO_BUTTON_ID, checkedId))
+                    transaction?.addToBackStack(null)
+                    transaction?.commit()
+                }
                 "Gps" -> editor.putString(MyConstant.location, "Gps")
             }
             editor.putInt(KEY_LOCATION_RADIO_BUTTON_ID, checkedId)
@@ -93,11 +97,12 @@ class SettingFragment : Fragment() {
             when (language) {
                 "Arabic" -> {
                     editor.putString(MyConstant.lan, "ar")
-                    homeviewModel.mySetLocale("ar",requireContext(),requireActivity())
+                    homeviewModel.mySetLocale("ar", requireContext(), requireActivity())
                 }
+
                 "English" -> {
                     editor.putString(MyConstant.lan, "en")
-                    homeviewModel.mySetLocale("en",requireContext(),requireActivity())
+                    homeviewModel.mySetLocale("en", requireContext(), requireActivity())
                 }
             }
             editor.putInt(KEY_LANGUAGE_RADIO_BUTTON_ID, checkedId)

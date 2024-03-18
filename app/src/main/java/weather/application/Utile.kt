@@ -12,6 +12,9 @@ fun loadImage(view: ImageView, url: String?, myError: Drawable) {
     }
 }
 object MyConstant{
+    const val longitude ="longitude"
+    const val latitude ="latitude"
+    const val address ="address"
     const val SHARED_PREFS = "sharedPreferences"
     const val  location="location"
     const val  wind_unit="wind_unit"

@@ -5,9 +5,9 @@
     <string name="close">Close Navigation Drawer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_name"> الطقس </string>
-    <string name="CityName">أسم المدينة</string>
-    <string name="TheweatherToday">الطقس على مدار اليوم: </string>
-    <string name="theWeatherAnotherDays">الطقس الأيام المقبلة:</string>
+    <string name="city_name">أسم المدينة</string>
+    <string name="the_weather_today">الطقس على مدار اليوم: </string>
+    <string name="the_weather_another_days">الطقس الأيام المقبلة:</string>
     <string name="Setting">الإعدادت</string>
     <string name="units">الوحدة:</string>
     <string name="Location">التعرف على المكان من خلال:</string>
@@ -15,8 +15,8 @@
     <string name="windspeed">سرعة الرياح:</string>
     <string name="language">اللغة:</string>
     <string name="Kelvin"> كيلفين </string>
-    <string name="Celsius">درجة مئوية</string>
-    <string name="Fahrenheit">فهرنهايت</string>
+    <string name="celsius">درجة مئوية</string>
+    <string name="fahrenheit">فهرنهايت</string>
     <string name="meter_sec">متر/ثانية</string>
     <string name="miles_hour">ميل/ساعة</string>
     <string name="Arabic">اللغة العربية</string>
@@ -27,5 +27,10 @@
     <string name="Favourite">الإماكن المفضلة</string>
     <string name="Alert">التنبيهات</string>
     <string name="hPa">هكتوباسكال</string>
+    <string name="add_to_faviourt_locations">مكان مفضل </string>
+    <string name="set_as_my_location">مكانى</string>
+    <string name="pick_place_then_choose">أضغط على مكان و وضعه ك:</string>
+    <string name="Not_selected_place_yet">لم يتم أختيار مكان بعد</string>
+    <string name="added_as_your_current_location">Added as your current location</string>
 
 </resources>
