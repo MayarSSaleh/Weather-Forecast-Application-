@@ -6,16 +6,17 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import weather.application.model.WeatherResponse
+import weather.application.model.FavLocation
 
 @Dao
-interface WeatherDAO {
-    @Query("SELECT * FROM today_weather_table")
-    fun getAll(): Flow<WeatherResponse>
+interface LocationsDao {
+
+    @Query("SELECT * FROM locations_table")
+    fun getAll(): Flow<List<FavLocation>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(weatherResponse: WeatherResponse): Long
+    suspend fun insert(favLocation: FavLocation): Long
 
     @Delete
-    suspend fun delete(): Int
+    suspend fun delete(favLocation: FavLocation): Int
 }

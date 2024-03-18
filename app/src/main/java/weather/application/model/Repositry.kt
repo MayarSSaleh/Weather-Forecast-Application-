@@ -1,6 +1,7 @@
 package weather.application.model
 
 import android.content.Context
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import weather.application.localDataBase.LocalDataSource
 import weather.application.network.RemoteDataSource
@@ -25,9 +26,33 @@ class Repositry private constructor(
         }
     }
 
-    suspend fun getWeather(latitude:Double , longitude:Double,units:String?,lang: String?) : Response<WeatherResponse> {
-        return productRemoteDataSource.getWeather(latitude,longitude,units, lang)
+    suspend fun getWeather(latitude: Double,longitude: Double, units: String?,lang: String?): Response<WeatherResponse> {
+        return productRemoteDataSource.getWeather(latitude, longitude, units, lang)
     }
+
+    fun getAllLocalLocation(): Flow<List<FavLocation>> {
+        return productLocalDataSource.getAllFavLocations()
+    }
+
+    suspend fun deleteFavLocation(favLocation: FavLocation) {
+        return productLocalDataSource.deleteFavLocation(favLocation)
+    }
+    suspend fun insert(favLocation: FavLocation) {
+        return productLocalDataSource.insertFavLocation(favLocation)
+    }
+
+    fun getWeathearToday(): Flow<WeatherResponse> {
+        return productLocalDataSource.getWeathearToday()
+    }
+
+    suspend fun deleteLocation() {
+        return productLocalDataSource.deleteWeather()
+    }
+    suspend fun insertWeather(weatherResponse: WeatherResponse) {
+        return productLocalDataSource.insertWeather(weatherResponse)
+    }
+
+
 
 }
 

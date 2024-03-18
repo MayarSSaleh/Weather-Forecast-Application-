@@ -5,24 +5,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.ImageView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import weather.application.MapFragment
 import weather.application.R
+import weather.application.fav.viewModel.FavViewModel
+import weather.application.fav.viewModel.FavViewModelFactory
 
 class FavouriteFragment : Fragment() {
-    private lateinit var fav_locations:RecyclerView
+    private lateinit var favRecycler:RecyclerView
     private lateinit var fav_locationsAdaptor:FavouriteAdaptor
     private lateinit var fav_image: ImageView
-// THERE ARE ADAPTOR HANDLINNNNNNNNNNNNNNNNNNNNNNG
+    private lateinit var favFactory: FavViewModelFactory
+    private lateinit var viewModel: FavViewModel
+    private lateinit var layoutManager: LinearLayoutManager
+
+
+    // THERE ARE ADAPTOR HANDLINNNNNNNNNNNNNNNNNNNNNNG
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         var view = inflater.inflate(R.layout.fragment_favourite, container, false)
         fav_image = view.findViewById(R.id.image_fav)
-        fav_locations=view.findViewById(R.id.fav_loc_recycler)
+        this.favRecycler =view.findViewById(R.id.fav_loc_recycler)
         fav_locationsAdaptor=FavouriteAdaptor(requireContext())
 
         fav_image.setOnClickListener {

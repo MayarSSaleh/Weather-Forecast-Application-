@@ -1,7 +1,11 @@
 package weather.application.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "today_weather_table")
 data class WeatherResponse(
+    @PrimaryKey
     val list: List<WeatherItem>,
     val city: City
 )
@@ -14,20 +18,29 @@ data class WeatherItem(
     val wind: Wind,
     val dt_txt: String,
 )
-data class FavLocation(val long:Double,val lot:Double,val locationName:String)
+
+@Entity(tableName = "locations_table")
+data class FavLocation(
+    val long: Double, val lot: Double,
+    @PrimaryKey
+    val locationName: String
+)
+
 data class Main(
     val temp: Double,
     val pressure: Int,
     val humidity: Int,
 )
+
 data class weather(
     val description: String,
     val icon: String
 )
+
 data class Clouds(val all: Int)
 data class Wind(val speed: Double)
 
-data class City( val name: String)
+data class City(val name: String)
 
 /*The current temperature
 ● Current date
