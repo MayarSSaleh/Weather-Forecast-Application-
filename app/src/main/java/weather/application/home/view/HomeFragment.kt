@@ -1,20 +1,33 @@
 package weather.application.home.view
 
+
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.Observer
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.squareup.picasso.Picasso
 import weather.application.MyConstant
 import weather.application.R
@@ -23,11 +36,6 @@ import weather.application.home.viewModel.HomeViewModelFactory
 import weather.application.model.Repositry
 import weather.application.model.WeatherItem
 import weather.application.model.WeatherResponse
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.TextStyle
-import java.util.Locale
 
 class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
@@ -50,6 +58,10 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerViewDays: RecyclerView
     private lateinit var daysAdaptor: DaysAdaptor
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var geocoder: Geocoder
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationProviderClient: FusedLocationProviderClient
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -61,10 +73,14 @@ class HomeFragment : Fragment() {
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         initUI(view)
         hoursAdapterList = HoursAdapterList()
-        daysAdaptor = DaysAdaptor()
-        homeViewModel.getWeather(requireContext())
+        daysAdaptor = DaysAdaptor(requireContext())
+        geocoder = Geocoder(requireContext())
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
+        getGpsLocationPermision()
+        getFreshLocation()
+
         homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner) { weatherResponse ->
+
             setCurrentWeather(weatherResponse)
             submitTOHoursAdapterList(weatherResponse.list)
             submitToDaysAdapterList(weatherResponse.list)
@@ -86,10 +102,13 @@ class HomeFragment : Fragment() {
         tv_pressure.text = weatherItem.main.pressure.toString()
         tv_cloud.text = weatherItem.clouds.all.toString()
         tv_humidity.text = weatherItem.main.humidity.toString()
-        tv_temp_unit.text = sharedPreferences.getString(MyConstant.temp_unit, " Kelvin")
+        if (sharedPreferences.getString(MyConstant.temp_unit, "Kelvin") != "Kelvin") {
+            tv_temp_unit.text = sharedPreferences.getString(MyConstant.temp_unit, " Kelvin")
+        }
         when (sharedPreferences.getString(MyConstant.temp_unit, " Kelvin")) {
             "Kelvin", "Celsius" -> {                // Meter unit
-                if (sharedPreferences.getString(MyConstant.wind_unit, "meter_sec") == "miles_hour") {
+                if (sharedPreferences.getString(MyConstant.wind_unit, "meter_sec") == "miles_hour"
+                ) {
                     tv_wind_speed.text = "miles/hour"
                     tv_wind.text = convertMetersPerSecondToMilesPerHour(weatherItem.wind.speed)
                 } else {
@@ -97,6 +116,7 @@ class HomeFragment : Fragment() {
                     tv_wind.text = weatherItem.wind.speed.toString()
                 }
             }
+
             "Fahrenheit" -> {                // Miles/hour
                 if (sharedPreferences.getString(MyConstant.wind_unit, "meter_sec") == "meter_sec") {
                     tv_wind_speed.text = "meter/sec"
@@ -109,18 +129,21 @@ class HomeFragment : Fragment() {
         }
 
     }
+
     private fun convertMetersPerSecondToMilesPerHour(metersPerSecond: Double): String {
         val metersToMiles = 0.000621371
         val secondsToHours = 3600.0
-        val result=metersPerSecond * metersToMiles * secondsToHours
+        val result = metersPerSecond * metersToMiles * secondsToHours
         return String.format("%.2f", result)
     }
+
     private fun convertMilesPerHourToMetersPerSecond(milesPerHour: Double): String {
         val milesToMeters = 1609.34
         val hoursToSeconds = 3600.0
         val result = milesPerHour * milesToMeters / hoursToSeconds
         return String.format("%.2f", result)
     }
+
     private fun initUI(view: View) {
         tv_Weather_description = view.findViewById(R.id.tv_Weather_description)
         tv_cityName = view.findViewById(R.id.city_name)
@@ -136,6 +159,7 @@ class HomeFragment : Fragment() {
         tv_temp_unit = view.findViewById(R.id.tv_temp_unit)
         tv_wind_speed = view.findViewById(R.id.tv_wind_unit)
     }
+
     private fun submitTOHoursAdapterList(weatherItemList: List<WeatherItem>) {
         var hoursList = mutableListOf<WeatherItem>()
         for (x in 1 until 8) {
@@ -146,6 +170,7 @@ class HomeFragment : Fragment() {
         recyclerView_hours.layoutManager = layoutManager
         hoursAdapterList.submitList(hoursList)
     }
+
     private fun submitToDaysAdapterList(list: List<WeatherItem>) {
         var dayList = mutableListOf<WeatherItem>()
         for (i in 8..32 step 8) {        //  dayList.add(list.get(8), list.get(16), list.get(24), list.get(32))
@@ -157,4 +182,85 @@ class HomeFragment : Fragment() {
         daysAdaptor.submitList(dayList)
     }
 
+    private fun getGpsLocationPermision() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {      // get permission for what i need
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ), 5
+            )
+            return
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // sure at some point we stop request the permission
+        Log.d("d", " 1111111111111in response not get the permsision")
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(
+                requireContext(),
+                "chosse the location through the map",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(requireContext(), "Be sure you open your location", Toast.LENGTH_SHORT)
+                .show()
+            getFreshLocation()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getFreshLocation() {
+        var longitudinalValue = 0.0
+        var latitudeValue = 0.0
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        val locationRequest: LocationRequest = LocationRequest.Builder(1000).apply {
+            setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
+        }.build()
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.lastLocation ?: return
+                longitudinalValue = location.longitude
+                latitudeValue = location.latitude
+                Log.d("d", " long $longitudinalValue and the lati $latitudeValue")
+                if (isAdded) {
+                    homeViewModel.getWeather(requireContext(), latitudeValue, longitudinalValue)
+                    locationProviderClient.removeLocationUpdates(this)
+                }
+            }
+        }
+        locationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
 }

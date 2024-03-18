@@ -92,12 +92,12 @@ class SettingFragment : Fragment() {
             }
             when (language) {
                 "Arabic" -> {
-                    editor.putString(MyConstant.lan, "Arabic")
-                    homeviewModel.setLocale("ar",requireContext())
+                    editor.putString(MyConstant.lan, "ar")
+                    homeviewModel.mySetLocale("ar",requireContext(),requireActivity())
                 }
                 "English" -> {
-                    editor.putString(MyConstant.lan, "English")
-                    homeviewModel.setLocale("en",requireContext())
+                    editor.putString(MyConstant.lan, "en")
+                    homeviewModel.mySetLocale("en",requireContext(),requireActivity())
                 }
             }
             editor.putInt(KEY_LANGUAGE_RADIO_BUTTON_ID, checkedId)
@@ -133,4 +133,6 @@ class SettingFragment : Fragment() {
             editor.apply()
         }
     }
+
+
 }

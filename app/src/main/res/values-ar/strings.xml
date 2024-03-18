@@ -14,7 +14,7 @@
     <string name="temperature">درجة الحرارة:</string>
     <string name="windspeed">سرعة الرياح:</string>
     <string name="language">اللغة:</string>
-    <string name="Kelvin">كيلفين</string>
+    <string name="Kelvin"> كيلفين </string>
     <string name="Celsius">درجة مئوية</string>
     <string name="Fahrenheit">فهرنهايت</string>
     <string name="meter_sec">متر/ثانية</string>

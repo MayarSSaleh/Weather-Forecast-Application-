@@ -17,5 +17,5 @@ object MyConstant{
     const val  wind_unit="wind_unit"
     const val  temp_unit="temp_unit"
     const val  lan="lan"
-
+    const val curentLanguage ="current lan"
 }
