@@ -14,15 +14,18 @@ import com.google.android.material.navigation.NavigationView
 import application.MapFragment
 import application.MyConstant
 import application.fav.view.FavouriteFragment
+import application.fav.viewModel.Communication
 import application.home.view.HomeFragment
 import application.home.viewModel.HomeViewModel
 import application.home.viewModel.HomeViewModelFactory
+import application.model.FavLocation
 import application.model.Repositry
 import application.setting.SettingFragment
 import com.weather.application.R
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), Communication,
+    NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var drawerToggle: ActionBarDrawerToggle
@@ -30,7 +33,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeViewModelFactory: HomeViewModelFactory
-    private lateinit var editor:Editor
+    private lateinit var editor: Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +54,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, HomeFragment()).commit()
     }
-    fun setLanguage(){
+
+    fun setLanguage() {
         sharedPreferences = this.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
         homeViewModelFactory = HomeViewModelFactory(Repositry.getInstance(this))
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         var selectedLanguage = sharedPreferences.getString(MyConstant.lan, "en")
         var currentLanguage = sharedPreferences.getString(MyConstant.curentLanguage, "en")
-        if (selectedLanguage == "ar"&& currentLanguage!="ar") {
+        if (selectedLanguage == "ar" && currentLanguage != "ar") {
             homeViewModel.mySetLocale(selectedLanguage!!, this, this)
         }
     }
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.alert -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MapFragment("",0)).commit()
+                    .replace(R.id.fragment_container, MapFragment("", 0)).commit()
                 drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }
@@ -118,10 +122,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.onOptionsItemSelected(item)
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         editor = sharedPreferences.edit()
         editor.putString(MyConstant.curentLanguage, "en")
         editor.apply()
+    }
+
+    override fun setFavLocaionAtHome(favLocation: FavLocation) {
+        val homeFragment = HomeFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable("favLocation", favLocation)
+            }
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, homeFragment).commit()
     }
 }

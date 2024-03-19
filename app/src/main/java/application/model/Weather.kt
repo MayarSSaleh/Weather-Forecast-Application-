@@ -1,13 +1,16 @@
 package application.model
 
+import android.os.Parcelable
 import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import application.localDataBase.WeatherResponseConverterCity
 import application.localDataBase.WeatherResponseConverterList
+import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "locations_table")
+@Parcelize
 data class FavLocation(
     @PrimaryKey
     @NonNull
@@ -16,7 +19,7 @@ data class FavLocation(
     val longitude: Double,
     @NonNull
     val latitude: Double
-)
+) : Parcelable
 
 @Entity(tableName = "today_weather_table")
 @TypeConverters(WeatherResponseConverterCity::class, WeatherResponseConverterList::class)

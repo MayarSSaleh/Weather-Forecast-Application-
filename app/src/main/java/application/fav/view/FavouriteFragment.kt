@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import application.MapFragment
+import application.fav.viewModel.Communication
 import application.fav.viewModel.FavViewModel
 import application.fav.viewModel.FavViewModelFactory
 import application.home.view.HomeFragment
@@ -24,7 +25,7 @@ class FavouriteFragment : Fragment() {
     private lateinit var favFactory: FavViewModelFactory
     private lateinit var viewModel: FavViewModel
     private lateinit var layoutManager: LinearLayoutManager
-
+    private lateinit var comm: Communication
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,8 +39,12 @@ class FavouriteFragment : Fragment() {
         val removeFromFav = { favLocation: FavLocation ->
             viewModel.deleteFavLocation(favLocation)
         }
+        comm = activity as Communication
+        val showFavLocation = { favLocation: FavLocation ->
+            comm.setFavLocaionAtHome(favLocation)
+        }
 
-        fav_locationsAdaptor = FavouriteAdaptor(requireContext(), removeFromFav)
+        fav_locationsAdaptor = FavouriteAdaptor(requireContext(), removeFromFav,showFavLocation)
         setUpRecycvlerView()
         viewModel.favLocations.observe(requireActivity()) {
             fav_locationsAdaptor.submitList(it)

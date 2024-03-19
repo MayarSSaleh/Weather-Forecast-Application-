@@ -6,25 +6,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import application.fav.viewModel.Communication
 import application.home.view.HomeFragment
 import application.model.FavLocation
 import com.weather.application.databinding.FavItemBinding
 
 class FavouriteAdaptor(
-    private val context: Context, private val listener: (FavLocation) -> Unit) :
+    private val context: Context, private val listener: (FavLocation) -> Unit,
+    private val openIt: (FavLocation) -> Unit
+) :
     ListAdapter<FavLocation, FavouriteAdaptor.LocationViewHolder>(LocationDiffUtil()) {
- private lateinit var homeFragment: HomeFragment
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = FavItemBinding.inflate(inflater, parent, false)
-        homeFragment=HomeFragment()
         return LocationViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: LocationViewHolder, position: Int) {
         val current = getItem(position)
         holder.binding.locationName.text = current.locationName
-        holder.binding.locationName.setOnClickListener { homeFragment.setFavLocaionAtHome(current) }
+        holder.binding.locationName.setOnClickListener {openIt(current)}
         holder.binding.btnRemoveFavLocation.setOnClickListener { listener(current) }
     }
 

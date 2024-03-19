@@ -9,6 +9,7 @@ import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,21 +81,29 @@ class HomeFragment : Fragment() {
         geocoder = Geocoder(requireContext())
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
         getGpsLocationPermision()
+        val favLocation: FavLocation? = arguments?.getParcelable("favLocation")
+        if (favLocation!=null){
+            Log.d("v","NOT      nuuuuuuuuuuuuuull")
+            homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
+        }else
+        {            Log.d("v","nuuuuuuuuuuuuuull")
 
-        if (homeViewModel.isNetworkAvailable(context)) {
-            if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
-                homeViewModel.getWeather(
-                    requireContext(),
-                    sharedPreferences.getString(MyConstant.latitude, "0.0")!!
-                        .toDouble(),
-                    sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble()
-                )
+            if (homeViewModel.isNetworkAvailable(context)) {
+                if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
+                    homeViewModel.getWeather(
+                        requireContext(),
+                        sharedPreferences.getString(MyConstant.latitude, "0.0")!!
+                            .toDouble(),
+                        sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble()
+                    )
+                } else {
+                    getFreshLocation()
+                }
             } else {
-                getFreshLocation()
+                homeViewModel.getTodayLocations()
             }
-        } else {
-            homeViewModel.getTodayLocations()
         }
+
 
         homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner) {
             setCurrentWeather(it)
@@ -119,6 +128,7 @@ class HomeFragment : Fragment() {
         tv_pressure.text = weatherItem.main.pressure.toString()
         tv_cloud.text = weatherItem.clouds.all.toString()
         tv_humidity.text = weatherItem.main.humidity.toString()
+
         if (sharedPreferences.getString(MyConstant.temp_unit, "Kelvin") != "Kelvin") {
             tv_temp_unit.text = sharedPreferences.getString(MyConstant.temp_unit, " Kelvin")
         }
@@ -241,11 +251,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // sure at some point we stop request the permission
         if (ActivityCompat.checkSelfPermission(
@@ -298,18 +304,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        locationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
-    }
-    fun setFavLocaionAtHome(favLocation: FavLocation){
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, HomeFragment()).commit()
-        homeViewModelFactory = HomeViewModelFactory(Repositry.getInstance(requireContext()))
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
-        homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
+        locationProviderClient.requestLocationUpdates(locationRequest,locationCallback,Looper.myLooper())
     }
 
 }
