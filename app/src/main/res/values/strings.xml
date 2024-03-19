@@ -32,5 +32,6 @@
     <string name="pick_place_then_choose">Click on place then choose to set as:</string>
     <string name="Not_selected_place_yet"> Not selected place yet </string>
     <string name="added_as_your_current_location">Added as your current location</string>
+    <string name="remove">Remove</string>
 
 </resources>
