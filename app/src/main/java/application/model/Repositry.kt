@@ -1,6 +1,7 @@
 package application.model
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import application.localDataBase.LocalDataSource
@@ -41,7 +42,9 @@ class Repositry private constructor(
         return productLocalDataSource.insertFavLocation(favLocation)
     }
 
-    fun getWeathearToday(): WeatherResponse {
+    suspend fun getWeathearToday(): WeatherResponse {
+        Log.d("weather","in side get reeeeeeeeeeep")
+
         return productLocalDataSource.getWeathearToday()
     }
 

@@ -33,5 +33,6 @@
     <string name="Not_selected_place_yet">لم يتم أختيار مكان بعد</string>
     <string name="added_as_your_current_location">Added as your current location</string>
     <string name="remove">Remove</string>
+    <string name="alerts">Alerts</string>
 
 </resources>

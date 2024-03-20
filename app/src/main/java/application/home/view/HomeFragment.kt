@@ -19,9 +19,11 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.InvalidationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -64,6 +66,8 @@ class HomeFragment : Fragment() {
     private lateinit var geocoder: Geocoder
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationProviderClient: FusedLocationProviderClient
+    lateinit var result: LiveData<WeatherResponse>
+
     var requestrefused = 0
 
 
@@ -82,12 +86,9 @@ class HomeFragment : Fragment() {
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
         getGpsLocationPermision()
         val favLocation: FavLocation? = arguments?.getParcelable("favLocation")
-        if (favLocation!=null){
-            Log.d("v","NOT      nuuuuuuuuuuuuuull")
+        if (favLocation != null) {
             homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
-        }else
-        {            Log.d("v","nuuuuuuuuuuuuuull")
-
+        } else {
             if (homeViewModel.isNetworkAvailable(context)) {
                 if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
                     homeViewModel.getWeather(
@@ -100,14 +101,22 @@ class HomeFragment : Fragment() {
                     getFreshLocation()
                 }
             } else {
-                homeViewModel.getTodayLocations()
+                Log.d("weather", "no internet before get last weather method")
+                homeViewModel.getLastWeather()
+
+                homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner,
+                    {
+                        Log.d("weather", "inside the observalble")
+
+                        setCurrentWeather(it)
+                        submitTOHoursAdapterList(it.list)
+                        submitToDaysAdapterList(it.list)
+                    })
             }
         }
 
-
         homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner) {
             setCurrentWeather(it)
-            homeViewModel.updateCurrentWeather(it)
             submitTOHoursAdapterList(it.list)
             submitToDaysAdapterList(it.list)
         }
@@ -251,7 +260,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // sure at some point we stop request the permission
         if (ActivityCompat.checkSelfPermission(
@@ -304,7 +317,11 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        locationProviderClient.requestLocationUpdates(locationRequest,locationCallback,Looper.myLooper())
+        locationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
     }
 
 }

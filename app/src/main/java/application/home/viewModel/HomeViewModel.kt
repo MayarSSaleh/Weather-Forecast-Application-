@@ -28,12 +28,12 @@ import java.util.Locale
 
 class HomeViewModel(private val repo: Repositry) : ViewModel() {
     private lateinit var sharedPreferences: SharedPreferences
-    private val _weatherResponseLiveData = MutableLiveData<WeatherResponse>()
-    var language: String? = null
-    val weatherResponseLiveData: LiveData<WeatherResponse> = _weatherResponseLiveData
-    lateinit var editor: SharedPreferences.Editor
-    lateinit var result: WeatherResponse
 
+    private val _weatherResponseLiveData = MutableLiveData<WeatherResponse>()
+    val weatherResponseLiveData: LiveData<WeatherResponse> = _weatherResponseLiveData
+
+    var language: String? = null
+    lateinit var editor: SharedPreferences.Editor
 
     fun getWeather(context: Context, longitude: Double, latitude: Double) =
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,9 +58,9 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
                     val weatherResponse = response.body()
                     if (weatherResponse != null) {
                         _weatherResponseLiveData.postValue(weatherResponse)
+                        updateCurrentWeather(weatherResponse)
                     }
                 } else {
-                    Log.d("API", "Response code: ${response.code()}")
                 }
             } catch (e: Exception) {
                 Log.d("API", "Error: ${e.message}", e)
@@ -87,17 +87,17 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
        }
    }
 
-    fun updateCurrentWeather(weatherResponse: WeatherResponse) {
+    private fun updateCurrentWeather(weatherResponse: WeatherResponse) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.deleteLocation()
             repo.insertWeather(weatherResponse)
         }
     }
-     fun getTodayLocations() :WeatherResponse{
+
+    fun getLastWeather() {
         viewModelScope.launch(Dispatchers.IO) {
-            result= repo.getWeathearToday()
+            _weatherResponseLiveData.postValue(repo.getWeathearToday())
         }
-        return result
     }
 
    private fun updateResourcesLegacy(context: Context, language: String): Context? {

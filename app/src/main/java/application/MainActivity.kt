@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
 import application.MapFragment
 import application.MyConstant
+import application.alerts.view.AlertFragment
 import application.fav.view.FavouriteFragment
 import application.fav.viewModel.Communication
 import application.home.view.HomeFragment
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), Communication,
 
             R.id.alert -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, MapFragment("", 0)).commit()
+                    .replace(R.id.fragment_container, AlertFragment()).commit()
                 drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }

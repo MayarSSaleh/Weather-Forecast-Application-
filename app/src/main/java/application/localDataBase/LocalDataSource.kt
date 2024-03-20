@@ -24,7 +24,8 @@ class LocalDataSource(var context: Context) {
         WeatherDao.delete()
     }
 
-    fun getWeathearToday(): WeatherResponse {
+    suspend fun getWeathearToday(): WeatherResponse {
+
         return WeatherDao.getTodayWeather()
     }
 
