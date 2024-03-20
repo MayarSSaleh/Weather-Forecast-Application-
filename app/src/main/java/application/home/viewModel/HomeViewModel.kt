@@ -19,8 +19,12 @@ import kotlinx.coroutines.launch
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 import application.application.MainActivity
+import application.model.APiState
 import application.model.Repositry
 import application.model.WeatherResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import java.util.Locale
 
 
@@ -29,63 +33,61 @@ import java.util.Locale
 class HomeViewModel(private val repo: Repositry) : ViewModel() {
     private lateinit var sharedPreferences: SharedPreferences
 
-    private val _weatherResponseLiveData = MutableLiveData<WeatherResponse>()
-    val weatherResponseLiveData: LiveData<WeatherResponse> = _weatherResponseLiveData
+    private val _weatherResponseLiveData: MutableStateFlow<APiState> =
+        MutableStateFlow<APiState>(APiState.Loading)
+
+    val weatherResponseLiveData: StateFlow<APiState> = _weatherResponseLiveData
 
     var language: String? = null
     lateinit var editor: SharedPreferences.Editor
 
-    fun getWeather(context: Context, longitude: Double, latitude: Double) =
+    fun getWeather(context: Context, longitude: Double, latitude: Double) {
+        // check the internet to
+        sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
+        val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {
+            "Celsius" -> "metric"
+            "Fahrenheit" -> "imperial"
+            else -> null
+        }
+        when (sharedPreferences.getString(MyConstant.lan, null)) {
+            "ar" -> {
+                language = "ar"
+            }
+
+            else -> null
+        }
         viewModelScope.launch(Dispatchers.IO) {
-            // check the internet to
-            sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
-            val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {
-                "Celsius" -> "metric"
-                "Fahrenheit" -> "imperial"
-                else -> null
-            }
-            when (sharedPreferences.getString(MyConstant.lan, null)) {
-                "ar" -> {
-                    language = "ar"
-                }
-
-                else -> null
+            val response = repo.getWeather(longitude, latitude, units = units, lang = language)
+            response.catch { e ->
+                _weatherResponseLiveData.value = APiState.Failure(e)
+            }.collect { weatherResponse ->
+                _weatherResponseLiveData.value = APiState.Success(weatherResponse!!)
+                updateCurrentWeather(weatherResponse)
             }
 
-            try {
-                val response = repo.getWeather(longitude, latitude, units = units, lang = language)
-                if (response.isSuccessful) {
-                    val weatherResponse = response.body()
-                    if (weatherResponse != null) {
-                        _weatherResponseLiveData.postValue(weatherResponse)
-                        updateCurrentWeather(weatherResponse)
-                    }
-                } else {
-                }
-            } catch (e: Exception) {
-                Log.d("API", "Error: ${e.message}", e)
-            }
         }
 
-   fun mySetLocale(languageCode: String, context: Context?, activity: Activity?) {
-       sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
+    }
 
-       if (context != null && activity != null) {
-           val locale = Locale(languageCode)
-           Locale.setDefault(locale)
-           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-               updateResources(context, languageCode)
-           } else {
-               updateResourcesLegacy(context, languageCode)
-           }
-           sharedPreferences.getString(MyConstant.lan, "en")
-           editor = sharedPreferences.edit()
-           editor.putString(MyConstant.curentLanguage, languageCode)
-           editor.apply()
+    fun mySetLocale(languageCode: String, context: Context?, activity: Activity?) {
+        sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
 
-           restartToChangeAppLanguage(activity, context)
-       }
-   }
+        if (context != null && activity != null) {
+            val locale = Locale(languageCode)
+            Locale.setDefault(locale)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                updateResources(context, languageCode)
+            } else {
+                updateResourcesLegacy(context, languageCode)
+            }
+            sharedPreferences.getString(MyConstant.lan, "en")
+            editor = sharedPreferences.edit()
+            editor.putString(MyConstant.curentLanguage, languageCode)
+            editor.apply()
+
+            restartToChangeAppLanguage(activity, context)
+        }
+    }
 
     private fun updateCurrentWeather(weatherResponse: WeatherResponse) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -100,52 +102,54 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
         }
     }
 
-   private fun updateResourcesLegacy(context: Context, language: String): Context? {
-       val locale = Locale(language)
-       Locale.setDefault(locale)
-       val resources = context.resources
-       val configuration = resources.configuration
-       configuration.locale = locale
-       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-           configuration.setLayoutDirection(locale)
-       }
-       resources.updateConfiguration(configuration, resources.displayMetrics)
-       return context
-   }
+    private fun updateResourcesLegacy(context: Context, language: String): Context? {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val resources = context.resources
+        val configuration = resources.configuration
+        configuration.locale = locale
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            configuration.setLayoutDirection(locale)
+        }
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+        return context
+    }
 
-   @TargetApi(Build.VERSION_CODES.N)
-   private fun updateResources(context: Context?, language: String): Context? {
-       val locale = Locale(language)
-       Locale.setDefault(locale)
-       val config = Configuration()
-       val configuration = context?.resources?.configuration
-       configuration?.setLocale(locale)
-       config.setLocale(locale)
-       configuration?.setLayoutDirection(locale)
-       context?.resources?.updateConfiguration(
-           config,
-           context?.resources?.displayMetrics
-       )
+    @TargetApi(Build.VERSION_CODES.N)
+    private fun updateResources(context: Context?, language: String): Context? {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        val configuration = context?.resources?.configuration
+        configuration?.setLocale(locale)
+        config.setLocale(locale)
+        configuration?.setLayoutDirection(locale)
+        context?.resources?.updateConfiguration(
+            config,
+            context?.resources?.displayMetrics
+        )
 
-       if (configuration != null) {
-           return context?.createConfigurationContext(configuration)
-       } else {
-           return null
-       }
-   }
+        if (configuration != null) {
+            return context?.createConfigurationContext(configuration)
+        } else {
+            return null
+        }
+    }
 
-   private fun restartToChangeAppLanguage(activity: Activity,context: Context) {
-       activity.finishAffinity()
-       startSplash(context)
-   }
+    private fun restartToChangeAppLanguage(activity: Activity, context: Context) {
+        activity.finishAffinity()
+        startSplash(context)
+    }
 
     fun startSplash(context: Context?) {
         context?.let {
             val intent = Intent(context, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.flags =
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }
     }
+
     fun isNetworkAvailable(context: Context?): Boolean {
         val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         var activeNetworkInfo: NetworkInfo?

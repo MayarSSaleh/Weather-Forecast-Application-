@@ -27,6 +27,7 @@ class FavouriteFragment : Fragment() {
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var comm: Communication
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

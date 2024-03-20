@@ -17,6 +17,6 @@ interface WeatherService {
         @Query("appid") appid: String = API_KEY,
         @Query("units") units: String? = null,
         @Query("lang") lang: String? = null
-    ): Response<WeatherResponse>
+    ): WeatherResponse
 
 }

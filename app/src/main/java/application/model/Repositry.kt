@@ -27,7 +27,7 @@ class Repositry private constructor(
         }
     }
 
-    suspend fun getWeather(latitude: Double,longitude: Double, units: String?,lang: String?): Response<WeatherResponse> {
+    suspend fun getWeather(latitude: Double,longitude: Double, units: String?,lang: String?): Flow<WeatherResponse> {
         return productRemoteDataSource.getWeather(latitude, longitude, units, lang)
     }
 

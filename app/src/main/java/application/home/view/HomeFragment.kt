@@ -91,12 +91,8 @@ class HomeFragment : Fragment() {
         } else {
             if (homeViewModel.isNetworkAvailable(context)) {
                 if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
-                    homeViewModel.getWeather(
-                        requireContext(),
-                        sharedPreferences.getString(MyConstant.latitude, "0.0")!!
-                            .toDouble(),
-                        sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble()
-                    )
+                    homeViewModel.getWeather(requireContext(), sharedPreferences.getString(MyConstant.latitude, "0.0")!!
+                            .toDouble(), sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble())
                 } else {
                     getFreshLocation()
                 }
