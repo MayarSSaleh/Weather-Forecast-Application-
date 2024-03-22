@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -21,9 +22,9 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.InvalidationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -34,12 +35,15 @@ import com.squareup.picasso.Picasso
 import application.MyConstant
 import application.home.viewModel.HomeViewModel
 import application.home.viewModel.HomeViewModelFactory
+import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.FavLocation
 
 import application.model.Repositry
 import application.model.WeatherItem
 import application.model.WeatherResponse
 import com.weather.application.R
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
@@ -67,6 +71,8 @@ class HomeFragment : Fragment() {
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationProviderClient: FusedLocationProviderClient
     lateinit var result: LiveData<WeatherResponse>
+    lateinit var loading_view: ProgressBar
+
 
     var requestrefused = 0
 
@@ -80,6 +86,7 @@ class HomeFragment : Fragment() {
         homeViewModelFactory = HomeViewModelFactory(Repositry.getInstance(requireContext()))
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         initUI(view)
+        loading_view.visibility = View.GONE
         hoursAdapterList = HoursAdapterList()
         daysAdaptor = DaysAdaptor(requireContext())
         geocoder = Geocoder(requireContext())
@@ -90,33 +97,54 @@ class HomeFragment : Fragment() {
             homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
         } else {
             if (homeViewModel.isNetworkAvailable(context)) {
+                Log.d("weather", " internet ")
+
                 if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
-                    homeViewModel.getWeather(requireContext(), sharedPreferences.getString(MyConstant.latitude, "0.0")!!
-                            .toDouble(), sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble())
+                    homeViewModel.getWeather(
+                        requireContext(),
+                        sharedPreferences.getString(MyConstant.latitude, "0.0")!!
+                            .toDouble(),
+                        sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble()
+                    )
                 } else {
                     getFreshLocation()
                 }
             } else {
                 Log.d("weather", "no internet before get last weather method")
                 homeViewModel.getLastWeather()
-
-                homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner,
-                    {
-                        Log.d("weather", "inside the observalble")
-
-                        setCurrentWeather(it)
-                        submitTOHoursAdapterList(it.list)
-                        submitToDaysAdapterList(it.list)
-                    })
+                responseOfGetWeatherFromApi()
             }
         }
-
-        homeViewModel.weatherResponseLiveData.observe(viewLifecycleOwner) {
-            setCurrentWeather(it)
-            submitTOHoursAdapterList(it.list)
-            submitToDaysAdapterList(it.list)
-        }
+        responseOfGetWeatherFromApi()
         return view
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun responseOfGetWeatherFromApi() {
+        lifecycleScope.launch {
+            homeViewModel.weatherResponseLiveData.collectLatest {
+                when (it) {
+                    is APiStateOrLocalStateFromLastWeather.Loading -> {
+                        loading_view.visibility = View.VISIBLE
+                    }
+                    is APiStateOrLocalStateFromLastWeather.Success -> {
+                        Log.d("weather", "inside the succ")
+                        setCurrentWeather(it.data)
+                        submitTOHoursAdapterList(it.data.list)
+                        submitToDaysAdapterList(it.data.list)
+                        loading_view.visibility = View.GONE
+                    }
+                    else -> {
+                        loading_view.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext(),
+                            "Sorry Can not get the weather}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -211,6 +239,8 @@ class HomeFragment : Fragment() {
         recyclerViewDays = view.findViewById(R.id.recyclerView_days)
         tv_temp_unit = view.findViewById(R.id.tv_temp_unit)
         tv_wind_speed = view.findViewById(R.id.tv_wind_unit)
+        loading_view = view.findViewById(R.id.loading_view)
+
     }
 
     private fun submitTOHoursAdapterList(weatherItemList: List<WeatherItem>) {
@@ -295,6 +325,8 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     fun getFreshLocation() {
+        Log.d("weather", " internet so get fresh ")
+
         var longitudinalValue = 0.0
         var latitudeValue = 0.0
         locationProviderClient =
@@ -308,6 +340,8 @@ class HomeFragment : Fragment() {
                 longitudinalValue = location.longitude
                 latitudeValue = location.latitude
                 if (isAdded) {
+                    Log.d("weather", " internet vaules $longitudinalValue ")
+
                     homeViewModel.getWeather(requireContext(), latitudeValue, longitudinalValue)
                     locationProviderClient.removeLocationUpdates(this)
                 }

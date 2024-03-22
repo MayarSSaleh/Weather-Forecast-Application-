@@ -10,8 +10,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +17,7 @@ import kotlinx.coroutines.launch
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 import application.application.MainActivity
-import application.model.APiState
+import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.Repositry
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,15 +31,16 @@ import java.util.Locale
 class HomeViewModel(private val repo: Repositry) : ViewModel() {
     private lateinit var sharedPreferences: SharedPreferences
 
-    private val _weatherResponseLiveData: MutableStateFlow<APiState> =
-        MutableStateFlow<APiState>(APiState.Loading)
+    private val _weatherResponseLiveData: MutableStateFlow<APiStateOrLocalStateFromLastWeather> =
+        MutableStateFlow(APiStateOrLocalStateFromLastWeather.Loading)
 
-    val weatherResponseLiveData: StateFlow<APiState> = _weatherResponseLiveData
+    val weatherResponseLiveData: StateFlow<APiStateOrLocalStateFromLastWeather> = _weatherResponseLiveData
 
     var language: String? = null
     lateinit var editor: SharedPreferences.Editor
 
     fun getWeather(context: Context, longitude: Double, latitude: Double) {
+        Log.d("weather", " in get weather")
         // check the internet to
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {
@@ -53,20 +52,30 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
             "ar" -> {
                 language = "ar"
             }
-
             else -> null
         }
+
         viewModelScope.launch(Dispatchers.IO) {
             val response = repo.getWeather(longitude, latitude, units = units, lang = language)
             response.catch { e ->
-                _weatherResponseLiveData.value = APiState.Failure(e)
-            }.collect { weatherResponse ->
-                _weatherResponseLiveData.value = APiState.Success(weatherResponse!!)
-                updateCurrentWeather(weatherResponse)
+                _weatherResponseLiveData.value = APiStateOrLocalStateFromLastWeather.Failure(e)
+            }.collect {
+                _weatherResponseLiveData.value = APiStateOrLocalStateFromLastWeather.Success(it!!)
+                updateCurrentWeather(it)
             }
-
         }
+    }
 
+    fun getLastWeather() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = repo.getLastWeather()
+            response.catch { e ->
+                _weatherResponseLiveData.value = APiStateOrLocalStateFromLastWeather.Failure(e)
+            }.collect {
+                if(it!=null){
+                _weatherResponseLiveData.value = APiStateOrLocalStateFromLastWeather.Success(it!!)
+            }}
+        }
     }
 
     fun mySetLocale(languageCode: String, context: Context?, activity: Activity?) {
@@ -96,11 +105,6 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
         }
     }
 
-    fun getLastWeather() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _weatherResponseLiveData.postValue(repo.getWeathearToday())
-        }
-    }
 
     private fun updateResourcesLegacy(context: Context, language: String): Context? {
         val locale = Locale(language)

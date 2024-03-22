@@ -3,7 +3,6 @@ package application.model
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 import application.localDataBase.LocalDataSource
 import application.network.RemoteDataSource
 
@@ -34,7 +33,7 @@ class Repositry private constructor(
     fun getAllLocalLocation(): Flow<List<FavLocation>> {
         return productLocalDataSource.getAllFavLocations()
     }
-
+// the follwoing will be reflected directly to UI as i call get all fav after it so no need to handle the return
     suspend fun deleteFavLocation(favLocation: FavLocation) {
         return productLocalDataSource.deleteFavLocation(favLocation)
     }
@@ -42,20 +41,16 @@ class Repositry private constructor(
         return productLocalDataSource.insertFavLocation(favLocation)
     }
 
-    suspend fun getWeathearToday(): WeatherResponse {
-        Log.d("weather","in side get reeeeeeeeeeep")
-
+    suspend fun getLastWeather(): Flow<WeatherResponse>{
         return productLocalDataSource.getWeathearToday()
     }
-
+// the following in back process not get the return to user
     suspend fun deleteLocation() {
         return productLocalDataSource.deleteWeather()
     }
     suspend fun insertWeather(weatherResponse: WeatherResponse) {
         return productLocalDataSource.insertWeather(weatherResponse)
     }
-
-
 
 }
 

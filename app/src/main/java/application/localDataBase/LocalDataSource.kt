@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class LocalDataSource(var context: Context) {
 
-    private val locationsDao: LocationsDao by lazy {
+    private val locationsDao: FavLocationsDao by lazy {
         AppDataBase.getInstance(context).getLocationDao()
     }
 
@@ -24,7 +24,7 @@ class LocalDataSource(var context: Context) {
         WeatherDao.delete()
     }
 
-    suspend fun getWeathearToday(): WeatherResponse {
+    suspend fun getWeathearToday():  Flow<WeatherResponse> {
 
         return WeatherDao.getTodayWeather()
     }

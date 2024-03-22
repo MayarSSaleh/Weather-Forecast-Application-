@@ -37,6 +37,15 @@
             android:layout_height="wrap_content" />
     </androidx.core.widget.NestedScrollView>
 
+    <ProgressBar
+        android:id="@+id/favloading_view"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/image_fav"
         android:layout_width="51dp"

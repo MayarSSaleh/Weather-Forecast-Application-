@@ -6,17 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import application.MapFragment
 import application.fav.viewModel.Communication
 import application.fav.viewModel.FavViewModel
 import application.fav.viewModel.FavViewModelFactory
-import application.home.view.HomeFragment
 import application.model.FavLocation
+import application.model.LocalStateFavouirteLocations
 import application.model.Repositry
 import com.weather.application.R
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class FavouriteFragment : Fragment() {
     private lateinit var favRecycler: RecyclerView
@@ -26,6 +31,8 @@ class FavouriteFragment : Fragment() {
     private lateinit var viewModel: FavViewModel
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var comm: Communication
+    lateinit var loading_view: ProgressBar
+
 
 
     override fun onCreateView(
@@ -37,6 +44,9 @@ class FavouriteFragment : Fragment() {
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
         fav_image = view.findViewById(R.id.image_fav)
         favRecycler = view.findViewById(R.id.fav_loc_recycler)
+        loading_view=view.findViewById(R.id.favloading_view)
+        loading_view.visibility = View.GONE
+
         val removeFromFav = { favLocation: FavLocation ->
             viewModel.deleteFavLocation(favLocation)
         }
@@ -47,9 +57,29 @@ class FavouriteFragment : Fragment() {
 
         fav_locationsAdaptor = FavouriteAdaptor(requireContext(), removeFromFav,showFavLocation)
         setUpRecycvlerView()
-        viewModel.favLocations.observe(requireActivity()) {
-            fav_locationsAdaptor.submitList(it)
+
+        lifecycleScope.launch {
+            viewModel.favLocations.collectLatest {
+                when (it) {
+                    is LocalStateFavouirteLocations.LoadingLocal -> {
+                        loading_view.visibility = View.VISIBLE
+                    }
+                    is LocalStateFavouirteLocations.SuccessLocal -> {
+                        fav_locationsAdaptor.submitList(it.data)
+                        loading_view.visibility = View.GONE
+                    }
+                    else -> {
+                        loading_view.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext(),
+                            "Sorry Can not get the favourite countries}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
+
         fav_image.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.fragment_container, MapFragment("", 5))

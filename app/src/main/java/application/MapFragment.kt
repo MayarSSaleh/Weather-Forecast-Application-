@@ -24,7 +24,8 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.Repositry
 import com.weather.application.R
 
-class MapFragment(private var mapButtonId: String, private var checkedId: Int) : Fragment(),OnMapReadyCallback {
+class MapFragment(private var mapButtonId: String, private var checkedId: Int) : Fragment(),
+    OnMapReadyCallback {
 
     private lateinit var rootView: View
     private lateinit var myMap: GoogleMap
@@ -83,7 +84,7 @@ class MapFragment(private var mapButtonId: String, private var checkedId: Int) :
                 .setPositiveButton("OK") { dialog, id ->
                     // i changed to map we conformed to location
                     editor.putInt(mapButtonId, checkedId)
-                    editor.putInt("mapButtonId",1)// to update the ui but it
+                    editor.putInt("mapButtonId", 1)// to update the ui but it
                     editor.apply()
                     editor.putString(MyConstant.location, "Map")
                     editor.putString(MyConstant.address, "$theAddress")
@@ -92,7 +93,7 @@ class MapFragment(private var mapButtonId: String, private var checkedId: Int) :
                     editor.apply()
                     Toast.makeText(
                         requireContext(),
-                        getString(R.string.added_as_your_current_location), Toast.LENGTH_LONG
+                        getString(R.string.added_as_your_current_location), Toast.LENGTH_SHORT
                     ).show()
 
                 }
@@ -100,14 +101,17 @@ class MapFragment(private var mapButtonId: String, private var checkedId: Int) :
             dialog.show()
         }
         addToFav.setOnClickListener {
-            if(longitude!=0.0 && latitude!=0.0){
-                var favLocation=FavLocation( theAddress,longitude,latitude )
+            if (longitude != 0.0 && latitude != 0.0) {
+                var favLocation = FavLocation(theAddress, longitude, latitude)
                 viewModel.insertFavLocation(favLocation)
-                Toast.makeText(requireContext(), "The country is added to your favorites", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "The country is added to your favorites",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
 
     override fun onMapReady(googleMap: GoogleMap) {
         myMap = googleMap
@@ -116,74 +120,10 @@ class MapFragment(private var mapButtonId: String, private var checkedId: Int) :
             // Get the latitude and longitude of the clicked position
             latitude = click.latitude
             longitude = click.longitude
-            Log.d("TAG", "onMapReady:lattttttt $latitude and longgggggg: $longitude")
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
             theAddress =
                 addresses?.firstOrNull()?.getAddressLine(0) ?: "Sorry, Address not found"
-            Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_LONG)
-                .show()
-            Log.d("TAG", "onMapReady:ADDRES $theAddress")
+            Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT).show()
         }
     }
-    /*
-        // not need it as
-        private fun getcurrentLo() {
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ),
-                    1
-                )
-                return
-            }
-
-            myMap.isMyLocationEnabled = true
-
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location ->
-                    if (location != null) {
-                        val currentLatLng = LatLng(location.latitude, location.longitude)
-                        myMap.addMarker(MarkerOptions().position(currentLatLng).title("My Location"))
-                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
-                    } else {
-                        Toast.makeText(requireContext(), "Error getting location}", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(
-                        requireContext(),
-                        "Error getting location: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-        }
-
-        override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
-        ) {
-            if (requestCode == 1) {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onMapReady(myMap)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Location permission denied, so sorry we can not open the map",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }*/
 }

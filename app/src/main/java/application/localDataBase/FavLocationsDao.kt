@@ -9,7 +9,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface LocationsDao {
+interface FavLocationsDao {
 
     @Query("SELECT * FROM locations_table")
     fun getAll(): Flow<List<FavLocation>>

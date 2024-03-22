@@ -12,7 +12,7 @@ import application.model.WeatherResponse
 @Database(entities = [FavLocation::class, WeatherResponse::class], version = 1)
 @TypeConverters(WeatherResponseConverterCity::class,WeatherResponseConverterList::class)
 abstract class AppDataBase : RoomDatabase() {
-    abstract fun getLocationDao(): LocationsDao
+    abstract fun getLocationDao(): FavLocationsDao
     abstract fun getWeatherDao(): WeatherDAO
 
     companion object {
