@@ -31,8 +31,9 @@
     <string name="set_as_my_location">مكانى</string>
     <string name="pick_place_then_choose">أضغط على مكان و وضعه ك:</string>
     <string name="Not_selected_place_yet">لم يتم أختيار مكان بعد</string>
-    <string name="added_as_your_current_location">Added as your current location</string>
-    <string name="remove">Remove</string>
-    <string name="alerts">Alerts</string>
+    <string name="added_as_your_current_location">تسجيلها كمكانك الحالى</string>
+    <string name="remove">مسح </string>
+    <string name="alerts">تنبيهات</string>
+    <string name="meter_sec_default">meter/sec</string>
 
 </resources>

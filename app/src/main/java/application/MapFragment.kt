@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,9 +23,9 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.Repositry
 import com.weather.application.R
 
-class MapFragment(private var mapButtonId: String, private var checkedId: Int) : Fragment(),
-    OnMapReadyCallback {
+class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String, private var checkedId: Int) : Fragment(),
 
+    OnMapReadyCallback {
     private lateinit var rootView: View
     private lateinit var myMap: GoogleMap
     private lateinit var mMapView: MapView
@@ -77,25 +76,18 @@ class MapFragment(private var mapButtonId: String, private var checkedId: Int) :
 
     private fun setOnClickListener() {
         mylocation.setOnClickListener {
-            Log.d("map", "inside on clickkkkkkkkkk")
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Conformation")
                 .setMessage("Make $theAddress is your location?")
                 .setPositiveButton("OK") { dialog, id ->
                     // i changed to map we conformed to location
-                    editor.putInt(mapButtonId, checkedId)
-                    editor.putInt("mapButtonId", 1)// to update the ui but it
-                    editor.apply()
+                    editor.putInt(mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID, checkedId)
                     editor.putString(MyConstant.location, "Map")
                     editor.putString(MyConstant.address, "$theAddress")
                     editor.putString(MyConstant.latitude, "$latitude")
                     editor.putString(MyConstant.longitude, "$longitude")
                     editor.apply()
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.added_as_your_current_location), Toast.LENGTH_SHORT
-                    ).show()
-
+                    Toast.makeText(requireContext(),getString(R.string.added_as_your_current_location), Toast.LENGTH_SHORT).show()
                 }
             val dialog = builder.create()
             dialog.show()

@@ -90,5 +90,7 @@ dependencies {
     //map
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
 
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 
 }

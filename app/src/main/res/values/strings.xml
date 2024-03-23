@@ -34,5 +34,6 @@
     <string name="added_as_your_current_location">Added as your current location</string>
     <string name="remove">Remove</string>
     <string name="alerts">Alerts</string>
+    <string name="meter_sec_default">meter/sec</string>
 
 </resources>

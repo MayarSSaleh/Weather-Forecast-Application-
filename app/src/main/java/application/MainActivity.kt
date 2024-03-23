@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import application.MapFragment
 import application.MyConstant
 import application.alerts.view.AlertFragment
 import application.fav.view.FavouriteFragment
@@ -21,7 +20,7 @@ import application.home.viewModel.HomeViewModel
 import application.home.viewModel.HomeViewModelFactory
 import application.model.FavLocation
 import application.model.Repositry
-import application.setting.SettingFragment
+import application.setting.view.SettingFragment
 import com.weather.application.R
 
 

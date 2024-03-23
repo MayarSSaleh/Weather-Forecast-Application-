@@ -1,4 +1,4 @@
-package application.setting
+package application.setting.view
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -41,13 +41,17 @@ class SettingFragment : Fragment() {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()
-        if (sharedPreferences.getInt("mapButtonId", 0) == 1) {
-            Log.d("what","trrrrrrrrrrrrrrrrrrrrrrrue")
-          binding.mapButton.isChecked=true
-        }else{
-            binding.root.findViewById<RadioButton>(sharedPreferences.getInt(KEY_LOCATION_RADIO_BUTTON_ID, 0 ))?.isChecked = true
-        }
-        binding.root.findViewById<RadioButton>(sharedPreferences.getInt( KEY_TEMPERATURE_RADIO_BUTTON_ID,0))?.isChecked = true
+
+        binding.root.findViewById<RadioButton>(
+            sharedPreferences.getInt(KEY_LOCATION_RADIO_BUTTON_ID, 0)
+        )?.isChecked = true
+
+        binding.root.findViewById<RadioButton>(
+            sharedPreferences.getInt(
+                KEY_TEMPERATURE_RADIO_BUTTON_ID,
+                0
+            )
+        )?.isChecked = true
         binding.root.findViewById<RadioButton>(
             sharedPreferences.getInt(
                 KEY_LANGUAGE_RADIO_BUTTON_ID,
@@ -76,14 +80,21 @@ class SettingFragment : Fragment() {
             when (location) {
                 "Map" -> {
                     val transaction = activity?.supportFragmentManager?.beginTransaction()
-                    transaction?.replace(R.id.fragment_container, MapFragment(KEY_LOCATION_RADIO_BUTTON_ID, checkedId))
+                    transaction?.replace(
+                        R.id.fragment_container, MapFragment(
+                            KEY_LOCATION_RADIO_BUTTON_ID, checkedId
+                        )
+                    )
                     transaction?.addToBackStack(null)
                     transaction?.commit()
                 }
-                "Gps" -> editor.putString(MyConstant.location, "Gps")
+
+                "Gps" -> {
+                    editor.putString(MyConstant.location, "Gps")
+                    editor.putInt(KEY_LOCATION_RADIO_BUTTON_ID, checkedId)
+                    editor.apply()
+                }
             }
-            editor.putInt(KEY_LOCATION_RADIO_BUTTON_ID, checkedId)
-            editor.apply()
         }
 
         binding.radioGroupLanguage.setOnCheckedChangeListener { group, checkedId ->

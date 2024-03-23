@@ -58,7 +58,8 @@
                 android:text="@string/meter_sec"
                 android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_wind_speed"
-                app:layout_constraintStart_toEndOf="@id/tv_wind_speed" />
+                app:layout_constraintStart_toEndOf="@id/tv_wind_speed"
+                app:layout_constraintTop_toTopOf="@+id/tv_wind_speed" />
 
             <ImageView
                 android:id="@+id/icon_image"

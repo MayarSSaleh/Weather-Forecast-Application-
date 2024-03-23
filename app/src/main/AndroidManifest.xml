@@ -4,7 +4,7 @@
     package="com.weather.application">
 
 
-<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -25,15 +25,19 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
+            android:name="application.application.SplashScreen"
+
+            ></activity>
+
+        <activity
             android:name="application.application.MainActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="application.application.SplashScreen" />
-        />
     </application>
 
 </manifest>

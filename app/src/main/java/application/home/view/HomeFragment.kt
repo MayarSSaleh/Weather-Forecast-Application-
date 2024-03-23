@@ -168,16 +168,12 @@ class HomeFragment : Fragment() {
         var savedTmepUnit = sharedPreferences.getString(MyConstant.temp_unit, "Kelvin")
         when (savedTmepUnit) {
             "Kelvin" -> {       // Meter unit
-                if (sharedPreferences.getString(
-                        MyConstant.wind_unit,
-                        "meter_sec"
-                    ) == "miles_hour"
-                ) {
-                    tv_wind_speed.text = "miles/hour"
+                if (sharedPreferences.getString(MyConstant.wind_unit,"meter_sec") == "miles_hour") {
+                    tv_wind_speed.text = getString(R.string.miles_hour)
                     var value = convertMetersPerSecondToMilesPerHour(weatherItem.wind.speed)
                     tv_wind.text = value
                 } else {
-                    tv_wind_speed.text = "meter/sec"
+                    tv_wind_speed.text = getString(R.string.meter_sec)
                     tv_wind.text = weatherItem.wind.speed.toString()
                 }
             }
@@ -189,22 +185,22 @@ class HomeFragment : Fragment() {
                         "meter_sec"
                     ) == "miles_hour"
                 ) {
-                    tv_wind_speed.text = "miles/hour"
+                    tv_wind_speed.text = getString(R.string.miles_hour)
                     var value = convertMetersPerSecondToMilesPerHour(weatherItem.wind.speed)
                     tv_wind.text = value
                 } else {
-                    tv_wind_speed.text = "meter/sec"
+                    tv_wind_speed.text = getString(R.string.meter_sec)
                     tv_wind.text = weatherItem.wind.speed.toString()
                 }
             }
 
             "Fahrenheit" -> {                // Miles/hour
                 if (sharedPreferences.getString(MyConstant.wind_unit, "meter_sec") == "meter_sec") {
-                    tv_wind_speed.text = "meter/sec"
+                    tv_wind_speed.text = getString(R.string.meter_sec)
                     var value = convertMilesPerHourToMetersPerSecond(weatherItem.wind.speed)
                     tv_wind.text = value
                 } else {
-                    tv_wind_speed.text = "miles/hour"
+                    tv_wind_speed.text = getString(R.string.miles_hour)
                     tv_wind.text = weatherItem.wind.speed.toString()
                 }
             }
