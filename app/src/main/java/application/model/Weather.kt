@@ -5,8 +5,8 @@ import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import application.localDataBase.WeatherResponseConverterCity
-import application.localDataBase.WeatherResponseConverterList
+import application.data.localDataBase.WeatherResponseConverterCity
+import application.data.localDataBase.WeatherResponseConverterList
 import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "locations_table")

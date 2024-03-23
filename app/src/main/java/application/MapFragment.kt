@@ -20,7 +20,7 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import application.fav.viewModel.FavViewModel
 import application.fav.viewModel.FavViewModelFactory
-import application.model.Repositry
+import application.model.Repository
 import com.weather.application.R
 
 class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String, private var checkedId: Int) : Fragment(),
@@ -55,7 +55,7 @@ class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: St
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()
         theAddress = getString(R.string.Not_selected_place_yet)
-        favFactory = FavViewModelFactory(Repositry.getInstance(requireContext()))
+        favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
 
         try {

@@ -1,21 +1,17 @@
-package application.network
+package application.data.network
 
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
-class RemoteDataSource {
+class RemoteDataSource : InterfaceRemoteDataSource {
     private val weatherService: WeatherService by lazy {
         RetrofitHelper.retrofit.create(WeatherService::class.java)
     }
 
-    suspend fun getWeather(
-        latitude: Double,
-        longitude: Double,
-        units: String?,
-        lang: String?
-    ): Flow<WeatherResponse> {
+    override suspend fun getWeather(latitude: Double, longitude: Double, units: String?, lang: String?): Flow<WeatherResponse> {
+
         return flow {
             emit(weatherService.getWeatherDetails(latitude, longitude, units = units, lang = lang))
         }

@@ -2,10 +2,10 @@ package application.fav.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import application.model.Repositry
+import application.model.Repository
 
 
-class FavViewModelFactory(private val repo: Repositry) : ViewModelProvider.Factory {
+class FavViewModelFactory(private val repo: Repository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(FavViewModel::class.java)) {

@@ -2,7 +2,6 @@ package application.setting.view
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 
 import application.home.viewModel.HomeViewModel
-import application.model.Repositry
+import application.model.Repository
 import com.weather.application.R
 import com.weather.application.databinding.FragmentSettingBinding
 
@@ -37,7 +36,7 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeviewModel = HomeViewModel(Repositry.getInstance(requireContext()))
+        homeviewModel = HomeViewModel(Repository.getInstance(requireContext()))
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()

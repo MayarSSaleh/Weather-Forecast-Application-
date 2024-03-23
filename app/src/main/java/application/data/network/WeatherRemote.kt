@@ -1,4 +1,4 @@
-package application.network
+package application.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

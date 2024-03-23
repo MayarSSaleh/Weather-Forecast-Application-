@@ -1,4 +1,4 @@
-package application.localDataBase
+package application.data.localDataBase
 
 import application.model.FavLocation
 import androidx.room.Dao

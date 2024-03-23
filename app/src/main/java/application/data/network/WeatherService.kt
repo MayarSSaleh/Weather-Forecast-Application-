@@ -1,4 +1,4 @@
-package application.network
+package application.data.network
 
 import application.model.WeatherResponse
 import retrofit2.Response

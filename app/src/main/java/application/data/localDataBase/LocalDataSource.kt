@@ -1,4 +1,4 @@
-package application.localDataBase
+package application.data.localDataBase
 
 import application.model.FavLocation
 import android.content.Context
@@ -6,7 +6,7 @@ import application.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
 
-class LocalDataSource(var context: Context) {
+class LocalDataSource(var context: Context) : InterfaceLocalDataSource {
 
     private val locationsDao: FavLocationsDao by lazy {
         AppDataBase.getInstance(context).getLocationDao()
@@ -16,28 +16,28 @@ class LocalDataSource(var context: Context) {
         AppDataBase.getInstance(context).getWeatherDao()
     }
 
-    suspend fun insertWeather(weatherResponse: WeatherResponse) {
+    override suspend fun insertWeather(weatherResponse: WeatherResponse) {
         WeatherDao.insert(weatherResponse)
     }
 
-    suspend fun deleteWeather() {
+    override suspend fun deleteWeather() {
         WeatherDao.delete()
     }
 
-    suspend fun getWeathearToday():  Flow<WeatherResponse> {
-
+    override suspend fun getLestWeathear(): Flow<WeatherResponse> {
         return WeatherDao.getTodayWeather()
     }
 
-    suspend fun insertFavLocation(favLocation: FavLocation) {
+
+    override suspend fun insertFavLocation(favLocation: FavLocation) {
         locationsDao.insert(favLocation)
     }
 
-    suspend fun deleteFavLocation(favLocation: FavLocation) {
+    override suspend fun deleteFavLocation(favLocation: FavLocation) {
         locationsDao.delete(favLocation)
     }
 
-    fun getAllFavLocations(): Flow<List<FavLocation>> {
+    override fun getAllFavLocations(): Flow<List<FavLocation>> {
         return locationsDao.getAll()
     }
 }

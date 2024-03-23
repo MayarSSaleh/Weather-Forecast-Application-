@@ -18,7 +18,7 @@ import application.fav.viewModel.FavViewModel
 import application.fav.viewModel.FavViewModelFactory
 import application.model.FavLocation
 import application.model.LocalStateFavouirteLocations
-import application.model.Repositry
+import application.model.Repository
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class FavouriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view = inflater.inflate(R.layout.fragment_favourite, container, false)
-        favFactory = FavViewModelFactory(Repositry.getInstance(requireContext()))
+        favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
         fav_image = view.findViewById(R.id.image_fav)
         favRecycler = view.findViewById(R.id.fav_loc_recycler)

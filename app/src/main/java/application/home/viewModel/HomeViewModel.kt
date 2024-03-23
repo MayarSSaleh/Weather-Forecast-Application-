@@ -9,16 +9,15 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
-import application.application.MainActivity
+import application.application.SplashScreen
 import application.model.APiStateOrLocalStateFromLastWeather
-import application.model.Repositry
+import application.model.Repository
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,19 +27,16 @@ import java.util.Locale
 
 // used by home fragment and setting fragment
 
-class HomeViewModel(private val repo: Repositry) : ViewModel() {
-    private lateinit var sharedPreferences: SharedPreferences
+class HomeViewModel(private val repo: Repository) : ViewModel() {
 
+    private lateinit var sharedPreferences: SharedPreferences
     private val _weatherResponseLiveData: MutableStateFlow<APiStateOrLocalStateFromLastWeather> =
         MutableStateFlow(APiStateOrLocalStateFromLastWeather.Loading)
-
     val weatherResponseLiveData: StateFlow<APiStateOrLocalStateFromLastWeather> = _weatherResponseLiveData
-
     var language: String? = null
     lateinit var editor: SharedPreferences.Editor
 
     fun getWeather(context: Context, longitude: Double, latitude: Double) {
-        Log.d("weather", " in get weather")
         // check the internet to
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {
@@ -105,7 +101,6 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
         }
     }
 
-
     private fun updateResourcesLegacy(context: Context, language: String): Context? {
         val locale = Locale(language)
         Locale.setDefault(locale)
@@ -147,7 +142,7 @@ class HomeViewModel(private val repo: Repositry) : ViewModel() {
 
     fun startSplash(context: Context?) {
         context?.let {
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, SplashScreen::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)

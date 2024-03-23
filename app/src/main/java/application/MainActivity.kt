@@ -19,7 +19,7 @@ import application.home.view.HomeFragment
 import application.home.viewModel.HomeViewModel
 import application.home.viewModel.HomeViewModelFactory
 import application.model.FavLocation
-import application.model.Repositry
+import application.model.Repository
 import application.setting.view.SettingFragment
 import com.weather.application.R
 
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), Communication,
 
     fun setLanguage() {
         sharedPreferences = this.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
-        homeViewModelFactory = HomeViewModelFactory(Repositry.getInstance(this))
+        homeViewModelFactory = HomeViewModelFactory(Repository.getInstance(this))
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
         var selectedLanguage = sharedPreferences.getString(MyConstant.lan, "en")
         var currentLanguage = sharedPreferences.getString(MyConstant.curentLanguage, "en")
