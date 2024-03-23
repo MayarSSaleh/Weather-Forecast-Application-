@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
+import application.application.MainActivity
 import application.application.SplashScreen
 import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.Repository
@@ -142,7 +143,7 @@ class HomeViewModel(private val repo: Repository) : ViewModel() {
 
     fun startSplash(context: Context?) {
         context?.let {
-            val intent = Intent(context, SplashScreen::class.java)
+            val intent = Intent(context, MainActivity::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)

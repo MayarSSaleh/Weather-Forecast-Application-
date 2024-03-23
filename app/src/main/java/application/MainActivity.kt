@@ -86,7 +86,8 @@ class MainActivity : AppCompatActivity(), Communication,
 
             R.id.fav -> {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, FavouriteFragment()).commit()
+                    .replace(R.id.fragment_container, FavouriteFragment())
+                    .commit()
                 drawerLayout.closeDrawer(GravityCompat.START)
                 return true
             }

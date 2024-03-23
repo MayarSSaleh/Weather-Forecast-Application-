@@ -44,19 +44,41 @@ class RepositoryTest {
     fun deleteLocation_returnNullOrEmptyList() = runBlockingTest() {
         // then call the method Delete the location
         repository.deleteLocation()
-
         // Get the least weather
-        val getLeastWeather = repository.getLastWeather()
-
-        var leastWeather: WeatherResponse? = null
-        getLeastWeather.collect { weatherList ->
-            leastWeather = weatherList.firstOrNull()
+        var lastWeather = repository.getLastWeather()
+        // Collect the emitted value
+        var result: WeatherResponse? = null
+        lastWeather.collect { weatherResponse ->
+            result = weatherResponse
         }
-        // Assert that leastWeather is null or empty
-        assertNull(leastWeather)
-
+        // Assert that the result is  null
+        assertNull(result)
     }
 
+    @Test
+    fun insertLeastWeatherResponse_takeWeatherResponse_returnIt() = runBlockingTest() {
+        //given create a object
+        val list: List<WeatherItem> = emptyList()
+        val lastResponse = WeatherResponse(list, City("least Response"))
+
+        // then call the method Delete the location
+        repository.deleteLocation()
+        repository.insertWeather(lastResponse)
+
+        // Get the least weather
+        var lastWeather = repository.getLastWeather()
+        // Collect the emitted value
+        var result: WeatherResponse? = null
+        lastWeather.collect { weatherResponse ->
+            result = weatherResponse
+        }
+        // Assert that the result is not null
+        assertNotNull(result)
+        // Assert specific properties of the result
+
+        assertThat(result!!.city.name, `is`("least Response"))
+        assertThat(result!!.list, `is`(emptyList()))
+    }
 
     @Test
     fun getAllLocalLocation() = runBlockingTest() {
