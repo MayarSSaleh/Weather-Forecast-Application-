@@ -10,20 +10,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeRepository : InterfaceRepository {
-    var favLocation = FavLocation(("testGet"), 0.0, 0.0)
-    private var weatherResponseLeastSaved: Flow<WeatherResponse>? = null
-    private var weatherResponseFromApi: WeatherResponse = WeatherResponse(emptyList(), City("Alex"))
-    private var repoFavLocationsList: List<FavLocation> = mutableListOf()
 
-    val _favLocations: MutableStateFlow<LocalStateFavouirteLocations> =
-        MutableStateFlow(LocalStateFavouirteLocations.LoadingLocal)
+    private var weatherResponseLeastSaved: WeatherResponse? = null
+    private var repoFavLocationsList: MutableList<FavLocation>? = mutableListOf()
 
     override fun getAllFavLocation(): Flow<List<FavLocation>> {
         return flow {
             repoFavLocationsList
         }
     }
-
 
     override suspend fun getWeather(
         latitude: Double,
@@ -32,17 +27,16 @@ class FakeRepository : InterfaceRepository {
         lang: String?
     ): Flow<WeatherResponse> {
         return flow {
-            weatherResponseFromApi
+            WeatherResponse(emptyList(), City("Alex"))
         }
     }
 
-
     override suspend fun deleteFavLocation(favLocation: FavLocation) {
-//        favLocations?.remove(favLocation)
+        repoFavLocationsList?.remove(favLocation)
     }
 
     override suspend fun insert(favLocation: FavLocation) {
-//        favLocations?.add(favLocation)
+        repoFavLocationsList?.add(favLocation)
     }
 
     override suspend fun getLastWeather(): Flow<WeatherResponse> {
@@ -56,6 +50,6 @@ class FakeRepository : InterfaceRepository {
     }
 
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {
-        TODO("Not yet implemented")
+        weatherResponseLeastSaved =weatherResponse
     }
 }

@@ -42,7 +42,7 @@ class FavouriteViewModelTest {
     }
 
     @Test
-    fun `getFavLocations_emitsLoadingAndSuccessStates`() = runBlockingTest {
+    fun `getFavLocations_emitsLoadingAndSuccessStates`() = runTest {
         // give
         var favLocation = FavLocation(("testGet"), 0.0, 0.0)
         val expectedFavLocations = listOf(favLocation)
@@ -93,21 +93,15 @@ class FavouriteViewModelTest {
     }
 
     @Test
-    fun `insert favourite location return the inserted allocation details and not null`() {
+    fun `insert favourite location return the inserted allocation details and not null`()  {
         val favLocation = FavLocation("Egypt", 0.0, 0.0)
         // When
         viewModel.insertFavLocation(favLocation)
-
         // Then
         // Verify that insert function is called with the correct favLocation
-        var result = viewModel.favLocations.value as LocalStateFavouirteLocations.SuccessLocal
-
+        var result = viewModel.favLocations.value
         // Assert that the inserted location is the same as the given location
-        assertNotNull(result)
-//        assertTrue(result.data is LocalStateFavouirteLocations.SuccessLocal)
-//        assertThat(result.data, `is` (LocalStateFavouirteLocations.SuccessLocal))
-//        assertThat(result!!.value., `is`("least Response"))
-
+        assertTrue(result is LocalStateFavouirteLocations.SuccessLocal)
     }
 
     @Test
