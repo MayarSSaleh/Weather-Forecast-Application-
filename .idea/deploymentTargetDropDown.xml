@@ -5,7 +5,19 @@
       <entry key="app">
         <State />
       </entry>
-      <entry key="insertMethod_createObject_returnTheValesOfCreatedObject()">
+      <entry key="deleteTheInsertedFavLocation_insertFav_getemptyList()">
+        <State />
+      </entry>
+      <entry key="getLeastWeatherResponse_getDefaultNorthernState()">
+        <State />
+      </entry>
+      <entry key="getLeastWeatherResponse_getEmptyList()">
+        <State />
+      </entry>
+      <entry key="getTheInsertedWeather_insertWeather_getHisDetails()">
+        <State />
+      </entry>
+      <entry key="getTheInserted_insertFav_getHisDetails()">
         <State />
       </entry>
     </value>

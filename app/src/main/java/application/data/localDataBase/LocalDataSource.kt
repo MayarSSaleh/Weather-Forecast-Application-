@@ -24,9 +24,6 @@ class LocalDataSource(var context: Context) : InterfaceLocalDataSource {
         WeatherDao.delete()
     }
 
-    override suspend fun getLestWeathear(): Flow<WeatherResponse> {
-        return WeatherDao.getTodayWeather()
-    }
 
 
     override suspend fun insertFavLocation(favLocation: FavLocation) {
@@ -39,5 +36,9 @@ class LocalDataSource(var context: Context) : InterfaceLocalDataSource {
 
     override fun getAllFavLocations(): Flow<List<FavLocation>> {
         return locationsDao.getAll()
+    }
+
+    override suspend fun getLestWeathear(): Flow<WeatherResponse> {
+        return WeatherDao.getTodayWeather()
     }
 }
