@@ -18,6 +18,7 @@ import application.MyConstant.SHARED_PREFS
 import application.application.MainActivity
 import application.application.SplashScreen
 import application.model.APiStateOrLocalStateFromLastWeather
+import application.model.InterfaceRepository
 import application.model.Repository
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +29,7 @@ import java.util.Locale
 
 // used by home fragment and setting fragment
 
-class HomeViewModel(private val repo: Repository) : ViewModel() {
+class HomeViewModel(private val repo: InterfaceRepository) : ViewModel() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private val _weatherResponseLiveData: MutableStateFlow<APiStateOrLocalStateFromLastWeather> =

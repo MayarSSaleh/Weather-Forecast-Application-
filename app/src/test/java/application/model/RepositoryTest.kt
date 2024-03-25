@@ -4,14 +4,18 @@ import application.data.localDataBase.FakeLocalDataSource
 import application.data.network.FakeRemoteDataSource
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 
 // 5  some local and some remote
+
 
 class RepositoryTest {
 
@@ -36,7 +40,7 @@ class RepositoryTest {
             )
         repository = Repository(
             fakeRemoteDataSource,
-            fakeLocalDataSource
+            fakeLocalDataSource,
         )
     }
 
@@ -83,7 +87,7 @@ class RepositoryTest {
     @Test
     fun getAllLocalLocation() = runBlockingTest() {
         // then call the method
-        var flowOfLocations = repository.getAllLocalLocation()
+        var flowOfLocations = repository.getAllFavLocation()
 
         // Collect the first emitted list of FavLocation
         var firstFavLocation: FavLocation? = null

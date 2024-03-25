@@ -11,5 +11,3 @@ sealed class LocalStateFavouirteLocations {
     data class FailureLocal(val msg: Throwable) : LocalStateFavouirteLocations()
     object LoadingLocal : LocalStateFavouirteLocations()
 }
-
-

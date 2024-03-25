@@ -76,6 +76,7 @@ class SettingFragment : Fragment() {
                 R.id.gpsButton -> "Gps"
                 else -> "Gps"
             }
+
             when (location) {
                 "Map" -> {
                     val transaction = activity?.supportFragmentManager?.beginTransaction()

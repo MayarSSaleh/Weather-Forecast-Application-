@@ -2,6 +2,7 @@ package application.home.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import application.model.FakeRepository
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.Before
@@ -11,17 +12,17 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class HomeViewModelTest {
-//    lateinit var repo: FakeRepository
+
+    lateinit var repo: FakeRepository
     lateinit var viewModel: HomeViewModel
 
-// to make all work in same thread as flow /live data observe in another thread
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
-//        repo = FakeRepository()
-//        viewModel = HomeViewModel(repo)
+        repo = FakeRepository()
+        viewModel = HomeViewModel(repo)
     }
 
     @Test
