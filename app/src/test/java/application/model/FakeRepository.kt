@@ -7,30 +7,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeRepository : InterfaceRepository {
-    var favLocation =FavLocation(("testGet"),0.0,0.0)
-    private var weatherResponsList: MutableList<WeatherResponse>? = mutableListOf()
-    private var repoFavLocationsList: List<FavLocation> = mutableListOf(favLocation)
+    var favLocation = FavLocation(("testGet"), 0.0, 0.0)
+    private var weatherResponseLeastSaved: Flow<WeatherResponse>? = null
+    private var weatherResponseFromApi: WeatherResponse = WeatherResponse(emptyList(), City("Alex"))
+    private var repoFavLocationsList: List<FavLocation> = mutableListOf()
 
     val _favLocations: MutableStateFlow<LocalStateFavouirteLocations> =
         MutableStateFlow(LocalStateFavouirteLocations.LoadingLocal)
 
     override fun getAllFavLocation(): Flow<List<FavLocation>> {
         return flow {
-
-            val favLocationsList =
-                when (val value = _favLocations.value) {
-                    is LocalStateFavouirteLocations.LoadingLocal -> {
-                        // Update state to SuccessLocal after delay
-                        _favLocations.value = LocalStateFavouirteLocations.LoadingLocal
-                    }
-                    is LocalStateFavouirteLocations.SuccessLocal -> {
-                        _favLocations.value = LocalStateFavouirteLocations.SuccessLocal(repoFavLocationsList)
-                    }
-                    else -> emptyList<FavLocation>()
-                }
-            emit(favLocationsList as List<FavLocation>)
+            repoFavLocationsList
         }
     }
 
@@ -41,7 +31,9 @@ class FakeRepository : InterfaceRepository {
         units: String?,
         lang: String?
     ): Flow<WeatherResponse> {
-        TODO("Not yet implemented")
+        return flow {
+            weatherResponseFromApi
+        }
     }
 
 
@@ -55,14 +47,12 @@ class FakeRepository : InterfaceRepository {
 
     override suspend fun getLastWeather(): Flow<WeatherResponse> {
         return flow {
-            // Create a copy of the list to avoid exposing the mutable reference
-            val weatherListCopy = weatherResponsList?.toList() ?: emptyList()
-            emitAll(weatherListCopy.asFlow())
+            weatherResponseLeastSaved
         }
     }
 
     override suspend fun deleteLocation() {
-        TODO("Not yet implemented")
+        weatherResponseLeastSaved=null
     }
 
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {

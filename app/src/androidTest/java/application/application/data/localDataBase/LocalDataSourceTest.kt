@@ -40,7 +40,9 @@ class LocalDataSourceTest {
         database = Room.inMemoryDatabaseBuilder(
             getApplicationContext(),
             AppDataBase::class.java
-        ).build()
+        ).allowMainThreadQueries()
+            .build()
+
         localDataSource = LocalDataSource(getApplicationContext())
     }
 
@@ -90,7 +92,7 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun getLeastWeatherResponse_getDefaultNorthernState() = runTest {
+    fun getLeastWeatherResponse_getDefaultAlexandria() = runTest {
         // Given
         localDataSource.insertWeather(WeatherResponse(emptyList(), City("Alexandria")))
         localDataSource.deleteWeather()
