@@ -25,7 +25,6 @@ class LocalDataSource(var context: Context) : InterfaceLocalDataSource {
     }
 
 
-
     override suspend fun insertFavLocation(favLocation: FavLocation) {
         locationsDao.insert(favLocation)
     }

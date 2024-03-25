@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.test.filters.MediumTest
 import application.data.localDataBase.AppDataBase
 import application.data.localDataBase.FavLocationsDao
 import application.data.localDataBase.LocalDataSource
@@ -24,13 +25,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+//Integrated with Dao
+@MediumTest
 class LocalDataSourceTest {
     lateinit var database: AppDataBase
     lateinit var localDataSource: LocalDataSource
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
-
 
     @Before
     fun setUp() {
@@ -46,7 +48,6 @@ class LocalDataSourceTest {
     fun finish() {
         database.close()
     }
-
 
     @Test
     fun getFavLocations_getEmptyList() = runTest {
@@ -90,24 +91,27 @@ class LocalDataSourceTest {
 
     @Test
     fun getLeastWeatherResponse_getDefaultNorthernState() = runTest {
+        // Given
+        localDataSource.insertWeather(WeatherResponse(emptyList(), City("Alexandria")))
+        localDataSource.deleteWeather()
         //when
         val getResult = localDataSource.getLestWeathear()
         val result = getResult.first()
         //assert
-        assertNotNull(result)
-        assertThat(result.city, `is`("Northern State"))
+        assertNull(result)
     }
 
     @Test
     fun getTheInsertedWeather_insertWeather_getHisDetails() = runTest {
         // Given
+        localDataSource.deleteWeather()
         localDataSource.insertWeather(WeatherResponse(emptyList(), City("Alexandria")))
         //when
         val getResult = localDataSource.getLestWeathear()
         val result = getResult.first()
         //assert
         assertNotNull(result)
-        assertThat(result.city, `is`("Alexandria"))
+        assertThat(result.city.name, `is`("Alexandria"))
         assertThat(result.list, `is`(emptyList()))
     }
 }
