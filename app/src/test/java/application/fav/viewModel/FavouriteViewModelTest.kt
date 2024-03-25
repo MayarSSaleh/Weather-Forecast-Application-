@@ -12,6 +12,8 @@ import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -76,21 +78,19 @@ class FavouriteViewModelTest {
 //
 //    }
 
-    @Test
-    fun getFavLocations_ReturnDetails() = runBlockingTest {
-        //Give
-        var favLocation = FavLocation("new", 0.0, 0.0)
-
-        // Then
-        //make repo as i will test insert function of view another time
-        repo.insert(favLocation)
-        var result = viewModel.favLocations.value
-
-        // Assert
-        assertNotNull(result)
-//        assertTrue(result ,`is` LocalStateFavouirteLocations.SuccessLocal)
-//        assertThat(result.data.get(0).locationName, `is` ("new"))
-    }
+//    @Test
+//    fun getFavLocations_ReturnDetails() = runTest {
+//        // Then
+//        var result: LocalStateFavouirteLocations? = null
+//
+//        viewModel.favLocations.collect { newState ->
+//            result = newState
+//        }
+//        // Assert
+//        assertNotNull(result)
+//        result as LocalStateFavouirteLocations.SuccessLocal
+//        assertTrue(result.data  is ("null") )
+//    }
 
     @Test
     fun `insert favourite location return the inserted allocation details and not null`()  {

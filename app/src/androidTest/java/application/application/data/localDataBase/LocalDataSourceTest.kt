@@ -25,7 +25,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-//Integrated with Dao
+
 @MediumTest
 class LocalDataSourceTest {
     lateinit var database: AppDataBase
@@ -33,6 +33,7 @@ class LocalDataSourceTest {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
+
 
     @Before
     fun setUp() {
@@ -42,8 +43,7 @@ class LocalDataSourceTest {
             AppDataBase::class.java
         ).allowMainThreadQueries()
             .build()
-
-        localDataSource = LocalDataSource(getApplicationContext())
+        localDataSource = LocalDataSource(database.getLocationDao(), database.getWeatherDao())
     }
 
     @After

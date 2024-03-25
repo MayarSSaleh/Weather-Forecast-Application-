@@ -47,7 +47,7 @@ class FavLocationDaoTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-// not make impact on code now
+    // not make impact on code now
     @ExperimentalCoroutinesApi
     @get: Rule
     var mainCoroutineRule = MainCoroutineRule()
@@ -91,27 +91,27 @@ class FavLocationDaoTest {
         assertThat(result.get(0).latitude, `is`(0.0))
     }
 
-
     @Test
     fun getAllFavLocation_theFavouriteLocations_sizeOfListIsOne() = runTest {
         // Given
         val favLocation = FavLocation("alex", 0.0, 0.0)
         dao.insert(favLocation)
+
         // When
         val getResult = dao.getAll()
         var result: List<FavLocation>? = null
-        val job = launch {
-            getResult.collectLatest { favLocationsList ->
-                result = favLocationsList
-            }
+//        val job = launch {
+        getResult.collect { favLocationsList ->
+            result = favLocationsList
+//            }
+//        }
+//        // Wait for the job to complete
+//        job.join()
+
+            // Then
+            assertThat(result?.size, `is`(1))
         }
-        // Wait for the job to complete
-        job.join()
-        // Then
-        assertThat(result?.size, `is`(1))
     }
-
-
 
     @Test
     fun deleteFavLocation_FavLocation_getNull() = runTest {

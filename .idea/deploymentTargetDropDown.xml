@@ -5,13 +5,10 @@
       <entry key="app">
         <State />
       </entry>
-      <entry key="getLeastWeatherResponse_getDefaultNorthernState()">
+      <entry key="getAllFavLocation_theFavouriteLocations_sizeOfListIsOne()">
         <State />
       </entry>
-      <entry key="getLeastWeatherResponse_getEmptyList()">
-        <State />
-      </entry>
-      <entry key="getTheInsertedWeather_insertWeather_getHisDetails()">
+      <entry key="getFavLocations_getEmptyList()">
         <State />
       </entry>
       <entry key="getTheInserted_insertFav_getHisDetails()">

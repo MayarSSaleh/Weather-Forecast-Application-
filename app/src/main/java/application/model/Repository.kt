@@ -1,28 +1,47 @@
- package application.model
+package application.model
 
 import android.content.Context
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.FavLocationsDao
 import application.data.localDataBase.InterfaceLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import application.data.localDataBase.LocalDataSource
+import application.data.localDataBase.WeatherDAO
 import application.data.network.InterfaceRemoteDataSource
 import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
- class Repository(
+class Repository(
     private var productRemoteDataSource: InterfaceRemoteDataSource,
     private var productLocalDataSource: InterfaceLocalDataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : InterfaceRepository {
 
+    //    private val locationsDao: FavLocationsDao by lazy {
+//        AppDataBase.getInstance(context).getLocationDao()
+//    }
+//
+//    private val WeatherDao: WeatherDAO by lazy {
+//        AppDataBase.getInstance(context).getWeatherDao()
+//    }
     companion object {
         @Volatile
         private var INSTANCE: Repository? = null
         fun getInstance(context: Context): Repository {
             return INSTANCE ?: synchronized(this) {
                 if (INSTANCE == null) {
-                    val remoteDataSource = RemoteDataSource()
-                    val localDataSource = LocalDataSource(context)
+                    val remoteDataSource = RemoteDataSource(
+                        RetrofitHelper.retrofit.create(
+                            WeatherService::class.java
+                        )
+                    )
+                    val localDataSource = LocalDataSource(
+                        AppDataBase.getInstance(context).getLocationDao(),
+                        AppDataBase.getInstance(context).getWeatherDao()
+                    )
                     INSTANCE = Repository(remoteDataSource, localDataSource)
                 }
                 INSTANCE!!

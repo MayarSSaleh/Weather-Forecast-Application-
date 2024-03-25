@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOf
 class FakeRepository : InterfaceRepository {
 
     private var weatherResponseLeastSaved: WeatherResponse? = null
-    private var repoFavLocationsList: MutableList<FavLocation>? = mutableListOf()
+    private var repoFavLocationsList: MutableList<FavLocation>? =null
 
     override fun getAllFavLocation(): Flow<List<FavLocation>> {
         return flow {
