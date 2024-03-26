@@ -2,23 +2,18 @@ package application.application.data.localDataBase
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.filters.MediumTest
 import application.data.localDataBase.AppDataBase
-import application.data.localDataBase.FavLocationsDao
 import application.data.localDataBase.LocalDataSource
 import application.model.City
 import application.model.FavLocation
 import application.model.WeatherResponse
-import junit.framework.TestCase
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -65,7 +60,7 @@ class LocalDataSourceTest {
     fun getTheInserted_insertFav_getHisDetails() = runTest {
         // Given
         val favLocations = FavLocation("alex", 0.0, 0.0)
-        localDataSource.insertFavLocation(favLocations)
+        localDataSource.insertAlert(favLocations)
         //when
         val getResult = localDataSource.getAllFavLocations()
         val result = getResult.first()
@@ -81,7 +76,7 @@ class LocalDataSourceTest {
     fun deleteTheInsertedFavLocation_insertFav_getEmptyList() = runTest {
         // Given
         val favLocations = FavLocation("alex", 0.0, 0.0)
-        localDataSource.insertFavLocation(favLocations)
+        localDataSource.insertAlert(favLocations)
         localDataSource.deleteFavLocation(favLocations)
         //when
         val getResult = localDataSource.getAllFavLocations()

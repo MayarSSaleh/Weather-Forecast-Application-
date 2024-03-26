@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,7 +24,10 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.Repository
 import com.weather.application.R
 
-class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String, private var checkedId: Int) : Fragment(),
+class MapFragment(
+    private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String,
+    private var checkedId: Int
+) : Fragment(),
 
     OnMapReadyCallback {
     private lateinit var rootView: View
@@ -37,6 +41,7 @@ class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: St
     lateinit var editor: SharedPreferences.Editor
     private lateinit var favFactory: FavViewModelFactory
     private lateinit var viewModel: FavViewModel
+    private lateinit var alert: ImageView
     private var latitude = 0.0
     private var longitude = 0.0
 
@@ -50,6 +55,7 @@ class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: St
         rootView = inflater.inflate(R.layout.fragment_map2, container, false)
         mylocation = rootView.findViewById(R.id.set_as_my_Location)
         addToFav = rootView.findViewById(R.id.btn_addToFav)
+        alert = rootView.findViewById(R.id.img_alert_mapScreen)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         geocoder = Geocoder(requireContext())
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
@@ -87,7 +93,11 @@ class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: St
                     editor.putString(MyConstant.latitude, "$latitude")
                     editor.putString(MyConstant.longitude, "$longitude")
                     editor.apply()
-                    Toast.makeText(requireContext(),getString(R.string.added_as_your_current_location), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_as_your_current_location),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             val dialog = builder.create()
             dialog.show()
@@ -103,6 +113,12 @@ class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: St
                 ).show()
             }
         }
+        alert.setOnClickListener {
+
+
+
+
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -115,7 +131,8 @@ class MapFragment(private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: St
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
             theAddress =
                 addresses?.firstOrNull()?.getAddressLine(0) ?: "Sorry, Address not found"
-            Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }

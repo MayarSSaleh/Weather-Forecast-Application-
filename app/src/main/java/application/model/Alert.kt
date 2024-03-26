@@ -22,7 +22,5 @@ data class Alert(
     val time: String,
     val typeOfAlarm: String// notification or  alarm .
 
-
-    
 ) : Parcelable
 

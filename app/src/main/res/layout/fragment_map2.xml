@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pick_place_then_choose"
-        android:textSize="17dp"
+        android:textSize="20dp"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map" />
@@ -29,21 +29,35 @@
         android:id="@+id/set_as_my_Location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="55dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
+        android:textSize="14dp"
         android:text="@string/set_as_my_location"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/img_alert_mapScreen"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <Button
         android:id="@+id/btn_addToFav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:text="@string/add_to_faviourt_locations"
+        android:textSize="14dp"
+        android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/set_as_my_Location"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location"
         app:layout_constraintStart_toEndOf="@+id/set_as_my_Location"
-        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location" />
+
+        />
+
+    <ImageView
+        android:id="@+id/img_alert_mapScreen"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/img_1"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/set_as_my_Location"
+        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="491dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package application.data.localDataBase
 
+import application.model.Alert
 import application.model.FavLocation
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
@@ -32,8 +33,12 @@ class FakeLocalDataSource(
         }
     }
 
-    override suspend fun insertFavLocation(favLocation: FavLocation) {
+    override suspend fun insertAlert(favLocation: FavLocation) {
         favLocations?.add(favLocation)
+    }
+
+    override suspend fun insertAlert(alert: Alert) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun deleteFavLocation(favLocation: FavLocation) {
@@ -45,5 +50,9 @@ class FakeLocalDataSource(
             emit(favLocations ?: emptyList())
 
         }
+    }
+
+    override fun getAllAlerts(): Flow<List<Alert>> {
+        TODO("Not yet implemented")
     }
 }

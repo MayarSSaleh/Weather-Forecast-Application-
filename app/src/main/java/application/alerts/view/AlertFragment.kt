@@ -15,11 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import application.MapFragment
 import application.alerts.viewModel.AlertViewModel
 import application.alerts.viewModel.AlertViewModelFactory
-import application.fav.view.FavouriteAdaptor
-import application.fav.viewModel.Communication
-import application.fav.viewModel.FavViewModel
-import application.fav.viewModel.FavViewModelFactory
-import application.model.LocalStateFavouirteLocations
+import application.model.LocalStateAlerts
 import application.model.Repository
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
@@ -47,7 +43,7 @@ class AlertFragment : Fragment() {
         loading_view=view.findViewById(R.id.alert_loading_view)
         loading_view.visibility = View.GONE
 
-        alertAdaptor = AlertAdaptor(requireContext())
+        alertAdaptor = AlertAdaptor()
         setUpRecycvlerView()
 
 
@@ -60,12 +56,12 @@ class AlertFragment : Fragment() {
 
 
         lifecycleScope.launch {
-            viewModel.aletsList.collectLatest {
+            viewModel.alertsList.collectLatest {
                 when (it) {
-                    is LocalStateFavouirteLocations.LoadingLocal -> {
+                    is LocalStateAlerts.LoadingLocaAlertl -> {
                         loading_view.visibility = View.VISIBLE
                     }
-                    is LocalStateFavouirteLocations.SuccessLocal -> {
+                    is LocalStateAlerts.SuccessLocalAlert -> {
                         alertAdaptor.submitList(it.data)
                         loading_view.visibility = View.GONE
                     }

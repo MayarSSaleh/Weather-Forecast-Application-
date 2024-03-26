@@ -1,41 +1,51 @@
 package application.data.localDataBase
 
 import application.model.FavLocation
-import android.content.Context
+import application.model.Alert
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
 
-class LocalDataSource(private val WeatherDao: WeatherDAO ,private val locationsDao: FavLocationsDao) : InterfaceLocalDataSource {
-
-//        AppDataBase.getInstance(context).getLocationDao()
-//
-//
-//        AppDataBase.getInstance(context).getWeatherDao()
-//
+class LocalDataSource(
+    private val weatherDAO: WeatherDAO,
+    private val favLocationsDao: FavLocationsDao,
+    private val alertDao: AlertDao
+) : InterfaceLocalDataSource {
 
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {
-        WeatherDao.insert(weatherResponse)
+        weatherDAO.insert(weatherResponse)
     }
 
     override suspend fun deleteWeather() {
-        WeatherDao.delete()
+        weatherDAO.delete()
     }
 
 
-    override suspend fun insertFavLocation(favLocation: FavLocation) {
-        locationsDao.insert(favLocation)
+    override fun getAllFavLocations(): Flow<List<FavLocation>> {
+        return favLocationsDao.getAll()
+    }
+
+    override suspend fun insertAlert(favLocation: FavLocation) {
+        favLocationsDao.insert(favLocation)
     }
 
     override suspend fun deleteFavLocation(favLocation: FavLocation) {
-        locationsDao.delete(favLocation)
+        favLocationsDao.delete(favLocation)
     }
 
-    override fun getAllFavLocations(): Flow<List<FavLocation>> {
-        return locationsDao.getAll()
-    }
 
     override suspend fun getLestWeathear(): Flow<WeatherResponse> {
-        return WeatherDao.getTodayWeather()
+        return weatherDAO.getTodayWeather()
     }
+
+
+    override fun getAllAlerts(): Flow<List<Alert>> {
+        return alertDao.getAllAlerts()
+    }
+
+    override suspend fun insertAlert(alert: Alert) {
+        alertDao.insert(alert)
+    }
+
+
 }

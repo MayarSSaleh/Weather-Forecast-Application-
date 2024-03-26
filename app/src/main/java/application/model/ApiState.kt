@@ -11,3 +11,9 @@ sealed class LocalStateFavouirteLocations {
     data class FailureLocal(val msg: Throwable) : LocalStateFavouirteLocations()
     object LoadingLocal : LocalStateFavouirteLocations()
 }
+
+sealed class LocalStateAlerts {
+    data class SuccessLocalAlert(val data: List<Alert>) : LocalStateAlerts()
+    data class FailureLocalAlert(val msg: Throwable) : LocalStateAlerts()
+    object LoadingLocaAlertl : LocalStateAlerts()
+}

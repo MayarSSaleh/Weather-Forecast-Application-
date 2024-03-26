@@ -23,4 +23,7 @@ interface InterfaceRepository {
     suspend fun deleteLocation()
 
     suspend fun insertWeather(weatherResponse: WeatherResponse)
+
+    fun getAllAlerts(): Flow<List<Alert>>
+    suspend fun insertAlert(alert: Alert)
 }

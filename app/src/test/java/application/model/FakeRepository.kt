@@ -52,4 +52,12 @@ class FakeRepository : InterfaceRepository {
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {
         weatherResponseLeastSaved =weatherResponse
     }
+
+    override fun getAllAlerts(): Flow<List<Alert>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertAlert(alert: Alert) {
+        TODO("Not yet implemented")
+    }
 }
