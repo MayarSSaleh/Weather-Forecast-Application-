@@ -33,8 +33,12 @@ class Repository(
         fun getInstance(context: Context): Repository {
             return INSTANCE ?: synchronized(this) {
                 if (INSTANCE == null) {
-                    val remoteDataSource = RemoteDataSource()
-                    val localDataSource = LocalDataSource(context )
+                    val remoteDataSource = RemoteDataSource(  RetrofitHelper.retrofit.create(WeatherService::class.java)
+                    )
+                    val localDataSource = LocalDataSource(
+                        AppDataBase.getInstance(context).getWeatherDao(),
+                        AppDataBase.getInstance(context).getLocationDao()
+                    )
                     INSTANCE = Repository(remoteDataSource, localDataSource)
                 }
                 INSTANCE!!

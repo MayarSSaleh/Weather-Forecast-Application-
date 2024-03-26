@@ -96,18 +96,11 @@ class FavLocationDaoTest {
         // Given
         val favLocation = FavLocation("alex", 0.0, 0.0)
         dao.insert(favLocation)
-
         // When
         val getResult = dao.getAll()
         var result: List<FavLocation>? = null
-//        val job = launch {
         getResult.collect { favLocationsList ->
             result = favLocationsList
-//            }
-//        }
-//        // Wait for the job to complete
-//        job.join()
-
             // Then
             assertThat(result?.size, `is`(1))
         }

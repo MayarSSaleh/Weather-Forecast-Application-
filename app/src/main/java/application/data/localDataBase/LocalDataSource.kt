@@ -6,15 +6,13 @@ import application.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
 
-class LocalDataSource(private var context: Context) : InterfaceLocalDataSource {
+class LocalDataSource(private val WeatherDao: WeatherDAO ,private val locationsDao: FavLocationsDao) : InterfaceLocalDataSource {
 
-    private val locationsDao: FavLocationsDao by lazy {
-        AppDataBase.getInstance(context).getLocationDao()
-    }
-
-    private val WeatherDao: WeatherDAO by lazy {
-        AppDataBase.getInstance(context).getWeatherDao()
-    }
+//        AppDataBase.getInstance(context).getLocationDao()
+//
+//
+//        AppDataBase.getInstance(context).getWeatherDao()
+//
 
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {
         WeatherDao.insert(weatherResponse)

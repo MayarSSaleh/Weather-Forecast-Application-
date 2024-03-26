@@ -43,7 +43,7 @@ class LocalDataSourceTest {
             AppDataBase::class.java
         ).allowMainThreadQueries()
             .build()
-        localDataSource = LocalDataSource(getApplicationContext())
+        localDataSource = LocalDataSource(database.getWeatherDao(),database.getLocationDao())
     }
 
     @After

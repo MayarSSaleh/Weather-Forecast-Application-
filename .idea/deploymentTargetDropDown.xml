@@ -5,13 +5,13 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="deleteFavLocation_FavLocation_getNull()">
+        <State />
+      </entry>
       <entry key="getAllFavLocation_theFavouriteLocations_sizeOfListIsOne()">
         <State />
       </entry>
       <entry key="getFavLocations_getEmptyList()">
-        <State />
-      </entry>
-      <entry key="getTheInserted_insertFav_getHisDetails()">
         <State />
       </entry>
     </value>
