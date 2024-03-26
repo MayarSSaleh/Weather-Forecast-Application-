@@ -32,8 +32,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.squareup.picasso.Picasso
 import application.MyConstant
-import application.home.viewModel.HomeViewModel
-import application.home.viewModel.HomeViewModelFactory
+import application.sharedBetweenScrens.WeatherShowViewModel
+import application.sharedBetweenScrens.WeatherShowModelFactory
 import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.FavLocation
 
@@ -46,8 +46,8 @@ import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var homeViewModelFactory: HomeViewModelFactory
+    private lateinit var homeViewModel: WeatherShowViewModel
+    private lateinit var homeViewModelFactory: WeatherShowModelFactory
     private lateinit var tv_Weather_description: TextView
     private lateinit var tv_cityName: TextView
     private lateinit var tv_dt: TextView
@@ -79,8 +79,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        homeViewModelFactory = HomeViewModelFactory(Repository.getInstance(requireContext()))
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        homeViewModelFactory = WeatherShowModelFactory(Repository.getInstance(requireContext()))
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(WeatherShowViewModel::class.java)
         initUI(view)
         loading_view.visibility = View.GONE
         hoursAdapterList = HoursAdapterList()
@@ -93,7 +93,6 @@ class HomeFragment : Fragment() {
             homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
         } else {
             if (homeViewModel.isNetworkAvailable(context)) {
-                Log.d("weather", " internet ")
                 if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
                     homeViewModel.getWeather(
                         requireContext(),
@@ -316,10 +315,6 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     fun getFreshLocation() {
-        Log.d("weather", " internet so get fresh ")
-
-        var longitudinalValue = 0.0
-        var latitudeValue = 0.0
         locationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         val locationRequest: LocationRequest = LocationRequest.Builder(1000).apply {
@@ -328,10 +323,9 @@ class HomeFragment : Fragment() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
-                longitudinalValue = location.longitude
-                latitudeValue = location.latitude
+                var   longitudinalValue = location.longitude
+                var  latitudeValue = location.latitude
                 if (isAdded) {
-                    Log.d("weather", " internet vaules $longitudinalValue ")
                     homeViewModel.getWeather(requireContext(), latitudeValue, longitudinalValue)
                     locationProviderClient.removeLocationUpdates(this)
                 }

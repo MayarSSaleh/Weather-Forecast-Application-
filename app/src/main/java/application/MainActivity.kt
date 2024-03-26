@@ -16,8 +16,8 @@ import application.alerts.view.AlertFragment
 import application.fav.view.FavouriteFragment
 import application.fav.viewModel.Communication
 import application.home.view.HomeFragment
-import application.home.viewModel.HomeViewModel
-import application.home.viewModel.HomeViewModelFactory
+import application.sharedBetweenScrens.WeatherShowViewModel
+import application.sharedBetweenScrens.WeatherShowModelFactory
 import application.model.FavLocation
 import application.model.Repository
 import application.setting.view.SettingFragment
@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity(), Communication,
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var toolbar: Toolbar
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var homeViewModelFactory: HomeViewModelFactory
+    private lateinit var homeViewModel: WeatherShowViewModel
+    private lateinit var homeViewModelFactory: WeatherShowModelFactory
     private lateinit var editor: Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +57,8 @@ class MainActivity : AppCompatActivity(), Communication,
 
     fun setLanguage() {
         sharedPreferences = this.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
-        homeViewModelFactory = HomeViewModelFactory(Repository.getInstance(this))
-        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+        homeViewModelFactory = WeatherShowModelFactory(Repository.getInstance(this))
+        homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(WeatherShowViewModel::class.java)
         var selectedLanguage = sharedPreferences.getString(MyConstant.lan, "en")
         var currentLanguage = sharedPreferences.getString(MyConstant.curentLanguage, "en")
         if (selectedLanguage == "ar" && currentLanguage != "ar") {

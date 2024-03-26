@@ -3,8 +3,7 @@ package application.home.viewModel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import application.model.FakeRepository
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import application.sharedBetweenScrens.WeatherShowViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -14,7 +13,7 @@ import org.junit.runner.RunWith
 class HomeViewModelTest {
 
     lateinit var repo: FakeRepository
-    lateinit var viewModel: HomeViewModel
+    lateinit var viewModel: WeatherShowViewModel
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -22,7 +21,7 @@ class HomeViewModelTest {
     @Before
     fun setUp() {
         repo = FakeRepository()
-        viewModel = HomeViewModel(repo)
+        viewModel = WeatherShowViewModel(repo)
     }
 
     @Test

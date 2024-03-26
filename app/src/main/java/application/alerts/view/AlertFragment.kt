@@ -5,13 +5,87 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import application.MapFragment
+import application.alerts.viewModel.AlertViewModel
+import application.alerts.viewModel.AlertViewModelFactory
+import application.fav.view.FavouriteAdaptor
+import application.fav.viewModel.Communication
+import application.fav.viewModel.FavViewModel
+import application.fav.viewModel.FavViewModelFactory
+import application.model.LocalStateFavouirteLocations
+import application.model.Repository
 import com.weather.application.R
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class AlertFragment : Fragment() {
+    private lateinit var add: ImageView
+
+    private lateinit var alertRecycler: RecyclerView
+    private lateinit var alertAdaptor: AlertAdaptor
+    private lateinit var alertFactory: AlertViewModelFactory
+    private lateinit var viewModel: AlertViewModel
+    private lateinit var layoutManager: LinearLayoutManager
+    lateinit var loading_view: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_alert, container, false)
+        var view = inflater.inflate(R.layout.fragment_alert, container, false)
+        add = view.findViewById(R.id.addAlert)
+        alertFactory = AlertViewModelFactory(Repository.getInstance(requireContext()))
+        viewModel = ViewModelProvider(this, alertFactory).get(AlertViewModel::class.java)
+        alertRecycler = view.findViewById(R.id.alert_recycler)
+        loading_view=view.findViewById(R.id.alert_loading_view)
+        loading_view.visibility = View.GONE
+
+        alertAdaptor = AlertAdaptor(requireContext())
+        setUpRecycvlerView()
+
+
+        add.setOnClickListener {
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragment_container, MapFragment("", 5))
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
+
+
+        lifecycleScope.launch {
+            viewModel.aletsList.collectLatest {
+                when (it) {
+                    is LocalStateFavouirteLocations.LoadingLocal -> {
+                        loading_view.visibility = View.VISIBLE
+                    }
+                    is LocalStateFavouirteLocations.SuccessLocal -> {
+                        alertAdaptor.submitList(it.data)
+                        loading_view.visibility = View.GONE
+                    }
+                    else -> {
+                        loading_view.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext(),
+                            "Sorry Can not get them}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+        return view
+    }
+    fun setUpRecycvlerView() {
+        layoutManager = LinearLayoutManager(requireContext())
+        alertRecycler.adapter = alertAdaptor
+        alertRecycler.layoutManager = layoutManager
     }
 }

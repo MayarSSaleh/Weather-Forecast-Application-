@@ -37,21 +37,15 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @SmallTest // unit test
-
 class FavLocationDaoTest {
     lateinit var database: AppDataBase
     lateinit var dao: FavLocationsDao
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
-
-    // not make impact on code now
-    @ExperimentalCoroutinesApi
-    @get: Rule
-    var mainCoroutineRule = MainCoroutineRule()
-
 
     @Before
     fun setUp() {
@@ -92,7 +86,7 @@ class FavLocationDaoTest {
     }
 
     @Test
-    fun getAllFavLocation_theFavouriteLocations_sizeOfListIsOne() = runTest {
+    fun getAllFavLocation_theFavouriteLocations_sizeOfListIsOne() = runBlockingTest {
         // Given
         val favLocation = FavLocation("alex", 0.0, 0.0)
         dao.insert(favLocation)

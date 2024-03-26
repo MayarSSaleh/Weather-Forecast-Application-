@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class FavouriteFragment : Fragment() {
+
     private lateinit var favRecycler: RecyclerView
     private lateinit var fav_locationsAdaptor: FavouriteAdaptor
     private lateinit var fav_image: ImageView

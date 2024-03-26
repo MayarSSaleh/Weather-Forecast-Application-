@@ -11,14 +11,14 @@ import application.MapFragment
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 
-import application.home.viewModel.HomeViewModel
+import application.sharedBetweenScrens.WeatherShowViewModel
 import application.model.Repository
 import com.weather.application.R
 import com.weather.application.databinding.FragmentSettingBinding
 
 class SettingFragment : Fragment() {
 
-    private lateinit var homeviewModel: HomeViewModel
+    private lateinit var homeviewModel: WeatherShowViewModel
     private lateinit var binding: FragmentSettingBinding
     private lateinit var location: String
     lateinit var sharedPreferences: SharedPreferences
@@ -36,7 +36,7 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeviewModel = HomeViewModel(Repository.getInstance(requireContext()))
+        homeviewModel = WeatherShowViewModel(Repository.getInstance(requireContext()))
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()

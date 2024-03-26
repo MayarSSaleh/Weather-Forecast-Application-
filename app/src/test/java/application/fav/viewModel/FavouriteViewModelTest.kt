@@ -1,7 +1,9 @@
 package application.fav.viewModel
 
+import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import application.MainCoroutineRule
 import application.model.City
 import application.model.FakeRepository
 import application.model.FavLocation
@@ -37,6 +39,10 @@ class FavouriteViewModelTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @ExperimentalCoroutinesApi
+    @get: Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     @Before
     fun setUp() {
         repo = FakeRepository()
@@ -49,17 +55,21 @@ class FavouriteViewModelTest {
         var favLocation = FavLocation(("testGet"), 0.0, 0.0)
         val expectedFavLocations = listOf(favLocation)
         viewModel.getFavLocations()
-
         // when
         val results = mutableListOf<LocalStateFavouirteLocations>()
         viewModel.favLocations.collect {
             results.add(it)
             //assert
-            assertThat((results as LocalStateFavouirteLocations.SuccessLocal).data, `is`(expectedFavLocations))
-            assertEquals(LocalStateFavouirteLocations.SuccessLocal(expectedFavLocations), results[0])
+            assertThat(
+                (results as LocalStateFavouirteLocations.SuccessLocal).data,
+                `is`(expectedFavLocations)
+            )
+            assertEquals(
+                LocalStateFavouirteLocations.SuccessLocal(expectedFavLocations),
+                results[0]
+            )
         }
     }
-    // ... other tests
 
 //    @Test
 //    fun getFavLocations_ReturnEmpty() = runBlockingTest {
@@ -78,22 +88,21 @@ class FavouriteViewModelTest {
 //
 //    }
 
-//    @Test
-//    fun getFavLocations_ReturnDetails() = runTest {
-//        // Then
-//        var result: LocalStateFavouirteLocations? = null
-//
-//        viewModel.favLocations.collect { newState ->
-//            result = newState
-//        }
-//        // Assert
-//        assertNotNull(result)
-//        result as LocalStateFavouirteLocations.SuccessLocal
-//        assertTrue(result.data  is ("null") )
-//    }
+    @Test
+    fun getFavLocations_ReturnNull() = runTest {
+        // Then
+        var result: LocalStateFavouirteLocations? = null
+
+        viewModel.favLocations.collect { newState ->
+            result = newState
+        }
+        // Assert
+        assertNotNull(result)
+        result as LocalStateFavouirteLocations.SuccessLocal
+    }
 
     @Test
-    fun `insert favourite location return the inserted allocation details and not null`()  {
+    fun `insert favourite location return the inserted allocation details and not null`() =mainCoroutineRule.runBlockingTest {
         val favLocation = FavLocation("Egypt", 0.0, 0.0)
         // When
         viewModel.insertFavLocation(favLocation)
@@ -102,21 +111,27 @@ class FavouriteViewModelTest {
         var result = viewModel.favLocations.value
         // Assert that the inserted location is the same as the given location
         assertTrue(result is LocalStateFavouirteLocations.SuccessLocal)
+        result as LocalStateFavouirteLocations.SuccessLocal
+        assertThat(result.data.get(0).locationName, `is`("Egypt"))
+
     }
 
     @Test
-    fun deleteFavLocation_returnNullListhaveOneFavLocation() = runBlockingTest() {
+    fun deleteFavLocation_returnNullListhaveOneFavLocation() = mainCoroutineRule.runBlockingTest {
         val favLocation = FavLocation("Egypt", 0.0, 0.0)
         // When
         repo.insert(favLocation)
         viewModel.deleteFavLocation(favLocation)
-
         // Collect the emitted value
         var result: LocalStateFavouirteLocations? = null
-
-        viewModel.favLocations.collect { newState ->
+        viewModel.favLocations.collectLatest { newState ->
             result = newState
         }
+        Log.d("d", "$result")
         assertTrue(result is LocalStateFavouirteLocations.SuccessLocal)
+        result as LocalStateFavouirteLocations.SuccessLocal
+        Log.d("d", "$result")
+//        assertThat(result.data, `is` (emptyList()))
     }
 }
+

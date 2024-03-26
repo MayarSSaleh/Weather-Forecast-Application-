@@ -1,4 +1,4 @@
-package application.home.viewModel
+package application.sharedBetweenScrens
 
 import android.annotation.TargetApi
 import android.app.Activity
@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +17,8 @@ import kotlinx.coroutines.launch
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 import application.application.MainActivity
-import application.application.SplashScreen
 import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.InterfaceRepository
-import application.model.Repository
 import application.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +28,7 @@ import java.util.Locale
 
 // used by home fragment and setting fragment
 
-class HomeViewModel(private val repo: InterfaceRepository) : ViewModel() {
+class WeatherShowViewModel(private val repo: InterfaceRepository) : ViewModel() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private val _weatherResponseLiveData: MutableStateFlow<APiStateOrLocalStateFromLastWeather> =
@@ -39,6 +38,8 @@ class HomeViewModel(private val repo: InterfaceRepository) : ViewModel() {
     lateinit var editor: SharedPreferences.Editor
 
     fun getWeather(context: Context, longitude: Double, latitude: Double) {
+
+        Log.d("Wetaherreeeee",":   " + longitude + "  " + latitude)
         // check the internet to
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {
