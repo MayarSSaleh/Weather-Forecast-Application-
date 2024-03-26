@@ -11,14 +11,17 @@ fun loadImage(view: ImageView, url: String?, myError: Drawable) {
         Picasso.get().load(it).error(myError).into(view)
     }
 }
-object MyConstant{
-    const val longitude ="longitude"
-    const val latitude ="latitude"
-    const val address ="address"
+
+object MyConstant {
+
+    const val location_lon = "loc_lon"
+    const val location_lat = "loc_lat"
+    const val address = "address"
     const val SHARED_PREFS = "sharedPreferences"
-    const val  location="location"
-    const val  wind_unit="wind_unit"
-    const val  temp_unit="temp_unit"
-    const val  lan="lan"
-    const val curentLanguage ="current lan"
+    const val User_CURRENT_LOCATION = "user_location"
+
+    const val wind_unit = "wind_unit"
+    const val temp_unit = "temp_unit"
+    const val lan = "lan"
+    const val curentLanguage = "current lan"
 }

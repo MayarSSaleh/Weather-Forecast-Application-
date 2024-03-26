@@ -42,7 +42,6 @@ class WeatherShowViewModel(private val repo: InterfaceRepository) : ViewModel() 
 
     fun getWeather(context: Context, longitude: Double, latitude: Double) {
 
-        Log.d("Wetaherreeeee",":   " + longitude + "  " + latitude)
         // check the internet to
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {

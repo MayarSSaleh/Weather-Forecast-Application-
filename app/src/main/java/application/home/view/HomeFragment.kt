@@ -93,18 +93,20 @@ class HomeFragment : Fragment() {
             homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
         } else {
             if (homeViewModel.isNetworkAvailable(context)) {
-                if (sharedPreferences.getString(MyConstant.location, "Gps") == "Map") {
+
+                var openLocationFrom=sharedPreferences.getString(MyConstant.User_CURRENT_LOCATION, "isGps")
+
+                if ( openLocationFrom == "isMap") {
                     homeViewModel.getWeather(
                         requireContext(),
-                        sharedPreferences.getString(MyConstant.latitude, "0.0")!!
+                        sharedPreferences.getString(MyConstant.location_lat, "0.0")!!
                             .toDouble(),
-                        sharedPreferences.getString(MyConstant.longitude, "0.0")!!.toDouble()
+                        sharedPreferences.getString(MyConstant.location_lon, "0.0")!!.toDouble()
                     )
                 } else {
                     getFreshLocation()
                 }
             } else {
-                Log.d("weather", "no internet before get last weather method")
                 homeViewModel.getLastWeather()
                 responseOfGetWeatherFromApi()
             }

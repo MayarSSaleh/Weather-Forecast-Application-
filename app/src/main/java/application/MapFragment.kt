@@ -98,10 +98,10 @@ class MapFragment(
                 .setPositiveButton("OK") { dialog, id ->
                     // i changed to map we conformed to location
                     editor.putInt(mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID, checkedId)
-                    editor.putString(MyConstant.location, "Map")
+                    editor.putString(MyConstant.User_CURRENT_LOCATION, "isMap")
                     editor.putString(MyConstant.address, "$theAddress")
-                    editor.putString(MyConstant.latitude, "$latitude")
-                    editor.putString(MyConstant.longitude, "$longitude")
+                    editor.putString(MyConstant.location_lat, "$latitude")
+                    editor.putString(MyConstant.location_lon, "$longitude")
                     editor.apply()
                     Toast.makeText(
                         requireContext(),

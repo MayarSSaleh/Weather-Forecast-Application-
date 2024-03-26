@@ -90,7 +90,7 @@ class SettingFragment : Fragment() {
                 }
 
                 "Gps" -> {
-                    editor.putString(MyConstant.location, "Gps")
+                    editor.putString(MyConstant.User_CURRENT_LOCATION, "isGps")
                     editor.putInt(KEY_LOCATION_RADIO_BUTTON_ID, checkedId)
                     editor.apply()
                 }
