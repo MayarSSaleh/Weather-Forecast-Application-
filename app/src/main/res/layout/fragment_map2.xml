@@ -53,7 +53,7 @@
         android:id="@+id/img_alert_mapScreen"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@drawable/img_1"
+        android:src="@drawable/alert"
         android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/set_as_my_Location"
         app:layout_constraintTop_toTopOf="@+id/set_as_my_Location"

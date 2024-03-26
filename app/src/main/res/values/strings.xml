@@ -35,5 +35,10 @@
     <string name="remove">Remove</string>
     <string name="alerts">Alerts</string>
     <string name="meter_sec_default">meter/sec</string>
+    <string name="alert_start_time">Time</string>
+    <string name="data_alert">Day</string>
+    <string name="type_of_alarm">Alarm Setting:</string>
+    <string name="notification">Notification</string>
+    <string name="alarm">Alarm</string>
 
 </resources>

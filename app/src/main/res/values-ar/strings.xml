@@ -35,5 +35,10 @@
     <string name="remove">مسح </string>
     <string name="alerts">تنبيهات</string>
     <string name="meter_sec_default">meter/sec</string>
+    <string name="alert_start_time">الساعة</string>
+    <string name="data_alert">التاريخ</string>
+    <string name="type_of_alarm">ظبط التنبيه: </string>
+    <string name="notification">Notification</string>
+    <string name="alarm">Alarm</string>
 
 </resources>

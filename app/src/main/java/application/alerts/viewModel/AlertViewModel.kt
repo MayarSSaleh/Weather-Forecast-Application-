@@ -1,5 +1,6 @@
 package application.alerts.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import application.model.Alert
@@ -30,12 +31,16 @@ class AlertViewModel(private var repo: InterfaceRepository) : ViewModel() {
                 _alertsList.value = LocalStateAlerts.SuccessLocalAlert(it!!)
             }
         }
+    }
 
-        fun insertALert(alert: Alert) {
-            viewModelScope.launch(Dispatchers.IO) {
-                repo.insertAlert(alert)
-                getAlerts()
-            }
+    fun insertALert(alert: Alert) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("alert", "$alert")
+            repo.insertAlert(alert)
+            getAlerts()
         }
+    }
+    fun deleteALL(){
+//        repo.deleteAllAlerts()
     }
 }

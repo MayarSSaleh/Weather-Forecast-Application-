@@ -17,7 +17,7 @@ data class Alert(
     @NonNull
     val alertlatitude: Double,
     @NonNull
-    val data: String,
+    val day: String,
     @NonNull
     val time: String,
     val typeOfAlarm: String// notification or  alarm .

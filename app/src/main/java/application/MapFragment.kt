@@ -13,6 +13,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import application.alerts.view.AlertDialogFragment
+import application.alerts.viewModel.AlertViewModel
+import application.alerts.viewModel.AlertViewModelFactory
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
@@ -21,15 +24,16 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import application.fav.viewModel.FavViewModel
 import application.fav.viewModel.FavViewModelFactory
+import application.model.Alert
 import application.model.Repository
 import com.weather.application.R
 
 class MapFragment(
     private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String,
     private var checkedId: Int
-) : Fragment(),
+) : Fragment(), OnMapReadyCallback, AlertDialogFragment.DialogListener {
 
-    OnMapReadyCallback {
+
     private lateinit var rootView: View
     private lateinit var myMap: GoogleMap
     private lateinit var mMapView: MapView
@@ -44,7 +48,8 @@ class MapFragment(
     private lateinit var alert: ImageView
     private var latitude = 0.0
     private var longitude = 0.0
-
+    private lateinit var viewModelAlert: AlertViewModel
+    private lateinit var alertFactory: AlertViewModelFactory
     private var theAddress: String = ""
 
     override fun onCreateView(
@@ -63,6 +68,9 @@ class MapFragment(
         theAddress = getString(R.string.Not_selected_place_yet)
         favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
+        alertFactory = AlertViewModelFactory(Repository.getInstance(requireContext()))
+        viewModelAlert = ViewModelProvider(this, alertFactory).get(AlertViewModel::class.java)
+
 
         try {
             MapsInitializer.initialize(requireActivity())
@@ -114,10 +122,9 @@ class MapFragment(
             }
         }
         alert.setOnClickListener {
-
-
-
-
+            val dialogFragment = AlertDialogFragment()
+            dialogFragment.setTargetFragment(this, 0)
+            dialogFragment.show(parentFragmentManager, "CustomDialog")
         }
     }
 
@@ -134,5 +141,16 @@ class MapFragment(
             Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT)
                 .show()
         }
+    }
+
+    override fun onPositiveButtonClick(
+        alarmType: String,
+        selectedDay: String,
+        selectedTime: String
+    ) {
+        viewModelAlert.insertALert(Alert(theAddress,longitude,latitude,selectedDay,selectedTime,alarmType))
+    }
+
+    override fun onNegativeButtonClick() {
     }
 }

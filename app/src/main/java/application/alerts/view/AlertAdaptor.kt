@@ -1,6 +1,5 @@
 package application.alerts.view
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -22,7 +21,7 @@ class AlertAdaptor() :
         val current = getItem(position)
         holder.binding.tvAlertCityName.text = current.alertlocationName
         holder.binding.tvAlertAlertType.text = current.typeOfAlarm
-        holder.binding.tvAlertData.text = current.data
+        holder.binding.tvAlertData.text = current.day
         holder.binding.tvAlertTime.text = current.time
     }
 
