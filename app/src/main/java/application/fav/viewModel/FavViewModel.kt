@@ -15,6 +15,7 @@ class FavViewModel(private var repo: InterfaceRepository) : ViewModel() {
 
     private val _favLocations: MutableStateFlow<LocalStateFavouirteLocations> =
         MutableStateFlow(LocalStateFavouirteLocations.LoadingLocal)
+
     val favLocations: StateFlow<LocalStateFavouirteLocations> = _favLocations
 
     fun getFavLocations() {

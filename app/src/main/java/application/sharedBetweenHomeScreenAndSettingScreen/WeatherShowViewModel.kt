@@ -1,4 +1,4 @@
-package application.sharedBetweenScrens
+package application.sharedBetweenHomeScreenAndSettingScreen
 
 import android.annotation.TargetApi
 import android.app.Activity
@@ -31,9 +31,12 @@ import java.util.Locale
 class WeatherShowViewModel(private val repo: InterfaceRepository) : ViewModel() {
 
     private lateinit var sharedPreferences: SharedPreferences
+
     private val _weatherResponseLiveData: MutableStateFlow<APiStateOrLocalStateFromLastWeather> =
         MutableStateFlow(APiStateOrLocalStateFromLastWeather.Loading)
+
     val weatherResponseLiveData: StateFlow<APiStateOrLocalStateFromLastWeather> = _weatherResponseLiveData
+
     var language: String? = null
     lateinit var editor: SharedPreferences.Editor
 

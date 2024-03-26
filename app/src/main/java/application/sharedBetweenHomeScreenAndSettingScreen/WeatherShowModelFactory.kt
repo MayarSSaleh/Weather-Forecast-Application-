@@ -1,4 +1,4 @@
-package application.sharedBetweenScrens
+package application.sharedBetweenHomeScreenAndSettingScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

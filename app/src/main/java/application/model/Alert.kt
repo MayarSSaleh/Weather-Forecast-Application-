@@ -11,16 +11,16 @@ import kotlinx.android.parcel.Parcelize
 data class Alert(
     @PrimaryKey
     @NonNull
-    val alertlocationName: String,
+    var alertlocationName: String,
     @NonNull
-    val alertlongitude: Double,
+    var alertlongitude: Double,
     @NonNull
-    val alertlatitude: Double,
+    var alertlatitude: Double,
     @NonNull
-    val day: String,
+    var day: String,
     @NonNull
-    val time: String,
-    val typeOfAlarm: String// notification or  alarm .
+    var time: String,
+    var typeOfAlarm: String// notification or  alarm .
 
 ) : Parcelable
 

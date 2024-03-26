@@ -11,7 +11,7 @@ import application.MapFragment
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 
-import application.sharedBetweenScrens.WeatherShowViewModel
+import application.sharedBetweenHomeScreenAndSettingScreen.WeatherShowViewModel
 import application.model.Repository
 import com.weather.application.R
 import com.weather.application.databinding.FragmentSettingBinding
