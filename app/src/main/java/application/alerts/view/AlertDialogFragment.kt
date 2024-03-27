@@ -17,7 +17,6 @@ import application.alerts.viewModel.AlertViewModelFactory
 import application.model.Alert
 import application.model.LocalStateFavouirteLocations
 import application.model.Repository
-import application.model.SetAlert
 import com.weather.application.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

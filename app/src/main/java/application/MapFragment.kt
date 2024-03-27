@@ -29,7 +29,6 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.Alert
 import application.model.LocalStateAlerts
 import application.model.Repository
-import application.model.SetAlert
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

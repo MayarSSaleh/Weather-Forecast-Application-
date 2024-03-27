@@ -17,10 +17,3 @@ sealed class LocalStateAlerts {
     data class FailureLocalAlert(val msg: Throwable) : LocalStateAlerts()
     object LoadingLocaAlertl : LocalStateAlerts()
 }
-
-sealed class SetAlert {
-    data class set(val data: Alert) : SetAlert()
-    data class not(val msg: String) : SetAlert()
-    object Loading : SetAlert()
-
-}

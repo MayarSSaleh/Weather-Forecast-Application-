@@ -15,9 +15,6 @@ class HomeViewModelTest {
     lateinit var repo: FakeRepository
     lateinit var viewModel: WeatherShowViewModel
 
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
-
     @Before
     fun setUp() {
         repo = FakeRepository()

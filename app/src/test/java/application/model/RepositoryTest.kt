@@ -79,7 +79,6 @@ class RepositoryTest {
         // Assert that the result is not null
         assertNotNull(result)
         // Assert specific properties of the result
-
         assertThat(result!!.city.name, `is`("least Response"))
         assertThat(result!!.list, `is`(emptyList()))
     }
