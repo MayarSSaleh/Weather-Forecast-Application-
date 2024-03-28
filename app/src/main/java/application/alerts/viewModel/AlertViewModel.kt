@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
+
 class AlertViewModel(private var repo: InterfaceRepository) : ViewModel() {
 
     private val _alertsList: MutableStateFlow<LocalStateAlerts> =
@@ -29,18 +30,24 @@ class AlertViewModel(private var repo: InterfaceRepository) : ViewModel() {
                 _alertsList.value = LocalStateAlerts.FailureLocalAlert(e)
             }.collect {
                 _alertsList.value = LocalStateAlerts.SuccessLocalAlert(it!!)
+
+                }
             }
         }
-    }
+
 
     fun insertALert(alert: Alert) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("alert", "$alert")
             repo.insertAlert(alert)
+
             getAlerts()
         }
     }
-    fun deleteALL(){
+
+    fun deleteALL() {
 //        repo.deleteAllAlerts()
     }
 }
+
+

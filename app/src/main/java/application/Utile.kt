@@ -24,4 +24,7 @@ object MyConstant {
     const val temp_unit = "temp_unit"
     const val lan = "lan"
     const val curentLanguage = "current lan"
+
+     const val CHANNEL_ID: String = "CHANNEL_ID"
+
 }

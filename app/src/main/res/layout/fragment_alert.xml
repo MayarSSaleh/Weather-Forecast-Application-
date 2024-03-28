@@ -21,7 +21,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nes"
         android:layout_width="378dp"
-        android:layout_height="416dp"
+        android:layout_height="570dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.515"
@@ -48,27 +48,33 @@
 
     <ImageView
         android:id="@+id/img_stop"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="96dp"
-        android:src="@drawable/s"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="107dp"
+        android:layout_marginEnd="164dp"
+        android:src="@drawable/stop_alarm"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_stopNotification"
+        app:layout_constraintTop_toTopOf="@+id/btn_stopNotification"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/btn_stopNotification"
+        android:layout_width="50dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/notification_stop"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nes" />
 
     <ImageView
         android:id="@+id/addAlert"
-        android:layout_width="51dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="41dp"
+        android:layout_height="43dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="36dp"
         android:src="@drawable/add"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_stop"
-     />
+        app:layout_constraintTop_toTopOf="@+id/btn_stopNotification" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

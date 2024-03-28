@@ -1,9 +1,13 @@
 package application.alerts.view
 
 
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,9 +25,12 @@ import com.weather.application.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
-class AlertDialogFragment(val addresssName:String,val longitude: Double, val latitude: Double) : DialogFragment() {
+class AlertDialogFragment(val addresssName: String, val longitude: Double, val latitude: Double) :
+    DialogFragment() {
 
     private lateinit var btn_day: Button
     private lateinit var btn_time: Button
@@ -31,11 +38,15 @@ class AlertDialogFragment(val addresssName:String,val longitude: Double, val lat
     private lateinit var viewModelAlert: AlertViewModel
     private lateinit var alertFactory: AlertViewModelFactory
     private val newAlert = Alert(addresssName, longitude, latitude, "", "", "")
+    private lateinit var alarmManager: AlarmManager
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = LayoutInflater.from(requireContext())
         val dialogView = inflater.inflate(R.layout.dialog, null)
+
+        alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
         val alarmType = dialogView.findViewById<RadioGroup>(R.id.radioGroup1)
         btn_time = dialogView.findViewById(R.id.btn_start_time)
         btn_day = dialogView.findViewById(R.id.btn_start_day)
@@ -67,7 +78,7 @@ class AlertDialogFragment(val addresssName:String,val longitude: Double, val lat
                 },
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
-                false
+                true
             )
             timePickerDialog.show()
         }
@@ -78,9 +89,48 @@ class AlertDialogFragment(val addresssName:String,val longitude: Double, val lat
                     dialogView.findViewById<RadioButton>(alarmType.checkedRadioButtonId).text.toString()
                 newAlert.typeOfAlarm = typeOfAlarm
                 viewModelAlert.insertALert(newAlert)
+                setAlerts(newAlert)
+
             }
             .setNegativeButton("Cancel", null)
 
         return builder.create()
+    }
+
+    private fun setAlerts(alert: Alert) {
+        val scheduledTimeMillis: Long = convertDateTimeToMillis(alert.day, alert.time)
+        Log.d("notif", "scheduledTimeMillis ${alert.day}and time is ${alert.time}")
+        Log.d("notif", "scheduledTimeMillis $scheduledTimeMillis")
+
+        val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
+        intent.putExtra("long", alert.alertlongitude)
+        intent.putExtra("type", alert.typeOfAlarm)
+        intent.putExtra("lat", alert.alertlatitude)
+        intent.putExtra("cityName", alert.alertlocationName)
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            1,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager?.setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            scheduledTimeMillis,
+            pendingIntent
+        )
+    }
+
+    private fun convertDateTimeToMillis(day: String, time: String): Long {
+        Log.d("notif", "in method  ${day}and time is ${time}")
+        val dateTimeString = "$day $time"
+        val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val date = format.parse(dateTimeString)
+        val timeInMillis = date?.time ?: -1
+        return if (timeInMillis != -1L) {
+            // Subtract 60 seconds (60,000 milliseconds) from the calculated time
+            timeInMillis - 18000
+        } else {
+            -1
+        }
     }
 }
