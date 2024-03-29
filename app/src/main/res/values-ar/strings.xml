@@ -41,12 +41,11 @@
     <string name="notification">الإشعارات </string>
     <string name="alarm">منبهات </string>
     <string name="ok">تأكيد </string>
-    <string name="cancel">Cancel</string>
-    <string name="conformation">Conformation</string>
-    <string name="are_your_stop_the_alarms">Are your stop the alarms?</string>
-    <string name="are_your_stop_the_notifications">Are your stop the Notifications?</string>
-    <string name="sorry_can_not_get_them">Sorry Can not get them}</string>
-    <string name="the_alarms_is_gone">The alarms is gone</string>
-    <string name="the_notification_is_gone">The Notification is gone</string>
+    <string name="cancel">إلغاء</string>
+    <string name="conformation">تأكيد</string>
+    <string name="are_your_stop_the_alarms">تأكيد توقيف المنبهات؟</string>
+    <string name="are_your_stop_the_notifications">تأكيد توقيف الإشعارات؟</string>
+    <string name="sorry_can_not_get_them">للإسف لا نستطيع الحصول عليهم</string>
+    <string name="stop">حسنا</string>
 
 </resources>

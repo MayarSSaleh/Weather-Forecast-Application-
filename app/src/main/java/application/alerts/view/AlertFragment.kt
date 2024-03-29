@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -32,11 +33,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import android.provider.Settings
 
 class AlertFragment : Fragment() {
     private lateinit var add: ImageView
     private lateinit var stopAlarms: ImageView
-
     private lateinit var alertRecycler: RecyclerView
     private lateinit var alertAdaptor: AlertAdaptor
     private lateinit var alertFactory: AlertViewModelFactory
@@ -46,6 +47,7 @@ class AlertFragment : Fragment() {
     lateinit var stopNotifcation: ImageView
     private val CHANNEL_ID: String = "CHANNEL_ID"
     private lateinit var alarmManager: AlarmManager
+    private val PERMISSION_REQUEST_CODE = 1001
 
 
     @RequiresApi(Build.VERSION_CODES.S)
@@ -57,6 +59,19 @@ class AlertFragment : Fragment() {
         Ui(view)
         setOnClickLisenter()
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(
+                requireContext()
+            )
+        ) {
+            // Permission is not granted, request it
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + requireActivity().packageName)
+            )
+            startActivityForResult(intent, PERMISSION_REQUEST_CODE)
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val notificationManager =
@@ -70,16 +85,19 @@ class AlertFragment : Fragment() {
                 )
             }
         }
+
         lifecycleScope.launch {
             viewModel.alertsList.collectLatest {
                 when (it) {
                     is LocalStateAlerts.LoadingLocaAlertl -> {
                         loading_view.visibility = View.VISIBLE
                     }
+
                     is LocalStateAlerts.SuccessLocalAlert -> {
                         alertAdaptor.submitList(it.data)
                         loading_view.visibility = View.GONE
                     }
+
                     else -> {
                         loading_view.visibility = View.GONE
                         Toast.makeText(
@@ -109,7 +127,6 @@ class AlertFragment : Fragment() {
         alertRecycler.adapter = alertAdaptor
         alertRecycler.layoutManager = layoutManager
     }
-
 
     fun setOnClickLisenter() {
 
@@ -154,8 +171,10 @@ class AlertFragment : Fragment() {
                     is LocalStateAlerts.SuccessLocalAlert -> {
                         for (alert in it.data) {
                             //get from room
-                            val scheduledTimeMillis: Long = convertDateTimeToMillis(alert.day, alert.time)
-                            val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
+                            val scheduledTimeMillis: Long =
+                                convertDateTimeToMillis(alert.day, alert.time)
+                            val intent =
+                                Intent(requireContext(), AlarmBroadcastReceiver::class.java)
                             intent.putExtra("Alert", alert)
                             val pendingIntent = PendingIntent.getBroadcast(
                                 requireContext(),
@@ -171,6 +190,7 @@ class AlertFragment : Fragment() {
                             requestCodeCounter++
                         }
                     }
+
                     else -> {
                     }
                 }
@@ -189,6 +209,19 @@ class AlertFragment : Fragment() {
             timeInMillis - 18000
         } else {
             -1
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(
+                    requireContext()
+                )
+            ) {
+            } else {
+            }
         }
     }
 }

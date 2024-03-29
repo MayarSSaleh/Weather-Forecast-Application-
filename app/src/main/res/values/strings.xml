@@ -48,5 +48,6 @@
     <string name="sorry_can_not_get_them">Sorry Can not get them}</string>
     <string name="the_alarms_is_gone">The alarms is gone</string>
     <string name="the_notification_is_gone">The Notification is gone</string>
+    <string name="stop">Stop</string>
 
 </resources>

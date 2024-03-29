@@ -21,7 +21,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nes"
         android:layout_width="378dp"
-        android:layout_height="570dp"
+        android:layout_height="600dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.515"

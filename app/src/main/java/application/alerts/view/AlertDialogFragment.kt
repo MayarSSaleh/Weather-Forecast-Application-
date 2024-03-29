@@ -90,14 +90,18 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
                 val typeOfAlarm =
                     dialogView.findViewById<RadioButton>(alarmType.checkedRadioButtonId).text.toString()
                 newAlert.typeOfAlarm = typeOfAlarm
-                viewModelAlert.insertALert(newAlert)
-                upDataAlarm()
+                if (newAlert.day == "" || newAlert.time == "") {
+                    Toast.makeText(context, "Please Enter valid data", Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModelAlert.insertALert(newAlert)
+                    upDataAlarm()
+                }
             }
             .setNegativeButton(getString(R.string.cancel), null)
         return builder.create()
     }
 
-     fun upDataAlarm() {
+    fun upDataAlarm() {
         var requestCodeCounter = 0
         viewModelAlert.getAlerts()
         lifecycleScope.launch {
@@ -106,12 +110,17 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
                     is LocalStateAlerts.SuccessLocalAlert -> {
                         for (alert in it.data) {
 
-Log.d("null", "long    ${alert.alertlongitude } lat ${alert.alertlatitude} and type ${alert.typeOfAlarm}  ")
+                            Log.d(
+                                "null",
+                                "long    ${alert.alertlongitude} lat ${alert.alertlatitude} and type ${alert.typeOfAlarm}  "
+                            )
                             Log.d("null", "date ${it.data.size}  ")
 
                             //get from room
-                            val scheduledTimeMillis: Long = convertDateTimeToMillis(alert.day, alert.time)
-                            val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
+                            val scheduledTimeMillis: Long =
+                                convertDateTimeToMillis(alert.day, alert.time)
+                            val intent =
+                                Intent(requireContext(), AlarmBroadcastReceiver::class.java)
                             intent.putExtra("alert-longitude", alert.alertlongitude)
                             intent.putExtra("alert-latitude", alert.alertlatitude)
                             intent.putExtra("typeOfAlarm", alert.typeOfAlarm)
@@ -130,6 +139,7 @@ Log.d("null", "long    ${alert.alertlongitude } lat ${alert.alertlatitude} and t
                             requestCodeCounter++
                         }
                     }
+
                     else -> {
                     }
                 }
@@ -138,7 +148,6 @@ Log.d("null", "long    ${alert.alertlongitude } lat ${alert.alertlatitude} and t
     }
 
     private fun convertDateTimeToMillis(day: String, time: String): Long {
-        Log.d("notif", "in method  ${day}and time is ${time}")
         val dateTimeString = "$day $time"
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         val date = format.parse(dateTimeString)
