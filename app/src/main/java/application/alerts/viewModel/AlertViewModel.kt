@@ -23,7 +23,7 @@ class AlertViewModel(private var repo: InterfaceRepository) : ViewModel() {
         getAlerts()
     }
 
-    private fun getAlerts() {
+    fun getAlerts() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = repo.getAllAlerts()
             response.catch { e ->
@@ -45,8 +45,18 @@ class AlertViewModel(private var repo: InterfaceRepository) : ViewModel() {
         }
     }
 
-    fun deleteALL() {
-//        repo.deleteAllAlerts()
+    fun deleteALLNotification() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteALLNotification()
+            getAlerts()
+        }
+    }
+
+    fun deleteALLAlarms() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.deleteALLAlarms()
+            getAlerts()
+        }
     }
 }
 

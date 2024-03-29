@@ -11,20 +11,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import application.alerts.viewModel.AlertViewModel
 import application.alerts.viewModel.AlertViewModelFactory
 import application.model.Alert
-import application.model.LocalStateFavouirteLocations
+import application.model.LocalStateAlerts
 import application.model.Repository
 import com.weather.application.R
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -84,40 +86,55 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
         }
 
         builder.setView(dialogView)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 val typeOfAlarm =
                     dialogView.findViewById<RadioButton>(alarmType.checkedRadioButtonId).text.toString()
                 newAlert.typeOfAlarm = typeOfAlarm
                 viewModelAlert.insertALert(newAlert)
-                setAlerts(newAlert)
-
+                upDataAlarm()
             }
-            .setNegativeButton("Cancel", null)
-
+            .setNegativeButton(getString(R.string.cancel), null)
         return builder.create()
     }
 
-    private fun setAlerts(alert: Alert) {
-        val scheduledTimeMillis: Long = convertDateTimeToMillis(alert.day, alert.time)
-        Log.d("notif", "scheduledTimeMillis ${alert.day}and time is ${alert.time}")
-        Log.d("notif", "scheduledTimeMillis $scheduledTimeMillis")
+     fun upDataAlarm() {
+        var requestCodeCounter = 0
+        viewModelAlert.getAlerts()
+        lifecycleScope.launch {
+            viewModelAlert.alertsList.collectLatest {
+                when (it) {
+                    is LocalStateAlerts.SuccessLocalAlert -> {
+                        for (alert in it.data) {
 
-        val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
-        intent.putExtra("long", alert.alertlongitude)
-        intent.putExtra("type", alert.typeOfAlarm)
-        intent.putExtra("lat", alert.alertlatitude)
-        intent.putExtra("cityName", alert.alertlocationName)
-        val pendingIntent = PendingIntent.getBroadcast(
-            requireContext(),
-            1,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager?.setAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            scheduledTimeMillis,
-            pendingIntent
-        )
+Log.d("null", "long    ${alert.alertlongitude } lat ${alert.alertlatitude} and type ${alert.typeOfAlarm}  ")
+                            Log.d("null", "date ${it.data.size}  ")
+
+                            //get from room
+                            val scheduledTimeMillis: Long = convertDateTimeToMillis(alert.day, alert.time)
+                            val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
+                            intent.putExtra("alert-longitude", alert.alertlongitude)
+                            intent.putExtra("alert-latitude", alert.alertlatitude)
+                            intent.putExtra("typeOfAlarm", alert.typeOfAlarm)
+
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                requireContext(),
+                                requestCodeCounter,
+                                intent,
+                                PendingIntent.FLAG_IMMUTABLE
+                            )
+                            alarmManager?.setAndAllowWhileIdle(
+                                AlarmManager.RTC_WAKEUP,
+                                scheduledTimeMillis,
+                                pendingIntent
+                            )
+                            requestCodeCounter++
+                        }
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
     }
 
     private fun convertDateTimeToMillis(day: String, time: String): Long {

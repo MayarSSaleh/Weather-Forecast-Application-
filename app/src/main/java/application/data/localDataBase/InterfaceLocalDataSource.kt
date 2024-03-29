@@ -20,5 +20,7 @@ interface InterfaceLocalDataSource {
     fun getAllAlerts(): Flow<List<Alert>>
 
     suspend fun insertAlert(alert: Alert)
+    suspend fun deleteALLNotification()
+    suspend fun deleteALLAlarms()
 
 }

@@ -1,11 +1,9 @@
 package application.home.viewModel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import application.model.FakeRepository
-import application.sharedBetweenHomeScreenAndSettingScreen.WeatherShowViewModel
+import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 

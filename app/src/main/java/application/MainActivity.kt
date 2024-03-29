@@ -16,8 +16,8 @@ import application.alerts.view.AlertFragment
 import application.fav.view.FavouriteFragment
 import application.fav.viewModel.Communication
 import application.home.view.HomeFragment
-import application.sharedBetweenHomeScreenAndSettingScreen.WeatherShowViewModel
-import application.sharedBetweenHomeScreenAndSettingScreen.WeatherShowModelFactory
+import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
+import application.ShowWeatherDeailrsViewModel.WeatherShowModelFactory
 import application.model.FavLocation
 import application.model.Repository
 import application.setting.view.SettingFragment

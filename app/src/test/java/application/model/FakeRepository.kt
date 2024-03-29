@@ -60,4 +60,12 @@ class FakeRepository : InterfaceRepository {
     override suspend fun insertAlert(alert: Alert) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun deleteALLNotification() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteALLAlarms() {
+        TODO("Not yet implemented")
+    }
 }

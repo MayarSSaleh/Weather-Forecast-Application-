@@ -90,5 +90,13 @@ class Repository(
         productLocalDataSource.insertAlert(alert)
     }
 
+    override suspend fun deleteALLNotification() {
+        productLocalDataSource.deleteALLNotification()
+    }
+
+    override suspend fun deleteALLAlarms() {
+        productLocalDataSource.deleteALLAlarms()
+    }
+
 }
 

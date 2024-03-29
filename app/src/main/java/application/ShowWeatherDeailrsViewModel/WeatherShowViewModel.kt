@@ -1,4 +1,4 @@
-package application.sharedBetweenHomeScreenAndSettingScreen
+package application.ShowWeatherDeailrsViewModel
 
 import android.annotation.TargetApi
 import android.app.Activity
@@ -9,7 +9,6 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers

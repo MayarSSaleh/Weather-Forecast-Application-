@@ -1,4 +1,4 @@
-package application.sharedBetweenHomeScreenAndSettingScreen
+package application.ShowWeatherDeailrsViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

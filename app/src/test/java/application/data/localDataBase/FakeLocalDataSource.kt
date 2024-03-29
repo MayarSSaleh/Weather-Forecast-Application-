@@ -48,11 +48,18 @@ class FakeLocalDataSource(
     override fun getAllFavLocations(): Flow<List<FavLocation>> {
         return flow {
             emit(favLocations ?: emptyList())
-
         }
     }
 
     override fun getAllAlerts(): Flow<List<Alert>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteALLNotification() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteALLAlarms() {
         TODO("Not yet implemented")
     }
 }

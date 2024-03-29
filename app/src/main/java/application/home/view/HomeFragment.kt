@@ -32,8 +32,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.squareup.picasso.Picasso
 import application.MyConstant
-import application.sharedBetweenHomeScreenAndSettingScreen.WeatherShowViewModel
-import application.sharedBetweenHomeScreenAndSettingScreen.WeatherShowModelFactory
+import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
+import application.ShowWeatherDeailrsViewModel.WeatherShowModelFactory
 import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.FavLocation
 
