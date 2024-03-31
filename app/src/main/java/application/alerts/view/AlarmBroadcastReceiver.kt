@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import application.model.Alert
 import application.model.Repository
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -30,20 +31,20 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         Log.d("t", "on broooooooooooooooooooooood cast")
         repository = Repository.getInstance(context)
 
-        val receivedAlert = intent.getParcelableExtra<Alert>("A")
+//        val receivedAlert = intent.getParcelableExtra<Alert>("A")
 
+        val alertUri = intent.data
+        val alertJson = alertUri?.getQueryParameter("alert_data")
+        Log.d("t", "on brooooooo  alertJson ${alertJson} ")
 
-        Log.d(
-            "t",
-            "on brooooooo ${receivedAlert} and test ${intent.getStringExtra("test")} and another way ${
-                intent.getExtras()?.getString("test")
-            }"
-        )
+        if (alertJson != null) {
+            // Deserialize JSON string into Alert object
+            val alert = Gson().fromJson(alertJson, Alert::class.java)
+            // Now you have the Alert object
 
-        if (receivedAlert != null) {
-            requestTheWeather(context, receivedAlert)
+            requestTheWeather(context, alert)
             Log.d("t", "on broooooooooooooooooooooood cast alert not null")
-            typeOfAlarm = receivedAlert?.typeOfAlarm.toString()
+            typeOfAlarm = alert?.typeOfAlarm.toString()
         }
     }
 

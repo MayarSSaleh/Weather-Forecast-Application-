@@ -38,6 +38,7 @@ import android.provider.Settings
 import application.MyConstant
 import application.MyConstant.alarmNumbers
 import application.model.Alert
+import com.google.gson.Gson
 
 class AlertFragment : Fragment() {
     // alerts add here so it mush back here after add
@@ -131,7 +132,7 @@ class AlertFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun upDataAlarm(data: List<Alert>) {
         // Remove previous alarms
-        /*
+
         val requestCodeListSize = sharedPreferences.getInt(alarmNumbers, 0)
         Log.d("t", "Previous alarm count: $requestCodeListSize")
 
@@ -146,19 +147,27 @@ class AlertFragment : Fragment() {
                 alertIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
-            alarmManager.cancel(alertPendingIntent)*/
-
-        alarmManager.cancelAll()
+            alarmManager.cancel(alertPendingIntent)
+        }
+//        alarmManager.cancelAll()
 
         // Set new alarms
         var requestCodeCounter = 0
         for (alert in data) {
             requestCodeCounter++
             Log.d("t", "Setting alarm for: $alert")
+//            val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
+//            intent.putExtra("A", alert)
+//
+            // Serialize Alert object into JSON string
+            val alertJson = Gson().toJson(alert)
+            val alertUri = Uri.parse("custom_scheme://alert").buildUpon()
+                .appendQueryParameter("alert_data", alertJson)
+                .build()
+
             val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
-            intent.putExtra("A", alert)
-            intent.putExtra("test","${alert.typeOfAlarm}")
-            Log.d("t", "alert fragment test ${intent.getStringExtra("test")}")
+            intent.data = alertUri
+
 // i can replace requestCodeCounter with id which  final int id = (int) System.currentTimeMillis();
             val pendingIntent = PendingIntent.getBroadcast(
                 requireContext(),
@@ -178,8 +187,8 @@ class AlertFragment : Fragment() {
             )
         }
 //        // Update the stored alarm count
-//        editor.putInt(alarmNumbers, requestCodeCounter)
-//        editor.apply()
+        editor.putInt(alarmNumbers, requestCodeCounter)
+        editor.apply()
     }
 
 
