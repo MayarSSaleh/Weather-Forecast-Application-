@@ -22,56 +22,45 @@ import kotlinx.coroutines.withContext
 
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
+
     private var typeOfAlarm = ""
     lateinit var repository: Repository
 
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("t", "on broooooooooooooooooooooood cast")
         repository = Repository.getInstance(context)
-
-//        val receivedAlert = intent.getParcelableExtra<Alert>("A")
-
         val alertUri = intent.data
         val alertJson = alertUri?.getQueryParameter("alert_data")
-        Log.d("t", "on brooooooo  alertJson ${alertJson} ")
-
         if (alertJson != null) {
             // Deserialize JSON string into Alert object
             val alert = Gson().fromJson(alertJson, Alert::class.java)
             // Now you have the Alert object
-
             requestTheWeather(context, alert)
-            Log.d("t", "on broooooooooooooooooooooood cast alert not null")
             typeOfAlarm = alert?.typeOfAlarm.toString()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun requestTheWeather(context: Context, alert: Alert) {
-        var alertlongitude = alert.alertlongitude
-        var alertlatitude = alert.alertlatitude
-
-        if (alertlongitude != 0.0 && alertlatitude != 0.0) {
-            val coroutineScope = CoroutineScope(Dispatchers.Main)
+           val coroutineScope = CoroutineScope(Dispatchers.Main)
             coroutineScope.launch {
                 withContext(Dispatchers.IO) {
                     repository.deleteAlert(alert)
                     val result =
-                        repository.getWeather(alertlongitude!!, alertlatitude!!, null, null)
+                        repository.getWeather( alert.alertlatitude, alert.alertlongitude,null, null)
                     result.collectLatest {
                         Log.d(
-                            "null", "result length is $result " +
-                                    "000${it.city.name} and ${it.list.get(0).weather.get(0).description}"
+                            "null", "result length is ${it.list.get(0).weather.get(0).description}"
                         )
+                        Log.d(
+                            "null", " nammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmme ${it.city.name}"
+                        )
+
                         showResult(context, it.city.name, it.list.get(0).weather.get(0).description)
                     }
                 }
             }
-        } else {
-            Log.d("null", "00000")
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
