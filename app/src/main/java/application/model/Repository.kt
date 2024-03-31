@@ -72,6 +72,7 @@ class Repository(
         return productLocalDataSource.getLestWeathear()
     }
 
+
     // the following in back process not get the return to user
     override suspend fun deleteLocation() {
         return productLocalDataSource.deleteWeather()
@@ -98,5 +99,8 @@ class Repository(
         productLocalDataSource.deleteALLAlarms()
     }
 
+    override suspend fun deleteAlert(alert: Alert) {
+        productLocalDataSource.deleteAlert(alert)
+    }
 }
 

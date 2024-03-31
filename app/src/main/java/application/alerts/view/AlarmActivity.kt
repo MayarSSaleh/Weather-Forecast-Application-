@@ -35,7 +35,7 @@ class AlarmActivity() : AppCompatActivity() {
         binding.tvCityAlarm.text = intent.getStringExtra("cityName")
         binding.tvDescAlarm.text = intent.getStringExtra("description")
 
-        binding.btnStopTheAlerm.setOnClickListener {
+        binding.button.setOnClickListener {
             if (ringtone != null && ringtone.isPlaying()) {
                 ringtone.stop();
             }

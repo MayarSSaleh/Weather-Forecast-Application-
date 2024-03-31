@@ -17,7 +17,7 @@ import application.fav.viewModel.Communication
 import application.fav.viewModel.FavViewModel
 import application.fav.viewModel.FavViewModelFactory
 import application.model.FavLocation
-import application.model.LocalStateFavouirteLocations
+import application.model.LocalStateFavouriteLocations
 import application.model.Repository
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
@@ -62,10 +62,10 @@ class FavouriteFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.favLocations.collectLatest {
                 when (it) {
-                    is LocalStateFavouirteLocations.LoadingLocal -> {
+                    is LocalStateFavouriteLocations.LoadingLocal -> {
                         loading_view.visibility = View.VISIBLE
                     }
-                    is LocalStateFavouirteLocations.SuccessLocal -> {
+                    is LocalStateFavouriteLocations.SuccessLocal -> {
                         fav_locationsAdaptor.submitList(it.data)
                         loading_view.visibility = View.GONE
                     }

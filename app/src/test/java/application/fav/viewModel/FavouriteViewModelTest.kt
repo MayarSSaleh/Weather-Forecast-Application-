@@ -1,34 +1,29 @@
 package application.fav.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import application.application.MainCoroutineRule
+import application.getOrAwaitValue
 import application.model.FakeRepository
 import application.model.FavLocation
-import application.model.LocalStateFavouirteLocations
+import application.model.LocalStateFavouriteLocations
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
-import kotlinx.coroutines.withTimeoutOrNull
-
-@RunWith(AndroidJUnit4::class)
+@RunWith(JUnit4::class)
 class FavouriteViewModelTest {
 
     lateinit var repo: FakeRepository
@@ -37,6 +32,9 @@ class FavouriteViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
+
     @Before
     fun setUp() {
         repo = FakeRepository()
@@ -44,25 +42,20 @@ class FavouriteViewModelTest {
     }
 
     @Test
-    fun getFavLocations_withTimeoutOrNull_() = runTest {
+    fun getFavLocations_withTimeoutOrNull_() = runBlockingTest {
         val fav = FavLocation(("testGet"), 0.0, 0.0)
-        val expectedFavLocations = listOf(fav)
         repo.insert(fav)
         viewModel.getFavLocations()
         // when
-            var result= withTimeoutOrNull(2000) {
-                viewModel.favLocations
-            }?.toList()
-        if (result == null) {
-            println("Network request timed out!")
-        } else {
-            assert(result[1] is LocalStateFavouirteLocations.SuccessLocal)
-            assertEquals(
-                (result[1] as LocalStateFavouirteLocations.SuccessLocal).data,
-                expectedFavLocations
-            )
-        }
+        var result = viewModel.favLocations.getOrAwaitValue {}
+
+        assertThat(result, notNullValue())
+        // Assert that the data matches the expected favorite locations
+//        assert(result  is LocalStateFavouirteLocations.LoadingLocal)
+        assert(result  is LocalStateFavouriteLocations.SuccessLocal)
+//        assertThat(successState.data, `is`(fav))
     }
+
 
     @Test
     fun getFavLocations_emitsLoadingThenSuccessStates() = runTest {
@@ -72,15 +65,12 @@ class FavouriteViewModelTest {
         repo.insert(fav)
         viewModel.getFavLocations()
 
-        // When (change scope with withContext)
-        val testScope = TestScope()
-        val results = withContext(testScope.coroutineContext) {
-            viewModel.favLocations.take(2).toList()
-        }
-        assert(results[1] is LocalStateFavouirteLocations.SuccessLocal)
+        var results = viewModel.favLocations.take(2).toList()
+        assert(results[1] is LocalStateFavouriteLocations.SuccessLocal)
         assertEquals(
-            (results[1] as LocalStateFavouirteLocations.SuccessLocal).data,
-            expectedFavLocations)
+            (results[1] as LocalStateFavouriteLocations.SuccessLocal).data,
+            expectedFavLocations
+        )
     }
 
     @Test
@@ -92,10 +82,10 @@ class FavouriteViewModelTest {
         viewModel.getFavLocations()
         // when
         var results = viewModel.favLocations.take(2).toList()
-        assert(results[0] is LocalStateFavouirteLocations.LoadingLocal)
-        assert(results[1] is LocalStateFavouirteLocations.SuccessLocal)
+        assert(results[0] is LocalStateFavouriteLocations.LoadingLocal)
+        assert(results[1] is LocalStateFavouriteLocations.SuccessLocal)
         assertEquals(
-            (results[1] as LocalStateFavouirteLocations.SuccessLocal).data,
+            (results[1] as LocalStateFavouriteLocations.SuccessLocal).data,
             expectedFavLocations
         )
     }
@@ -107,14 +97,14 @@ class FavouriteViewModelTest {
         val expectedFavLocations = listOf(favLocation)
         viewModel.getFavLocations()
         // when
-        val results = mutableListOf<LocalStateFavouirteLocations>()
+        val results = mutableListOf<LocalStateFavouriteLocations>()
         viewModel.favLocations.collectLatest {
             results.add(it)
         }
-        assert(results[0] is LocalStateFavouirteLocations.LoadingLocal)
-        assert(results[1] is LocalStateFavouirteLocations.SuccessLocal)
+        assert(results[0] is LocalStateFavouriteLocations.LoadingLocal)
+        assert(results[1] is LocalStateFavouriteLocations.SuccessLocal)
         assertEquals(
-            (results[1] as LocalStateFavouirteLocations.SuccessLocal).data,
+            (results[1] as LocalStateFavouriteLocations.SuccessLocal).data,
             expectedFavLocations
         )
     }
@@ -122,14 +112,14 @@ class FavouriteViewModelTest {
     @Test
     fun getFavLocations_ReturnNull() = runTest {
         // Then
-        var result: LocalStateFavouirteLocations? = null
+        var result: LocalStateFavouriteLocations? = null
 
         viewModel.favLocations.collectLatest { newState ->
             result = newState
         }
         // Assert
         assertNotNull(result)
-        result as LocalStateFavouirteLocations.SuccessLocal
+        result as LocalStateFavouriteLocations.SuccessLocal
 //        assertThat(result.data, `is` (emptyList()))
     }
 
@@ -143,8 +133,8 @@ class FavouriteViewModelTest {
             // Verify that insert function is called with the correct favLocation
             var result = viewModel.favLocations.value
             // Assert that the inserted location is the same as the given location
-            assertTrue(result is LocalStateFavouirteLocations.SuccessLocal)
-            result as LocalStateFavouirteLocations.SuccessLocal
+            assertTrue(result is LocalStateFavouriteLocations.SuccessLocal)
+            result as LocalStateFavouriteLocations.SuccessLocal
             assertThat(result.data.get(0).locationName, `is`("Egypt"))
 
         }

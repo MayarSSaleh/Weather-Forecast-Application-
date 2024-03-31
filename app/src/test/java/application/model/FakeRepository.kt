@@ -20,6 +20,10 @@ class FakeRepository : InterfaceRepository {
         }
     }
 
+    override suspend fun deleteAlert(alert: Alert) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getWeather(
         latitude: Double,
         longitude: Double,

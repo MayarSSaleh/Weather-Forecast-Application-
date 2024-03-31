@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
+import android.app.AlarmManager
+import android.content.Context
 
 @BindingAdapter("myImageUrl", "myError")
 fun loadImage(view: ImageView, url: String?, myError: Drawable) {
@@ -14,6 +16,7 @@ fun loadImage(view: ImageView, url: String?, myError: Drawable) {
 
 object MyConstant {
 
+    const val alarmNumbers = "alarmNumbers"
     const val location_lon = "loc_lon"
     const val location_lat = "loc_lat"
     const val address = "address"
@@ -25,6 +28,6 @@ object MyConstant {
     const val lan = "lan"
     const val curentLanguage = "current lan"
 
-     const val CHANNEL_ID: String = "CHANNEL_ID"
+    const val CHANNEL_ID: String = "CHANNEL_ID"
 
 }

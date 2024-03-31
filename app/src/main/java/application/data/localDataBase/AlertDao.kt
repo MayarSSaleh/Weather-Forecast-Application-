@@ -18,9 +18,15 @@ interface AlertDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(alert: Alert): Long
 
+    @Delete
+    suspend fun deleteAlert(alert: Alert): Int
+
+
     @Query("DELETE FROM alerts_table WHERE typeOfAlarm = 'Notification'")
     suspend fun deleteALLNotification()
 
     @Query("DELETE FROM alerts_table WHERE typeOfAlarm = 'Alarm'")
     suspend fun deleteALLAlarms()
+
+
 }

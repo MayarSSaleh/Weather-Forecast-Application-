@@ -11,67 +11,73 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.ViewModelProvider
-import application.ShowWeatherDeailrsViewModel.WeatherShowModelFactory
-import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
-import application.model.APiStateOrLocalStateFromLastWeather
+import application.model.Alert
 import application.model.Repository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
-
     private var typeOfAlarm = ""
-    private var alertlongitude = 0.0
-    private var alertlatitude = 0.0
+    lateinit var repository: Repository
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d("t", "on broooooooooooooooooooooood cast")
+        repository = Repository.getInstance(context)
 
-        alertlongitude = intent.getDoubleExtra("alert-longitude", 0.0)
-        alertlatitude = intent.getDoubleExtra("alert-latitude", 0.0)
-        typeOfAlarm = intent.getStringExtra("typeOfAlarm").toString()
+        val receivedAlert = intent.getParcelableExtra<Alert>("A")
+
+
         Log.d(
-            "null", "broad long    ${intent.getStringExtra("alert-longitude")} " +
-                    "lat ${intent.getDoubleExtra("alert-latitude", 0.0)}" +
-                    " and type ${intent.getDoubleExtra("typeOfAlarm", 0.0)}  "
+            "t",
+            "on brooooooo ${receivedAlert} and test ${intent.getStringExtra("test")} and another way ${
+                intent.getExtras()?.getString("test")
+            }"
         )
 
-        showResult(context, "eeee", "ttttttt")
-//        if (alertlongitude != 0.0 && alertlatitude != 0.0) {
-//        val
-//            lifecycleScope.launch {
-//                withContext(Dispatchers.IO) {
-//                    homeViewModelFactory =
-//                        WeatherShowModelFactory(Repository.getInstance(context))
-//                 var   homeViewModel = ViewModelProvider(this, homeViewModelFactory).get( WeatherShowViewModel::class.java )
-//                  var  homeViewModel.getWeather(context, alertlongitude, alertlatitude)
-//
-//                    homeViewModel.weatherResponseLiveData.collectLatest {
-//                        when (it) {
-//                            is APiStateOrLocalStateFromLastWeather.Success -> {
-//                                showResult(context, it.data.city.name, it.data.list.get(0).weather.get(0).description)
-//                            }
-//                            else -> {}
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        else {
-//            Log.d("null", "0.00000000000000000000000")
-//        }
+        if (receivedAlert != null) {
+            requestTheWeather(context, receivedAlert)
+            Log.d("t", "on broooooooooooooooooooooood cast alert not null")
+            typeOfAlarm = receivedAlert?.typeOfAlarm.toString()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    private fun showResult(context: Context, cityName: String, descrpstion: String) {
+    private fun requestTheWeather(context: Context, alert: Alert) {
+        var alertlongitude = alert.alertlongitude
+        var alertlatitude = alert.alertlatitude
+
+        if (alertlongitude != 0.0 && alertlatitude != 0.0) {
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    repository.deleteAlert(alert)
+                    val result =
+                        repository.getWeather(alertlongitude!!, alertlatitude!!, null, null)
+                    result.collectLatest {
+                        Log.d(
+                            "null", "result length is $result " +
+                                    "000${it.city.name} and ${it.list.get(0).weather.get(0).description}"
+                        )
+                        showResult(context, it.city.name, it.list.get(0).weather.get(0).description)
+                    }
+                }
+            }
+        } else {
+            Log.d("null", "00000")
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun showResult(context: Context, cityName: String, description: String) {
         if (typeOfAlarm == "Notification") {
             val notificationManagerCompat = NotificationManagerCompat.from(context)
-            val notificationBuilder = createNotification(context, cityName, descrpstion)
+            val notificationBuilder = createNotification(context, cityName, description)
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS
@@ -84,7 +90,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             if (typeOfAlarm == "Alarm" && Settings.canDrawOverlays(context)) {
                 val intent = Intent(context, AlarmActivity::class.java)
                 intent.putExtra("cityName", cityName)
-                intent.putExtra("description", descrpstion)
+                intent.putExtra("description", description)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
             }

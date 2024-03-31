@@ -11,6 +11,7 @@ interface InterfaceRepository {
     ): Flow<WeatherResponse>
 
     fun getAllFavLocation(): Flow<List<FavLocation>>
+     suspend fun deleteAlert(alert: Alert)
 
     // the following will be reflected directly to UI as i call get all fav after it so no need to handle the return
     suspend fun deleteFavLocation(favLocation: FavLocation)

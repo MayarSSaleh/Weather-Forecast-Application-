@@ -6,10 +6,10 @@ sealed class APiStateOrLocalStateFromLastWeather {
     object Loading : APiStateOrLocalStateFromLastWeather()
 }
 
-sealed class LocalStateFavouirteLocations {
-    data class SuccessLocal(val data: List<FavLocation>) : LocalStateFavouirteLocations()
-    data class FailureLocal(val msg: Throwable) : LocalStateFavouirteLocations()
-    object LoadingLocal : LocalStateFavouirteLocations()
+sealed class LocalStateFavouriteLocations {
+    data class SuccessLocal(val data: List<FavLocation>) : LocalStateFavouriteLocations()
+    data class FailureLocal(val msg: Throwable) : LocalStateFavouriteLocations()
+    object LoadingLocal : LocalStateFavouriteLocations()
 }
 
 sealed class LocalStateAlerts {

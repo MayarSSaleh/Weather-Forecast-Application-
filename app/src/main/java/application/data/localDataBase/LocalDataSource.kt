@@ -51,6 +51,10 @@ class LocalDataSource(
         alertDao.deleteALLAlarms()
     }
 
+    override suspend fun deleteAlert(alert: Alert) {
+        alertDao.deleteAlert(alert)
+    }
+
     override suspend fun insertAlert(alert: Alert) {
         alertDao.insert(alert)
     }

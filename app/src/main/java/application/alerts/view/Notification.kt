@@ -24,8 +24,6 @@ fun createNotification(context: Context, cityName: String, descrption: String): 
         val notificationManager =
             context.getSystemService(NotificationManager::class.java) as NotificationManager
         notificationManager.createNotificationChannel(channel)
-        Log.d("notif", "inside channel")
-
     }
 
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)

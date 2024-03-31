@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import application.MyConstant
 import application.alerts.viewModel.AlertViewModel
 import application.alerts.viewModel.AlertViewModelFactory
 import application.model.Alert
@@ -41,11 +43,15 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
     private lateinit var alertFactory: AlertViewModelFactory
     private val newAlert = Alert(addresssName, longitude, latitude, "", "", "")
     private lateinit var alarmManager: AlarmManager
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = LayoutInflater.from(requireContext())
         val dialogView = inflater.inflate(R.layout.dialog, null)
+        sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
+        editor = sharedPreferences.edit()
 
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -94,69 +100,10 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
                     Toast.makeText(context, "Please Enter valid data", Toast.LENGTH_SHORT).show()
                 } else {
                     viewModelAlert.insertALert(newAlert)
-                    upDataAlarm()
                 }
             }
             .setNegativeButton(getString(R.string.cancel), null)
         return builder.create()
     }
 
-    fun upDataAlarm() {
-        var requestCodeCounter = 0
-        viewModelAlert.getAlerts()
-        lifecycleScope.launch {
-            viewModelAlert.alertsList.collectLatest {
-                when (it) {
-                    is LocalStateAlerts.SuccessLocalAlert -> {
-                        for (alert in it.data) {
-
-                            Log.d(
-                                "null",
-                                "long    ${alert.alertlongitude} lat ${alert.alertlatitude} and type ${alert.typeOfAlarm}  "
-                            )
-                            Log.d("null", "date ${it.data.size}  ")
-
-                            //get from room
-                            val scheduledTimeMillis: Long =
-                                convertDateTimeToMillis(alert.day, alert.time)
-                            val intent =
-                                Intent(requireContext(), AlarmBroadcastReceiver::class.java)
-                            intent.putExtra("alert-longitude", alert.alertlongitude)
-                            intent.putExtra("alert-latitude", alert.alertlatitude)
-                            intent.putExtra("typeOfAlarm", alert.typeOfAlarm)
-
-                            val pendingIntent = PendingIntent.getBroadcast(
-                                requireContext(),
-                                requestCodeCounter,
-                                intent,
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-                            alarmManager?.setAndAllowWhileIdle(
-                                AlarmManager.RTC_WAKEUP,
-                                scheduledTimeMillis,
-                                pendingIntent
-                            )
-                            requestCodeCounter++
-                        }
-                    }
-
-                    else -> {
-                    }
-                }
-            }
-        }
-    }
-
-    private fun convertDateTimeToMillis(day: String, time: String): Long {
-        val dateTimeString = "$day $time"
-        val format = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-        val date = format.parse(dateTimeString)
-        val timeInMillis = date?.time ?: -1
-        return if (timeInMillis != -1L) {
-            // Subtract 60 seconds (60,000 milliseconds) from the calculated time
-            timeInMillis - 18000
-        } else {
-            -1
-        }
-    }
 }

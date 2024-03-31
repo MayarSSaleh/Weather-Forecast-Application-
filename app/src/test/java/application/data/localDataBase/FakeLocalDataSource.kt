@@ -62,4 +62,8 @@ class FakeLocalDataSource(
     override suspend fun deleteALLAlarms() {
         TODO("Not yet implemented")
     }
+
+    override suspend fun deleteAlert(alert: Alert) {
+        TODO("Not yet implemented")
+    }
 }

@@ -34,7 +34,7 @@
     <string name="added_as_your_current_location">تسجيلها كمكانك الحالى</string>
     <string name="remove">مسح </string>
     <string name="alerts">تنبيهات</string>
-    <string name="meter_sec_default">meter/sec</string>
+    <string name="meter_sec_default">متر/ثانية</string>
     <string name="alert_start_time">الساعة</string>
     <string name="data_alert">التاريخ</string>
     <string name="type_of_alarm">ظبط التنبيه: </string>

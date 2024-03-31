@@ -22,5 +22,6 @@ interface InterfaceLocalDataSource {
     suspend fun insertAlert(alert: Alert)
     suspend fun deleteALLNotification()
     suspend fun deleteALLAlarms()
+    suspend fun deleteAlert(alert: Alert)
 
 }

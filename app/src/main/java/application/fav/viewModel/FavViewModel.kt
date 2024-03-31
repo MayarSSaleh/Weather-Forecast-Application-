@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import application.model.FavLocation
 import application.model.InterfaceRepository
-import application.model.LocalStateFavouirteLocations
+import application.model.LocalStateFavouriteLocations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,19 +13,19 @@ import kotlinx.coroutines.launch
 
 class FavViewModel(private var repo: InterfaceRepository) : ViewModel() {
 
-    private val _favLocations: MutableStateFlow<LocalStateFavouirteLocations> =
-        MutableStateFlow(LocalStateFavouirteLocations.LoadingLocal)
+    private val _favLocations: MutableStateFlow<LocalStateFavouriteLocations> =
+        MutableStateFlow(LocalStateFavouriteLocations.LoadingLocal)
 
-    val favLocations: StateFlow<LocalStateFavouirteLocations> = _favLocations
+    val favLocations: StateFlow<LocalStateFavouriteLocations> = _favLocations
 
     fun getFavLocations() {
         //Preventing UI Thread Blocking
         viewModelScope.launch(Dispatchers.IO) {
             val response = repo.getAllFavLocation()
             response.catch { e ->
-                _favLocations.value = LocalStateFavouirteLocations.FailureLocal(e)
+                _favLocations.value = LocalStateFavouriteLocations.FailureLocal(e)
             }.collect {
-                _favLocations.value = LocalStateFavouirteLocations.SuccessLocal(it!!)
+                _favLocations.value = LocalStateFavouriteLocations.SuccessLocal(it!!)
             }
         }
     }
