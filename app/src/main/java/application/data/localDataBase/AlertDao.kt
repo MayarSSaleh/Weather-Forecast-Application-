@@ -22,10 +22,10 @@ interface AlertDao {
     suspend fun deleteAlert(alert: Alert): Int
 
 
-    @Query("DELETE FROM alerts_table WHERE typeOfAlarm = 'Notification'")
+    @Query("DELETE FROM alerts_table WHERE typeOfAlarm= 'Notification'")
     suspend fun deleteALLNotification()
 
-    @Query("DELETE FROM alerts_table WHERE typeOfAlarm = 'Alarm'")
+    @Query("DELETE FROM alerts_table WHERE typeOfAlarm= 'Alarm'")
     suspend fun deleteALLAlarms()
 
 

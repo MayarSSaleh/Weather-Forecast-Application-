@@ -124,7 +124,6 @@ class HomeFragment : Fragment() {
                         loading_view.visibility = View.VISIBLE
                     }
                     is APiStateOrLocalStateFromLastWeather.Success -> {
-                        Log.d("weather", "inside the succ")
                         setCurrentWeather(it.data)
                         submitTOHoursAdapterList(it.data.list)
                         submitToDaysAdapterList(it.data.list)

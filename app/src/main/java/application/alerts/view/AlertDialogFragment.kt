@@ -96,6 +96,7 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
                 val typeOfAlarm =
                     dialogView.findViewById<RadioButton>(alarmType.checkedRadioButtonId).text.toString()
                 newAlert.typeOfAlarm = typeOfAlarm
+                Log.d("t"," newAlert.typeOfAlarm ${ newAlert.typeOfAlarm}")
                 if (newAlert.day == "" || newAlert.time == "") {
                     Toast.makeText(context, "Please Enter valid data", Toast.LENGTH_SHORT).show()
                 } else {

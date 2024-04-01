@@ -1,5 +1,6 @@
 package application.data.localDataBase
 
+import android.util.Log
 import application.model.FavLocation
 import application.model.Alert
 import application.model.WeatherResponse
@@ -44,14 +45,19 @@ class LocalDataSource(
     }
 
     override suspend fun deleteALLNotification() {
+        Log.d("t", "deleteALLNotification ")
+
         alertDao.deleteALLNotification()
     }
 
     override suspend fun deleteALLAlarms() {
+        Log.d("t", "deeeeeeeeeeeeelet alermsss alarm ")
+
         alertDao.deleteALLAlarms()
     }
 
     override suspend fun deleteAlert(alert: Alert) {
+
         alertDao.deleteAlert(alert)
     }
 

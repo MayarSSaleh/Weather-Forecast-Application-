@@ -57,7 +57,7 @@ class AlertFragment : Fragment() {
     lateinit var editor: SharedPreferences.Editor
     lateinit var alarmManager: AlarmManager
 
-    @RequiresApi(Build.VERSION_CODES.S)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -131,8 +131,8 @@ class AlertFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun upDataAlarm(data: List<Alert>) {
-        // Remove previous alarms
 
+        // Remove previous alarms
         val requestCodeListSize = sharedPreferences.getInt(alarmNumbers, 0)
         Log.d("t", "Previous alarm count: $requestCodeListSize")
 
@@ -149,16 +149,11 @@ class AlertFragment : Fragment() {
             )
             alarmManager.cancel(alertPendingIntent)
         }
-//        alarmManager.cancelAll()
 
         // Set new alarms
         var requestCodeCounter = 0
         for (alert in data) {
             requestCodeCounter++
-            Log.d("t", "Setting alarm for: $alert")
-//            val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
-//            intent.putExtra("A", alert)
-//
             // Serialize Alert object into JSON string
             val alertJson = Gson().toJson(alert)
             val alertUri = Uri.parse("custom_scheme://alert").buildUpon()

@@ -43,24 +43,17 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun requestTheWeather(context: Context, alert: Alert) {
-           val coroutineScope = CoroutineScope(Dispatchers.Main)
-            coroutineScope.launch {
-                withContext(Dispatchers.IO) {
-                    repository.deleteAlert(alert)
-                    val result =
-                        repository.getWeather( alert.alertlatitude, alert.alertlongitude,null, null)
-                    result.collectLatest {
-                        Log.d(
-                            "null", "result length is ${it.list.get(0).weather.get(0).description}"
-                        )
-                        Log.d(
-                            "null", " nammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmme ${it.city.name}"
-                        )
-
-                        showResult(context, it.city.name, it.list.get(0).weather.get(0).description)
-                    }
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.deleteAlert(alert)
+                val result =
+                    repository.getWeather(alert.alertlatitude, alert.alertlongitude, null, null)
+                result.collectLatest {
+                    showResult(context, it.city.name, it.list.get(0).weather.get(0).description)
                 }
             }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

@@ -38,9 +38,7 @@ class AlertViewModel(private var repo: InterfaceRepository) : ViewModel() {
 
     fun insertALert(alert: Alert) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("alert", "$alert")
             repo.insertAlert(alert)
-
             getAlerts()
         }
     }
