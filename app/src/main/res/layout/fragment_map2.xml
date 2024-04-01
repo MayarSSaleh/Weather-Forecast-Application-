@@ -9,11 +9,10 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="590dp"
+        android:layout_height="570dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchTextInputLayout" />
-
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -29,8 +28,10 @@
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_margin="10dp"
             android:hint="Search"
-            android:inputType="text" />
+            android:inputType="text"
+            android:padding="5dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -39,9 +40,9 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/pick_place_then_choose"
         android:textSize="20dp"
-        android:layout_marginStart="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map" />
 
@@ -51,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
-        android:textSize="14dp"
         android:text="@string/set_as_my_location"
+        android:textSize="14dp"
         app:layout_constraintStart_toEndOf="@id/img_alert_mapScreen"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -60,23 +61,22 @@
         android:id="@+id/btn_addToFav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:text="@string/add_to_faviourt_locations"
         android:textSize="14dp"
-        android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/set_as_my_Location"
-        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location"
         app:layout_constraintStart_toEndOf="@+id/set_as_my_Location"
-        />
+        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location" />
 
     <ImageView
         android:id="@+id/img_alert_mapScreen"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/alert"
         android:layout_marginStart="20dp"
+        android:src="@drawable/alert"
         app:layout_constraintBottom_toBottomOf="@+id/set_as_my_Location"
-        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/set_as_my_Location"
         tools:layout_editor_absoluteY="491dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,20 @@
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
-class SearchRepository(private val coroutineScope: CoroutineScope) {
+class SearchRepository(private val lifecycleScope: LifecycleCoroutineScope) {
     private val _searchResults = MutableSharedFlow<List<String>>()
     val searchResults: SharedFlow<List<String>> = _searchResults
 
-    fun search() {
-        val results = listOf("Afghanistan","Albania","Australia","Bahrain","Brazil","Egypt","Morocco","Qatar",
-            "Romania","Russia","Tunisia","Turkey")
+    fun search(query: String, countries: List<Pair<String, Pair<Double, Double>>>) {
+        // Filter countries based on the query
+        val filteredCountries = countries.filter { it.first.contains(query, true) }
+            .map { it.first }
 
-        coroutineScope.launch {
-            _searchResults.emit(results)
+        lifecycleScope.launch {
+            _searchResults.emit(filteredCountries)
         }
     }
 }
+

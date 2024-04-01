@@ -19,6 +19,7 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.FavLocation
 import application.model.LocalStateFavouriteLocations
 import application.model.Repository
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -27,7 +28,8 @@ class FavouriteFragment : Fragment() {
 
     private lateinit var favRecycler: RecyclerView
     private lateinit var fav_locationsAdaptor: FavouriteAdaptor
-    private lateinit var fav_image: ImageView
+    private lateinit var fav_fab: FloatingActionButton
+
     private lateinit var favFactory: FavViewModelFactory
     private lateinit var viewModel: FavViewModel
     private lateinit var layoutManager: LinearLayoutManager
@@ -43,7 +45,7 @@ class FavouriteFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_favourite, container, false)
         favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
-        fav_image = view.findViewById(R.id.image_fav)
+        fav_fab = view.findViewById(R.id.fab)
         favRecycler = view.findViewById(R.id.fav_loc_recycler)
         loading_view=view.findViewById(R.id.favloading_view)
         loading_view.visibility = View.GONE
@@ -81,7 +83,7 @@ class FavouriteFragment : Fragment() {
             }
         }
 
-        fav_image.setOnClickListener {
+        fav_fab.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.fragment_container, MapFragment("", 5))
             transaction?.addToBackStack(null)

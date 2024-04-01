@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class MapFragment(
     private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String,
@@ -67,7 +68,24 @@ class MapFragment(
     private lateinit var searchTextInputLayout: TextInputLayout
     private lateinit var searchEditText: AutoCompleteTextView
 
+    private val countries = listOf(
+        Pair("Sydney", Pair(-33.8688, 151.2093)),
+        Pair("Cairo", Pair(30.0444, 31.2357)),
+        Pair("Cape Town", Pair(-33.9249, 18.4241)),
+        Pair("Santiago", Pair(-33.4489, -70.6693)),
+        Pair("Beijing", Pair(39.9042, 116.4074)),
+        Pair("Rabat", Pair(34.020882, -6.841650)),
+        Pair("Doha", Pair(25.276987, 51.520069)),
+        Pair("Bucharest", Pair(44.4268, 26.1025)),
+        Pair("Moscow", Pair(55.7558, 37.6173)),
+        Pair("Tunis", Pair(36.8065, 10.1815)),
+        Pair("Istanbul", Pair(41.0082, 28.9784)),
+        Pair("Tokyo", Pair(35.6895, 139.6917))
+    )
+
+
     private lateinit var searchRepository: SearchRepository
+
     private val searchResultsAdapter: ArrayAdapter<String> by lazy {
         ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
     }
@@ -184,25 +202,50 @@ class MapFragment(
         }
     }
 
+
     private fun setupSearch() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchRepository.search()
+                val query = s.toString()
+                if (query.length >= 1) {
+                    searchRepository.search(query, countries)
+                } else {
+                    // Clear the adapter if query length is less than 1
+                    searchResultsAdapter.clear()
+                    searchResultsAdapter.notifyDataSetChanged()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        // Collect search results from the repository
         lifecycleScope.launch {
             searchRepository.searchResults.collectLatest { results ->
+                // Update the adapter with search results
                 searchResultsAdapter.clear()
                 searchResultsAdapter.addAll(results)
                 searchResultsAdapter.notifyDataSetChanged()
             }
         }
         searchEditText.setAdapter(searchResultsAdapter)
+        setOnItemClickListener()
+    }
+
+    private fun setOnItemClickListener() {
+        searchEditText.setOnItemClickListener { parent, _, position, _ ->
+            val selectedCountry = parent.getItemAtPosition(position) as String
+            val (latitude, longitude) = countries.first { (name, _) -> name == selectedCountry }.second
+            val message =
+                "Selected Country: $selectedCountry\nLatitude: $latitude\nLongitude: $longitude is added to your favorites"
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            if (longitude != 0.0 && latitude != 0.0) {
+                var favLocation = FavLocation(selectedCountry, longitude, latitude)
+                viewModel.insertFavLocation(favLocation)
+            }
+        }
     }
 }
