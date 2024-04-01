@@ -44,10 +44,6 @@ import java.util.Locale
 class AlertFragment : Fragment() {
     // alerts add here so it mush back here after add
 
-//    private lateinit var add: ImageView
-//    private lateinit var stopAlarms: ImageView
-//    lateinit var stopNotifcation: ImageView
-
     private lateinit var alertRecycler: RecyclerView
     private lateinit var alertAdaptor: AlertAdaptor
     private lateinit var alertFactory: AlertViewModelFactory
@@ -166,7 +162,6 @@ class AlertFragment : Fragment() {
         }
     }
 
-
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun upDataAlarm(data: List<Alert>) {
 
@@ -190,17 +185,14 @@ class AlertFragment : Fragment() {
         var requestCodeCounter = 0
         for (alert in data) {
             Log.d("t", "data: ${data.size}")
-
             requestCodeCounter++
             // Serialize Alert object into JSON string
             val alertJson = Gson().toJson(alert)
             val alertUri = Uri.parse("custom_scheme://alert").buildUpon()
                 .appendQueryParameter("alert_data", alertJson)
                 .build()
-
             val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
             intent.data = alertUri
-
 // i can replace requestCodeCounter with id which  final int id = (int) System.currentTimeMillis();
             val pendingIntent = PendingIntent.getBroadcast(
                 requireContext(),
@@ -223,7 +215,6 @@ class AlertFragment : Fragment() {
         editor.putInt(alarmNumbers, requestCodeCounter)
         editor.apply()
     }
-
 
     private fun convertDateTimeToMillis(day: String, time: String): Long {
         val dateTimeString = "$day $time"
@@ -250,11 +241,7 @@ class AlertFragment : Fragment() {
     }
 
     private fun Ui(view: View) {
-//        add = view.findViewById(R.id.addAlert)
-//        stopAlarms = view.findViewById(R.id.img_stop)
-//        stopNotifcation = view.findViewById(R.id.btn_stopNotification)
         alert_fab = view.findViewById(R.id.alert_fab)
-
         alertFactory = AlertViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, alertFactory).get(AlertViewModel::class.java)
         alertRecycler = view.findViewById(R.id.alert_recycler)
@@ -317,40 +304,3 @@ class AlertFragment : Fragment() {
         popupMenu.show()
     }
 }
-
-
-
-
-
-
-//        add.setOnClickListener {
-//            val transaction = activity?.supportFragmentManager?.beginTransaction()
-//            transaction?.replace(R.id.fragment_container, MapFragment("", 5))
-//            transaction?.addToBackStack(null)
-//            transaction?.commit()
-//        }
-//
-//        stopAlarms.setOnClickListener {
-//            val builder = AlertDialog.Builder(requireContext())
-//            builder.setTitle(getString(R.string.conformation))
-//                .setMessage(getString(R.string.are_your_stop_the_alarms))
-//                .setPositiveButton(getString(R.string.ok)) { dialog, id ->
-//                    viewModel.deleteALLAlarms()
-//                    observeOnAlertsList()
-//                }
-//            val dialog = builder.create()
-//            dialog.show()
-//        }
-//
-//        stopNotifcation.setOnClickListener {
-//            val builder = AlertDialog.Builder(requireContext())
-//            builder.setTitle(getString(R.string.conformation))
-//                .setMessage(getString(R.string.are_your_stop_the_notifications))
-//                .setPositiveButton(getString(R.string.ok)) { dialog, id ->
-//                    viewModel.deleteALLNotification()
-//                    observeOnAlertsList()
-//                }
-//            val dialog = builder.create()
-//            dialog.show()
-//        }
-//    }

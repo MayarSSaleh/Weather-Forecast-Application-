@@ -19,7 +19,6 @@
         android:id="@+id/searchTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,8 +27,8 @@
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:hint="Search"
+            android:layout_margin="7dp"
+            android:hint="@string/search"
             android:inputType="text"
             android:padding="5dp" />
 

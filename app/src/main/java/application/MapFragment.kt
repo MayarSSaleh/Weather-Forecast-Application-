@@ -35,6 +35,8 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.Alert
 import application.model.LocalStateAlerts
 import application.model.Repository
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.textfield.TextInputLayout
 import com.weather.application.R
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -69,6 +71,9 @@ class MapFragment(
     private lateinit var searchEditText: AutoCompleteTextView
 
     private val countries = listOf(
+        Pair("Amsterdam", Pair(52.3676, 4.9041)),
+        Pair("Athens", Pair(37.9838, 23.7275)),
+        Pair("Austin", Pair(30.2672, -97.7431)),
         Pair("Sydney", Pair(-33.8688, 151.2093)),
         Pair("Cairo", Pair(30.0444, 31.2357)),
         Pair("Cape Town", Pair(-33.9249, 18.4241)),
@@ -76,8 +81,17 @@ class MapFragment(
         Pair("Beijing", Pair(39.9042, 116.4074)),
         Pair("Rabat", Pair(34.020882, -6.841650)),
         Pair("Doha", Pair(25.276987, 51.520069)),
+        Pair("Dublin", Pair(53.3498, -6.2603)),
+        Pair("Delhi", Pair(28.7041, 77.1025)),
+        Pair("Detroit", Pair(42.3314, -83.0458)),
+        Pair("Dallas", Pair(32.7767, -96.7970)),
         Pair("Bucharest", Pair(44.4268, 26.1025)),
         Pair("Moscow", Pair(55.7558, 37.6173)),
+        Pair("London", Pair(51.5074, -0.1278)),
+        Pair("Los Angeles", Pair(34.0522, -118.2437)),
+        Pair("Lagos", Pair(6.5244, 3.3792)),
+        Pair("Lima", Pair(-12.0464, -77.0428)),
+        Pair("Lisbon", Pair(38.7223, -9.1393)),
         Pair("Tunis", Pair(36.8065, 10.1815)),
         Pair("Istanbul", Pair(41.0082, 28.9784)),
         Pair("Tokyo", Pair(35.6895, 139.6917))
@@ -133,7 +147,7 @@ class MapFragment(
         mylocation = rootView.findViewById(R.id.set_as_my_Location)
         addToFav = rootView.findViewById(R.id.btn_addToFav)
         alert = rootView.findViewById(R.id.img_alert_mapScreen)
-        searchTextInputLayout = rootView.findViewById(R.id.searchTextInputLayout)
+        searchTextInputLayout = rootView.findViewById(R.id.searchTextInputLayout)// for design the AutoCompleteTextView
         searchEditText = rootView.findViewById(R.id.searchEditText)
 
     }
@@ -142,15 +156,21 @@ class MapFragment(
         myMap = googleMap
         myMap.uiSettings.isZoomControlsEnabled = true
         myMap.setOnMapClickListener { click ->
+
             // Get the latitude and longitude of the clicked position
             latitude = click.latitude
             longitude = click.longitude
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            theAddress =
-                addresses?.firstOrNull()?.getAddressLine(0) ?: "Sorry, Address not found"
+            theAddress = addresses?.firstOrNull()?.getAddressLine(0) ?: "Sorry, Address not found"
+
             Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT)
                 .show()
 
+            // Add a marker at the clicked position
+            val clickedLatLng = LatLng(latitude, longitude)
+            val markerOptions = MarkerOptions().position(clickedLatLng).title("Clicked Location")
+            myMap.clear()
+            myMap.addMarker(markerOptions)
         }
     }
 
@@ -210,10 +230,9 @@ class MapFragment(
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
-                if (query.length >= 1) {
+                if (query.isNotEmpty()) {
                     searchRepository.search(query, countries)
                 } else {
-                    // Clear the adapter if query length is less than 1
                     searchResultsAdapter.clear()
                     searchResultsAdapter.notifyDataSetChanged()
                 }
@@ -240,7 +259,7 @@ class MapFragment(
             val selectedCountry = parent.getItemAtPosition(position) as String
             val (latitude, longitude) = countries.first { (name, _) -> name == selectedCountry }.second
             val message =
-                "$selectedCountry  city is added to your favorites"
+                "$selectedCountry city is added to your favorites"
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             if (longitude != 0.0 && latitude != 0.0) {
                 var favLocation = FavLocation(selectedCountry, longitude, latitude)

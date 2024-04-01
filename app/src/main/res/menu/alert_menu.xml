@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-   >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/menu_add_alert"
         android:icon="@drawable/add"
-        android:title="Add Alert" />
+        android:title="@string/add_alert" />
     <item
         android:id="@+id/menu_stop"
         android:icon="@drawable/stop_alarm"
-        android:title="Stop Alarm" />
+        android:title="@string/stop_alarm" />
     <item
         android:id="@+id/menu_stop_notification"
         android:icon="@drawable/notification_stop"
-        android:title="Stop Notification" />
+        android:title="@string/stop_notification" />
 
 </menu>

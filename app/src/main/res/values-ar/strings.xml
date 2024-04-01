@@ -47,6 +47,9 @@
     <string name="are_your_stop_the_notifications">تأكيد توقيف الإشعارات؟</string>
     <string name="sorry_can_not_get_them">للإسف لا نستطيع الحصول عليهم</string>
     <string name="stop">حسنا</string>
-    <string name="search">Search</string>
+    <string name="search"> بحث </string>
+    <string name="add_alert">إضافة تنبيه</string>
+    <string name="stop_alarm">إيقاف المنبهات</string>
+    <string name="stop_notification"> إيقاف الإشعارات</string>
 
 </resources>

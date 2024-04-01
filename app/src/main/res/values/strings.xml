@@ -29,7 +29,7 @@
     <string name="hPa">hPa</string>
     <string name="add_to_faviourt_locations">Favourite location</string>
     <string name="set_as_my_location">My location</string>
-    <string name="pick_place_then_choose">Click on place then choose to set as:</string>
+    <string name="pick_place_then_choose">Pick place,then choose to set as:</string>
     <string name="Not_selected_place_yet"> Not selected place yet </string>
     <string name="added_as_your_current_location">Added as your current location</string>
     <string name="remove">Remove</string>
@@ -45,8 +45,11 @@
     <string name="conformation">Conformation</string>
     <string name="are_your_stop_the_alarms">Are your stop the alarms?</string>
     <string name="are_your_stop_the_notifications">Are your stop the Notifications?</string>
-    <string name="sorry_can_not_get_them">Sorry Can not get them}</string>
+    <string name="sorry_can_not_get_them">Sorry Can not get them</string>
     <string name="stop">Stop</string>
     <string name="search">Search</string>
+    <string name="add_alert">Add Alert</string>
+    <string name="stop_alarm">Stop Alarms</string>
+    <string name="stop_notification">Stop Notifications</string>
 
 </resources>
