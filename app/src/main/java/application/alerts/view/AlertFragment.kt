@@ -42,6 +42,7 @@ import com.google.gson.Gson
 
 class AlertFragment : Fragment() {
     // alerts add here so it mush back here after add
+
     private lateinit var add: ImageView
     private lateinit var stopAlarms: ImageView
     private lateinit var alertRecycler: RecyclerView
@@ -69,7 +70,6 @@ class AlertFragment : Fragment() {
         editor = sharedPreferences.edit()
         alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         getPermissions()
-
         var isAlarmDataHandled = false
         lifecycleScope.launch {
             viewModel.alertsList.collectLatest {
@@ -87,7 +87,6 @@ class AlertFragment : Fragment() {
                             isAlarmDataHandled = true
                         }
                     }
-
                     else -> {
                         loading_view.visibility = View.GONE
                         Toast.makeText(
@@ -130,6 +129,39 @@ class AlertFragment : Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    fun observeOnAlertsList(){
+        var isAlarmDataHandled = false
+        lifecycleScope.launch {
+            viewModel.alertsList.collectLatest {
+                when (it) {
+                    is LocalStateAlerts.LoadingLocaAlertl -> {
+                        loading_view.visibility = View.VISIBLE
+                    }
+
+                    is LocalStateAlerts.SuccessLocalAlert -> {
+                        alertAdaptor.submitList(it.data)
+                        loading_view.visibility = View.GONE
+                        //to stop  subsequent calls.
+                        if (!isAlarmDataHandled) {
+                            upDataAlarm(it.data)
+                            isAlarmDataHandled = true
+                        }
+                    }
+                    else -> {
+                        loading_view.visibility = View.GONE
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.sorry_can_not_get_them),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun upDataAlarm(data: List<Alert>) {
 
         // Remove previous alarms
@@ -137,9 +169,7 @@ class AlertFragment : Fragment() {
         Log.d("t", "Previous alarm count: $requestCodeListSize")
 
         for (requestCode in 1..requestCodeListSize) {
-
             Log.d("t", "Previous alarm count in for loop: $requestCodeListSize")
-
             val alertIntent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
             val alertPendingIntent = PendingIntent.getBroadcast(
                 requireContext(),
@@ -153,6 +183,8 @@ class AlertFragment : Fragment() {
         // Set new alarms
         var requestCodeCounter = 0
         for (alert in data) {
+            Log.d("t", "data: ${data.size}")
+
             requestCodeCounter++
             // Serialize Alert object into JSON string
             val alertJson = Gson().toJson(alert)
@@ -207,7 +239,6 @@ class AlertFragment : Fragment() {
                     requireContext()
                 )
             ) {
-            } else {
             }
         }
     }
@@ -222,12 +253,12 @@ class AlertFragment : Fragment() {
         stopAlarms = view.findViewById(R.id.img_stop)
         stopNotifcation = view.findViewById(R.id.btn_stopNotification)
         alertAdaptor = AlertAdaptor()
-
         layoutManager = LinearLayoutManager(requireContext())
         alertRecycler.adapter = alertAdaptor
         alertRecycler.layoutManager = layoutManager
     }
 
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun setOnClickListener() {
 
         add.setOnClickListener {
@@ -243,6 +274,7 @@ class AlertFragment : Fragment() {
                 .setMessage(getString(R.string.are_your_stop_the_alarms))
                 .setPositiveButton(getString(R.string.ok)) { dialog, id ->
                     viewModel.deleteALLAlarms()
+                    observeOnAlertsList()
                 }
             val dialog = builder.create()
             dialog.show()
@@ -254,6 +286,7 @@ class AlertFragment : Fragment() {
                 .setMessage(getString(R.string.are_your_stop_the_notifications))
                 .setPositiveButton(getString(R.string.ok)) { dialog, id ->
                     viewModel.deleteALLNotification()
+                    observeOnAlertsList()
                 }
             val dialog = builder.create()
             dialog.show()

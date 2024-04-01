@@ -126,4 +126,9 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 
+//search view
+    def appcompat_version = "1.6.1"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+
+
 }

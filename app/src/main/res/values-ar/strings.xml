@@ -47,5 +47,6 @@
     <string name="are_your_stop_the_notifications">تأكيد توقيف الإشعارات؟</string>
     <string name="sorry_can_not_get_them">للإسف لا نستطيع الحصول عليهم</string>
     <string name="stop">حسنا</string>
+    <string name="search">Search</string>
 
 </resources>

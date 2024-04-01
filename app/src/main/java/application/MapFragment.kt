@@ -5,11 +5,14 @@ import android.app.AlertDialog
 import android.content.SharedPreferences
 import android.location.Geocoder
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -29,7 +32,10 @@ import application.fav.viewModel.FavViewModelFactory
 import application.model.Alert
 import application.model.LocalStateAlerts
 import application.model.Repository
+import com.google.android.material.textfield.TextInputLayout
 import com.weather.application.R
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -55,15 +61,18 @@ class MapFragment(
     private var longitude = 0.0
     private var theAddress = ""
 
+    private lateinit var searchTextInputLayout: TextInputLayout
+    private lateinit var searchEditText: EditText
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_map2, container, false)
-        mylocation = rootView.findViewById(R.id.set_as_my_Location)
-        addToFav = rootView.findViewById(R.id.btn_addToFav)
-        alert = rootView.findViewById(R.id.img_alert_mapScreen)
+
+        initViews(rootView)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         geocoder = Geocoder(requireContext())
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
@@ -71,8 +80,13 @@ class MapFragment(
         theAddress = getString(R.string.Not_selected_place_yet)
         favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
+        setupSearch()
+        setupMap(savedInstanceState)
+        setOnClickListener()
+        return rootView
+    }
 
-
+    private fun setupMap(savedInstanceState: Bundle?) {
         try {
             MapsInitializer.initialize(requireActivity())
             mMapView = rootView.findViewById(R.id.map)
@@ -85,8 +99,31 @@ class MapFragment(
                 Toast.LENGTH_SHORT
             ).show()
         }
-        setOnClickListener()
-        return rootView
+    }
+
+    private fun initViews(rootView: View) {
+        mylocation = rootView.findViewById(R.id.set_as_my_Location)
+        addToFav = rootView.findViewById(R.id.btn_addToFav)
+        alert = rootView.findViewById(R.id.img_alert_mapScreen)
+        searchTextInputLayout =rootView.findViewById(R.id.searchTextInputLayout)
+        searchEditText=rootView.findViewById(R.id.searchEditText)
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        myMap = googleMap
+        myMap.uiSettings.isZoomControlsEnabled = true
+        myMap.setOnMapClickListener { click ->
+            // Get the latitude and longitude of the clicked position
+            latitude = click.latitude
+            longitude = click.longitude
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            theAddress =
+                addresses?.firstOrNull()?.getAddressLine(0) ?: "Sorry, Address not found"
+            Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT)
+                .show()
+
+        }
     }
 
     private fun setOnClickListener() {
@@ -137,23 +174,39 @@ class MapFragment(
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        myMap = googleMap
-        myMap.uiSettings.isZoomControlsEnabled = true
-        myMap.setOnMapClickListener { click ->
-            // Get the latitude and longitude of the clicked position
-            latitude = click.latitude
-            longitude = click.longitude
-            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            theAddress =
-                addresses?.firstOrNull()?.getAddressLine(0) ?: "Sorry, Address not found"
-            Toast.makeText(requireContext(), "The location is $theAddress", Toast.LENGTH_SHORT)
-                .show()
+    private fun setupSearch() {
+        // Setup search functionality
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Perform search operation here using the text in the EditText
+                val searchText = s.toString()
+                // Perform search operation based on searchText
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Not needed
+            }
+        })
+    }
+
+    class SearchRepository {
+        private val _searchResults = MutableSharedFlow<List<String>>()
+        val searchResults: SharedFlow<List<String>> = _searchResults
+
+        fun search(query: String) {
+            // Perform search operation here and emit search results
+            // For demonstration purposes, let's emit a list of dummy search results
+            val results = listOf("$query 1", "$query 2", "$query 3") // Replace with actual search results
+            viewModelScope.launch {
+                _searchResults.emit(results)
+            }
         }
     }
 
 
-//        viewModelAlert.insertALert(Alert(theAddress,longitude,latitude,selectedDay,selectedTime,alarmType))
+
 
 }
