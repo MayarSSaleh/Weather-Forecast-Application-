@@ -10,11 +10,12 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -25,38 +26,41 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import application.MapFragment
+import application.MyConstant
+import application.MyConstant.alarmNumbers
 import application.alerts.viewModel.AlertViewModel
 import application.alerts.viewModel.AlertViewModelFactory
+import application.model.Alert
 import application.model.LocalStateAlerts
 import application.model.Repository
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
-import android.provider.Settings
-import application.MyConstant
-import application.MyConstant.alarmNumbers
-import application.model.Alert
-import com.google.gson.Gson
 
 class AlertFragment : Fragment() {
     // alerts add here so it mush back here after add
 
-    private lateinit var add: ImageView
-    private lateinit var stopAlarms: ImageView
+//    private lateinit var add: ImageView
+//    private lateinit var stopAlarms: ImageView
+//    lateinit var stopNotifcation: ImageView
+
     private lateinit var alertRecycler: RecyclerView
     private lateinit var alertAdaptor: AlertAdaptor
     private lateinit var alertFactory: AlertViewModelFactory
     private lateinit var viewModel: AlertViewModel
     private lateinit var layoutManager: LinearLayoutManager
     lateinit var loading_view: ProgressBar
-    lateinit var stopNotifcation: ImageView
     private val CHANNEL_ID: String = "CHANNEL_ID"
     private val PERMISSION_REQUEST_CODE = 1001
     lateinit var sharedPreferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     lateinit var alarmManager: AlarmManager
+
+    private lateinit var alert_fab: FloatingActionButton
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreateView(
@@ -87,6 +91,7 @@ class AlertFragment : Fragment() {
                             isAlarmDataHandled = true
                         }
                     }
+
                     else -> {
                         loading_view.visibility = View.GONE
                         Toast.makeText(
@@ -129,7 +134,7 @@ class AlertFragment : Fragment() {
 
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    fun observeOnAlertsList(){
+    fun observeOnAlertsList() {
         var isAlarmDataHandled = false
         lifecycleScope.launch {
             viewModel.alertsList.collectLatest {
@@ -147,6 +152,7 @@ class AlertFragment : Fragment() {
                             isAlarmDataHandled = true
                         }
                     }
+
                     else -> {
                         loading_view.visibility = View.GONE
                         Toast.makeText(
@@ -244,14 +250,17 @@ class AlertFragment : Fragment() {
     }
 
     private fun Ui(view: View) {
-        add = view.findViewById(R.id.addAlert)
+//        add = view.findViewById(R.id.addAlert)
+//        stopAlarms = view.findViewById(R.id.img_stop)
+//        stopNotifcation = view.findViewById(R.id.btn_stopNotification)
+        alert_fab = view.findViewById(R.id.alert_fab)
+
         alertFactory = AlertViewModelFactory(Repository.getInstance(requireContext()))
         viewModel = ViewModelProvider(this, alertFactory).get(AlertViewModel::class.java)
         alertRecycler = view.findViewById(R.id.alert_recycler)
         loading_view = view.findViewById(R.id.alert_loading_view)
         loading_view.visibility = View.GONE
-        stopAlarms = view.findViewById(R.id.img_stop)
-        stopNotifcation = view.findViewById(R.id.btn_stopNotification)
+
         alertAdaptor = AlertAdaptor()
         layoutManager = LinearLayoutManager(requireContext())
         alertRecycler.adapter = alertAdaptor
@@ -260,37 +269,88 @@ class AlertFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun setOnClickListener() {
-
-        add.setOnClickListener {
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.replace(R.id.fragment_container, MapFragment("", 5))
-            transaction?.addToBackStack(null)
-            transaction?.commit()
-        }
-
-        stopAlarms.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(getString(R.string.conformation))
-                .setMessage(getString(R.string.are_your_stop_the_alarms))
-                .setPositiveButton(getString(R.string.ok)) { dialog, id ->
-                    viewModel.deleteALLAlarms()
-                    observeOnAlertsList()
-                }
-            val dialog = builder.create()
-            dialog.show()
-        }
-
-        stopNotifcation.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle(getString(R.string.conformation))
-                .setMessage(getString(R.string.are_your_stop_the_notifications))
-                .setPositiveButton(getString(R.string.ok)) { dialog, id ->
-                    viewModel.deleteALLNotification()
-                    observeOnAlertsList()
-                }
-            val dialog = builder.create()
-            dialog.show()
-        }
+        alert_fab.setOnClickListener(View.OnClickListener { showPopupMenu() })
     }
 
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun showPopupMenu() {
+        val popupMenu = PopupMenu(requireContext(), alert_fab)
+        popupMenu.menuInflater.inflate(R.menu.alert_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_stop -> {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle(getString(R.string.conformation))
+                        .setMessage(getString(R.string.are_your_stop_the_alarms))
+                        .setPositiveButton(getString(R.string.ok)) { dialog, id ->
+                            viewModel.deleteALLAlarms()
+                            observeOnAlertsList()
+                        }
+                    val dialog = builder.create()
+                    dialog.show()
+                    true
+                }
+
+                R.id.menu_stop_notification -> {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle(getString(R.string.conformation))
+                        .setMessage(getString(R.string.are_your_stop_the_notifications))
+                        .setPositiveButton(getString(R.string.ok)) { dialog, id ->
+                            viewModel.deleteALLNotification()
+                            observeOnAlertsList()
+                        }
+                    val dialog = builder.create()
+                    dialog.show()
+                    true
+                }
+                R.id.menu_add_alert -> {
+                    val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragment_container, MapFragment("", 5))
+                    transaction?.addToBackStack(null)
+                    transaction?.commit()
+                    true
+                }
+
+                else -> false
+            }
+        }
+        popupMenu.show()
+    }
 }
+
+
+
+
+
+
+//        add.setOnClickListener {
+//            val transaction = activity?.supportFragmentManager?.beginTransaction()
+//            transaction?.replace(R.id.fragment_container, MapFragment("", 5))
+//            transaction?.addToBackStack(null)
+//            transaction?.commit()
+//        }
+//
+//        stopAlarms.setOnClickListener {
+//            val builder = AlertDialog.Builder(requireContext())
+//            builder.setTitle(getString(R.string.conformation))
+//                .setMessage(getString(R.string.are_your_stop_the_alarms))
+//                .setPositiveButton(getString(R.string.ok)) { dialog, id ->
+//                    viewModel.deleteALLAlarms()
+//                    observeOnAlertsList()
+//                }
+//            val dialog = builder.create()
+//            dialog.show()
+//        }
+//
+//        stopNotifcation.setOnClickListener {
+//            val builder = AlertDialog.Builder(requireContext())
+//            builder.setTitle(getString(R.string.conformation))
+//                .setMessage(getString(R.string.are_your_stop_the_notifications))
+//                .setPositiveButton(getString(R.string.ok)) { dialog, id ->
+//                    viewModel.deleteALLNotification()
+//                    observeOnAlertsList()
+//                }
+//            val dialog = builder.create()
+//            dialog.show()
+//        }
+//    }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+   >
+
+    <item
+        android:id="@+id/menu_add_alert"
+        android:icon="@drawable/add"
+        android:title="Add Alert" />
+    <item
+        android:id="@+id/menu_stop"
+        android:icon="@drawable/stop_alarm"
+        android:title="Stop Alarm" />
+    <item
+        android:id="@+id/menu_stop_notification"
+        android:icon="@drawable/notification_stop"
+        android:title="Stop Notification" />
+
+</menu>

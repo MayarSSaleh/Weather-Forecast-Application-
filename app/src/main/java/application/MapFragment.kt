@@ -240,7 +240,7 @@ class MapFragment(
             val selectedCountry = parent.getItemAtPosition(position) as String
             val (latitude, longitude) = countries.first { (name, _) -> name == selectedCountry }.second
             val message =
-                "Selected Country: $selectedCountry\nLatitude: $latitude\nLongitude: $longitude is added to your favorites"
+                "$selectedCountry  city is added to your favorites"
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             if (longitude != 0.0 && latitude != 0.0) {
                 var favLocation = FavLocation(selectedCountry, longitude, latitude)

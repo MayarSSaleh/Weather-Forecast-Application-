@@ -46,35 +46,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/img_stop"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="107dp"
-        android:layout_marginEnd="164dp"
-        android:src="@drawable/stop_alarm"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/alert_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/baseline_menu_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_stopNotification"
-        app:layout_constraintTop_toTopOf="@+id/btn_stopNotification"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/btn_stopNotification"
-        android:layout_width="50dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="28dp"
-        android:src="@drawable/notification_stop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nes" />
-
-    <ImageView
-        android:id="@+id/addAlert"
-        android:layout_width="41dp"
-        android:layout_height="43dp"
-        android:layout_marginEnd="32dp"
-        android:src="@drawable/add"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_stopNotification" />
+        app:layout_constraintTop_toBottomOf="@+id/nes"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
