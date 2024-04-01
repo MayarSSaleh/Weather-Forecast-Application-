@@ -1,5 +1,6 @@
 package application
 
+import SearchRepository
 import application.model.FavLocation
 import android.app.AlertDialog
 import android.content.SharedPreferences
@@ -11,6 +12,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -62,7 +65,13 @@ class MapFragment(
     private var theAddress = ""
 
     private lateinit var searchTextInputLayout: TextInputLayout
-    private lateinit var searchEditText: EditText
+    private lateinit var searchEditText: AutoCompleteTextView
+
+    private lateinit var searchRepository: SearchRepository
+    private val searchResultsAdapter: ArrayAdapter<String> by lazy {
+        ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +79,7 @@ class MapFragment(
         savedInstanceState: Bundle?
     ): View? {
         rootView = inflater.inflate(R.layout.fragment_map2, container, false)
+        searchRepository = SearchRepository(lifecycleScope)
 
         initViews(rootView)
 
@@ -105,8 +115,8 @@ class MapFragment(
         mylocation = rootView.findViewById(R.id.set_as_my_Location)
         addToFav = rootView.findViewById(R.id.btn_addToFav)
         alert = rootView.findViewById(R.id.img_alert_mapScreen)
-        searchTextInputLayout =rootView.findViewById(R.id.searchTextInputLayout)
-        searchEditText=rootView.findViewById(R.id.searchEditText)
+        searchTextInputLayout = rootView.findViewById(R.id.searchTextInputLayout)
+        searchEditText = rootView.findViewById(R.id.searchEditText)
 
     }
 
@@ -161,7 +171,7 @@ class MapFragment(
         }
         alert.setOnClickListener {
             if (theAddress != getString(R.string.Not_selected_place_yet)) {
-                val dialogFragment = AlertDialogFragment(theAddress,longitude,latitude)
+                val dialogFragment = AlertDialogFragment(theAddress, longitude, latitude)
                 dialogFragment.setTargetFragment(this, 0)
                 dialogFragment.show(parentFragmentManager, "CustomDialog")
             } else {
@@ -175,38 +185,24 @@ class MapFragment(
     }
 
     private fun setupSearch() {
-        // Setup search functionality
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Perform search operation here using the text in the EditText
-                val searchText = s.toString()
-                // Perform search operation based on searchText
+                searchRepository.search()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // Not needed
             }
         })
-    }
-
-    class SearchRepository {
-        private val _searchResults = MutableSharedFlow<List<String>>()
-        val searchResults: SharedFlow<List<String>> = _searchResults
-
-        fun search(query: String) {
-            // Perform search operation here and emit search results
-            // For demonstration purposes, let's emit a list of dummy search results
-            val results = listOf("$query 1", "$query 2", "$query 3") // Replace with actual search results
-            viewModelScope.launch {
-                _searchResults.emit(results)
+        lifecycleScope.launch {
+            searchRepository.searchResults.collectLatest { results ->
+                searchResultsAdapter.clear()
+                searchResultsAdapter.addAll(results)
+                searchResultsAdapter.notifyDataSetChanged()
             }
         }
+        searchEditText.setAdapter(searchResultsAdapter)
     }
-
-
-
-
 }
