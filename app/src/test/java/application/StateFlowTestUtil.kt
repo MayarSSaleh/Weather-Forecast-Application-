@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException
 
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)
 suspend fun <T> Flow<T>.getOrAwaitValue(
-    time: Long = 5,
+    time: Long = 2 ,
     timeUnit: TimeUnit = TimeUnit.SECONDS,
     afterObserve: () -> Unit = {}
 ): T {

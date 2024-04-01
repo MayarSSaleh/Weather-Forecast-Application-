@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -13,9 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import application.MapFragment
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.fav.viewModel.Communication
-import application.fav.viewModel.FavViewModel
-import application.fav.viewModel.FavViewModelFactory
+import application.fav.viewModel.stateFlow.FavViewModel
+import application.fav.viewModel.stateFlow.FavViewModelFactory
 import application.model.FavLocation
 import application.model.LocalStateFavouriteLocations
 import application.model.Repository
@@ -43,7 +47,15 @@ class FavouriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view = inflater.inflate(R.layout.fragment_favourite, container, false)
-        favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(requireContext()).getWeatherDao(),
+            AppDataBase.getInstance(requireContext()).getLocationDao(),
+            AppDataBase.getInstance(requireContext()).getAlertsDao()
+        )
+        favFactory = FavViewModelFactory(Repository.getInstance(remoteDataSource,localDataSource))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
         fav_fab = view.findViewById(R.id.fab)
         favRecycler = view.findViewById(R.id.fav_loc_recycler)

@@ -1,4 +1,4 @@
-package application.ShowWeatherDeailrsViewModel
+package application.showWeatherDetailsViewModel
 
 import android.annotation.TargetApi
 import android.app.Activity
@@ -40,7 +40,6 @@ class WeatherShowViewModel(private val repo: InterfaceRepository) : ViewModel() 
     lateinit var editor: SharedPreferences.Editor
 
     fun getWeather(context: Context, longitude: Double, latitude: Double) {
-
         // check the internet to
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         val units = when (sharedPreferences.getString(MyConstant.temp_unit, null)) {

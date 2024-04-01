@@ -30,6 +30,11 @@ import application.MyConstant
 import application.MyConstant.alarmNumbers
 import application.alerts.viewModel.AlertViewModel
 import application.alerts.viewModel.AlertViewModelFactory
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.model.Alert
 import application.model.LocalStateAlerts
 import application.model.Repository
@@ -186,11 +191,13 @@ class AlertFragment : Fragment() {
         for (alert in data) {
             Log.d("t", "data: ${data.size}")
             requestCodeCounter++
+
             // Serialize Alert object into JSON string
             val alertJson = Gson().toJson(alert)
             val alertUri = Uri.parse("custom_scheme://alert").buildUpon()
                 .appendQueryParameter("alert_data", alertJson)
                 .build()
+
             val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
             intent.data = alertUri
 // i can replace requestCodeCounter with id which  final int id = (int) System.currentTimeMillis();
@@ -242,12 +249,21 @@ class AlertFragment : Fragment() {
 
     private fun Ui(view: View) {
         alert_fab = view.findViewById(R.id.alert_fab)
-        alertFactory = AlertViewModelFactory(Repository.getInstance(requireContext()))
+
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(requireContext()).getWeatherDao(),
+            AppDataBase.getInstance(requireContext()).getLocationDao(),
+            AppDataBase.getInstance(requireContext()).getAlertsDao()
+        )
+
+        alertFactory = AlertViewModelFactory(Repository.getInstance(remoteDataSource,localDataSource))
         viewModel = ViewModelProvider(this, alertFactory).get(AlertViewModel::class.java)
         alertRecycler = view.findViewById(R.id.alert_recycler)
         loading_view = view.findViewById(R.id.alert_loading_view)
         loading_view.visibility = View.GONE
-
         alertAdaptor = AlertAdaptor()
         layoutManager = LinearLayoutManager(requireContext())
         alertRecycler.adapter = alertAdaptor
@@ -256,7 +272,7 @@ class AlertFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun setOnClickListener() {
-        alert_fab.setOnClickListener(View.OnClickListener { showPopupMenu() })
+        alert_fab.setOnClickListener({ showPopupMenu() })
     }
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)

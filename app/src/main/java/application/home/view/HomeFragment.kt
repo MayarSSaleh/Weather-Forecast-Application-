@@ -9,7 +9,6 @@ import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,8 +31,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.squareup.picasso.Picasso
 import application.MyConstant
-import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
-import application.ShowWeatherDeailrsViewModel.WeatherShowModelFactory
+import application.showWeatherDetailsViewModel.WeatherShowViewModel
+import application.showWeatherDetailsViewModel.WeatherShowModelFactory
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.FavLocation
 
@@ -79,7 +83,15 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
-        homeViewModelFactory = WeatherShowModelFactory(Repository.getInstance(requireContext()))
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(requireContext()).getWeatherDao(),
+            AppDataBase.getInstance(requireContext()).getLocationDao(),
+            AppDataBase.getInstance(requireContext()).getAlertsDao()
+        )
+        homeViewModelFactory = WeatherShowModelFactory(Repository.getInstance(remoteDataSource,localDataSource))
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(WeatherShowViewModel::class.java)
         initUI(view)
         loading_view.visibility = View.GONE

@@ -23,6 +23,11 @@ import androidx.lifecycle.lifecycleScope
 import application.MyConstant
 import application.alerts.viewModel.AlertViewModel
 import application.alerts.viewModel.AlertViewModelFactory
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.model.Alert
 import application.model.LocalStateAlerts
 import application.model.Repository
@@ -58,7 +63,15 @@ class AlertDialogFragment(val addresssName: String, val longitude: Double, val l
         val alarmType = dialogView.findViewById<RadioGroup>(R.id.radioGroup1)
         btn_time = dialogView.findViewById(R.id.btn_start_time)
         btn_day = dialogView.findViewById(R.id.btn_start_day)
-        alertFactory = AlertViewModelFactory(Repository.getInstance(requireContext()))
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(requireContext()).getWeatherDao(),
+            AppDataBase.getInstance(requireContext()).getLocationDao(),
+            AppDataBase.getInstance(requireContext()).getAlertsDao()
+        )
+        alertFactory = AlertViewModelFactory(Repository.getInstance(remoteDataSource,localDataSource))
         viewModelAlert = ViewModelProvider(this, alertFactory).get(AlertViewModel::class.java)
 
         btn_day.setOnClickListener {

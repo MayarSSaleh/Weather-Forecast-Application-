@@ -1,4 +1,4 @@
-package application.fav.viewModel
+package application.fav.viewModel.stateFlow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +17,7 @@ class FavViewModel(private var repo: InterfaceRepository) : ViewModel() {
         MutableStateFlow(LocalStateFavouriteLocations.LoadingLocal)
 
     val favLocations: StateFlow<LocalStateFavouriteLocations> = _favLocations
+
 
     fun getFavLocations() {
         //Preventing UI Thread Blocking
@@ -39,7 +40,6 @@ class FavViewModel(private var repo: InterfaceRepository) : ViewModel() {
             getFavLocations()
         }
     }
-
 
     fun insertFavLocation(favLocation: FavLocation) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -4,13 +4,10 @@ import application.data.localDataBase.FakeLocalDataSource
 import application.data.network.FakeRemoteDataSource
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 
@@ -21,7 +18,6 @@ class RepositoryTest {
 
     val list: List<WeatherItem> = emptyList()
     private val lastResponse = WeatherResponse(list, City("Alex"))
-
     private val favLocation = FavLocation("Egypt", 0.0, 0.0)
     private var weatherResponsList = listOf(lastResponse)
     private var favLocationList = listOf(favLocation)
@@ -38,20 +34,19 @@ class RepositoryTest {
                 weatherResponsList?.toMutableList(),
                 favLocationList?.toMutableList()
             )
-        repository = Repository(
+        repository = Repository.getInstance(
             fakeRemoteDataSource,
             fakeLocalDataSource,
         )
     }
 
     @Test
-    fun deleteLocation_returnNullOrEmptyList() = runBlockingTest() {
+    fun deleteLocation_returnNull() = runBlockingTest() {
         // then call the method Delete the location
         repository.deleteLocation()
-        // Get the least weather
         var lastWeather = repository.getLastWeather()
-        // Collect the emitted value
         var result: WeatherResponse? = null
+
         lastWeather.collect { weatherResponse ->
             result = weatherResponse
         }
@@ -84,7 +79,7 @@ class RepositoryTest {
     }
 
     @Test
-    fun getAllLocalLocation() = runBlockingTest() {
+    fun getAllAvocation_rerunLocationNameEgyptAndLatAndLonZeroPointZero() = runBlockingTest() {
         // then call the method
         var flowOfLocations = repository.getAllFavLocation()
 
@@ -99,7 +94,6 @@ class RepositoryTest {
 
         // Assert that the firstFavLocation is not null
         assertNotNull(firstFavLocation)
-
         // Assert locationName is Egypt
         assertThat(firstFavLocation!!.locationName, `is`("Egypt"))
         assertThat(firstFavLocation!!.latitude, `is`(0.0))
@@ -109,7 +103,7 @@ class RepositoryTest {
 
 
     @Test
-    fun `getLastWeather _ return flow of weather response have one last values has Alex as city name`() =
+    fun `getLastWeather return flow of weather response have one last values has Alex as city name and empty list`() =
         runBlockingTest() {
             // then call the method and give default parameter
             var lastWeather = repository.getLastWeather()
@@ -123,11 +117,10 @@ class RepositoryTest {
             // Assert specific properties of the result
             assertThat(result!!.city.name, `is`("Alex"))
             assertThat(result!!.list, `is`(emptyList()))
-
         }
 
     @Test
-    fun `getWeather take latitude And Longitude And units and lang returnf WeatherResponse from Api`() =
+    fun `getWeather take latitude And Longitude And units and lang return WeatherResponse from Api`() =
         runBlockingTest() {
             // then call the method and give default parameter
             var resultResponse = repository.getWeather(0.0, 0.0, "", "")

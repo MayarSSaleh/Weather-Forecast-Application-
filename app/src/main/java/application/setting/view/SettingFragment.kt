@@ -11,7 +11,12 @@ import application.MapFragment
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 
-import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
+import application.showWeatherDetailsViewModel.WeatherShowViewModel
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.model.Repository
 import com.weather.application.R
 import com.weather.application.databinding.FragmentSettingBinding
@@ -36,7 +41,15 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeviewModel = WeatherShowViewModel(Repository.getInstance(requireContext()))
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(requireContext()).getWeatherDao(),
+            AppDataBase.getInstance(requireContext()).getLocationDao(),
+            AppDataBase.getInstance(requireContext()).getAlertsDao()
+        )
+        homeviewModel = WeatherShowViewModel(Repository.getInstance(remoteDataSource,localDataSource))
         binding = FragmentSettingBinding.inflate(inflater, container, false)
         sharedPreferences = context?.getSharedPreferences(SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()

@@ -8,42 +8,38 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import application.alerts.view.AlertDialogFragment
-import application.alerts.viewModel.AlertViewModel
-import application.alerts.viewModel.AlertViewModelFactory
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
-import application.fav.viewModel.FavViewModel
-import application.fav.viewModel.FavViewModelFactory
-import application.model.Alert
-import application.model.LocalStateAlerts
+import application.fav.viewModel.stateFlow.FavViewModel
+import application.fav.viewModel.stateFlow.FavViewModelFactory
 import application.model.Repository
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.textfield.TextInputLayout
 import com.weather.application.R
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 class MapFragment(
     private var mapButtonIdReferTOKEY_LOCATION_RADIO_BUTTON_ID: String,
@@ -120,7 +116,15 @@ class MapFragment(
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
         editor = sharedPreferences.edit()
         theAddress = getString(R.string.Not_selected_place_yet)
-        favFactory = FavViewModelFactory(Repository.getInstance(requireContext()))
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(requireContext()).getWeatherDao(),
+            AppDataBase.getInstance(requireContext()).getLocationDao(),
+            AppDataBase.getInstance(requireContext()).getAlertsDao()
+        )
+        favFactory = FavViewModelFactory(Repository.getInstance(remoteDataSource,localDataSource))
         viewModel = ViewModelProvider(this, favFactory).get(FavViewModel::class.java)
         setupSearch()
         setupMap(savedInstanceState)

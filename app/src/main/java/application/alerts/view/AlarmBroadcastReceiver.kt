@@ -11,6 +11,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.model.Alert
 import application.model.Repository
 import com.google.gson.Gson
@@ -29,7 +34,17 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onReceive(context: Context, intent: Intent) {
-        repository = Repository.getInstance(context)
+
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(context).getWeatherDao(),
+            AppDataBase.getInstance(context).getLocationDao(),
+            AppDataBase.getInstance(context).getAlertsDao()
+        )
+
+        repository = Repository.getInstance(remoteDataSource,localDataSource)
         val alertUri = intent.data
         val alertJson = alertUri?.getQueryParameter("alert_data")
         if (alertJson != null) {

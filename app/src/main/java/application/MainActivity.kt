@@ -16,8 +16,13 @@ import application.alerts.view.AlertFragment
 import application.fav.view.FavouriteFragment
 import application.fav.viewModel.Communication
 import application.home.view.HomeFragment
-import application.ShowWeatherDeailrsViewModel.WeatherShowViewModel
-import application.ShowWeatherDeailrsViewModel.WeatherShowModelFactory
+import application.showWeatherDetailsViewModel.WeatherShowViewModel
+import application.showWeatherDetailsViewModel.WeatherShowModelFactory
+import application.data.localDataBase.AppDataBase
+import application.data.localDataBase.LocalDataSource
+import application.data.network.RemoteDataSource
+import application.data.network.RetrofitHelper
+import application.data.network.WeatherService
 import application.model.FavLocation
 import application.model.Repository
 import application.setting.view.SettingFragment
@@ -55,9 +60,20 @@ class MainActivity : AppCompatActivity(), Communication,
             .replace(R.id.fragment_container, HomeFragment()).commit()
     }
 
+
+
+
     fun setLanguage() {
         sharedPreferences = this.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
-        homeViewModelFactory = WeatherShowModelFactory(Repository.getInstance(this))
+        val remoteDataSource = RemoteDataSource(
+            RetrofitHelper.retrofit.create(WeatherService::class.java)
+        )
+        val localDataSource = LocalDataSource(
+            AppDataBase.getInstance(this).getWeatherDao(),
+            AppDataBase.getInstance(this).getLocationDao(),
+            AppDataBase.getInstance(this).getAlertsDao()
+        )
+        homeViewModelFactory = WeatherShowModelFactory(Repository.getInstance(remoteDataSource,localDataSource))
         homeViewModel = ViewModelProvider(this, homeViewModelFactory).get(WeatherShowViewModel::class.java)
         var selectedLanguage = sharedPreferences.getString(MyConstant.lan, "en")
         var currentLanguage = sharedPreferences.getString(MyConstant.curentLanguage, "en")

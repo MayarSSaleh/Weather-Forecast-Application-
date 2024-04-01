@@ -1,7 +1,9 @@
 package application.fav.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import application.application.MainCoroutineRule
+import application.fav.viewModel.stateFlow.FavViewModel
 import application.getOrAwaitValue
 import application.model.FakeRepository
 import application.model.FavLocation
@@ -9,9 +11,11 @@ import application.model.LocalStateFavouriteLocations
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
@@ -23,7 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
-@RunWith(JUnit4::class)
+@RunWith(AndroidJUnit4::class)
 class FavouriteViewModelTest {
 
     lateinit var repo: FakeRepository
@@ -41,21 +45,83 @@ class FavouriteViewModelTest {
         viewModel = FavViewModel(repo)
     }
 
+
+    @Test
+    fun `get favourite location return emptyList`() =
+        runBlockingTest {
+            viewModel.getFavLocations()
+            launch {
+                viewModel.favLocations.collect {
+                    when (it) {
+                        is LocalStateFavouriteLocations.SuccessLocal -> {
+                            assertThat(it.data.size, `is`(0))
+                            cancel()
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+
+    @Test
+    fun `insert favourite location return the inserted allocation details and not null`() =
+        runBlockingTest {
+            val favLocation = FavLocation("Egypt", 0.0, 0.0)
+            // When
+            viewModel.insertFavLocation(favLocation)
+            viewModel.getFavLocations()
+            launch {
+                viewModel.favLocations.collect {
+                    when (it) {
+                        is LocalStateFavouriteLocations.SuccessLocal -> {
+                            assertThat(it.data.get(0).locationName, `is`("Egypt"))
+                            assertThat(it.data.get(0).longitude, `is`(0.0))
+                            assertThat(it.data.get(0).latitude, `is`(0.0))
+                            cancel()
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+
+    @Test
+    fun `delete favourite location give object then delete it return list size zero`() = runBlockingTest {
+            //given
+            val favLocation = FavLocation("Egypt", 0.0, 0.0)
+            // When
+            viewModel.insertFavLocation(favLocation)
+            viewModel.deleteFavLocation(favLocation)
+            viewModel.getFavLocations()
+            val job = launch {
+                viewModel.favLocations.collect {
+                    when (it) {
+                        is LocalStateFavouriteLocations.SuccessLocal -> {
+                            assertThat(it.data.size, `is`(0))
+                        }
+                        else -> {}
+                    }
+                }
+            }
+            job.cancel()
+        }
+
+
     @Test
     fun getFavLocations_withTimeoutOrNull_() = runBlockingTest {
         val fav = FavLocation(("testGet"), 0.0, 0.0)
         repo.insert(fav)
-        viewModel.getFavLocations()
+
         // when
-        var result = viewModel.favLocations.getOrAwaitValue {}
-
+        var result = viewModel.favLocations.getOrAwaitValue { }
+        val succ = result as LocalStateFavouriteLocations.SuccessLocal
         assertThat(result, notNullValue())
-        // Assert that the data matches the expected favorite locations
-//        assert(result  is LocalStateFavouirteLocations.LoadingLocal)
-        assert(result  is LocalStateFavouriteLocations.SuccessLocal)
-//        assertThat(successState.data, `is`(fav))
-    }
 
+        assertThat(succ.data, `is`(listOf(fav)))
+    }
 
     @Test
     fun getFavLocations_emitsLoadingThenSuccessStates() = runTest {
@@ -124,7 +190,7 @@ class FavouriteViewModelTest {
     }
 
     @Test
-    fun `insert favourite location return the inserted allocation details and not null`() =
+    fun `insert favourite location_ the inserted allocation details and not null`() =
         runTest() {
             val favLocation = FavLocation("Egypt", 0.0, 0.0)
             // When

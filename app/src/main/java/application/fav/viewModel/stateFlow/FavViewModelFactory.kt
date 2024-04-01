@@ -1,9 +1,8 @@
-package application.fav.viewModel
+package application.fav.viewModel.stateFlow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import application.model.InterfaceRepository
-import application.model.Repository
 
 @Suppress("UNCHECKED_CAST")
 class FavViewModelFactory(private val repo: InterfaceRepository) : ViewModelProvider.Factory {

@@ -12,40 +12,59 @@ import application.data.network.WeatherService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class Repository(
+class Repository private constructor(
     private var productRemoteDataSource: InterfaceRemoteDataSource,
     private var productLocalDataSource: InterfaceLocalDataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : InterfaceRepository {
 
-    //    private val locationsDao: FavLocationsDao by lazy {
-//        AppDataBase.getInstance(context).getLocationDao()
+
+//    companion object {
+//        @Volatile
+//        private var INSTANCE: Repository? = null
+//        fun getInstance(context: Context): Repository {
+//            return INSTANCE ?: synchronized(this) {
+//                if (INSTANCE == null) {
+//                    val remoteDataSource = RemoteDataSource(
+//                        RetrofitHelper.retrofit.create(WeatherService::class.java)
+//                    )
+//                    val localDataSource = LocalDataSource(
+//                        AppDataBase.getInstance(context).getWeatherDao(),
+//                        AppDataBase.getInstance(context).getLocationDao(),
+//                        AppDataBase.getInstance(context).getAlertsDao()
+//                    )
+//                    INSTANCE = Repository(remoteDataSource, localDataSource)
+//                }
+//                INSTANCE!!
+//            }
+//        }
 //    }
-//
-//    private val WeatherDao: WeatherDAO by lazy {
-//        AppDataBase.getInstance(context).getWeatherDao()
-//    }
-    companion object {
-        @Volatile
-        private var INSTANCE: Repository? = null
-        fun getInstance(context: Context): Repository {
-            return INSTANCE ?: synchronized(this) {
-                if (INSTANCE == null) {
-                    val remoteDataSource = RemoteDataSource(
-                        RetrofitHelper.retrofit.create(WeatherService::class.java)
-                    )
-                    val localDataSource = LocalDataSource(
-                        AppDataBase.getInstance(context).getWeatherDao(),
-                        AppDataBase.getInstance(context).getLocationDao(),
-                        AppDataBase.getInstance(context).getAlertsDao()
-                    )
-                    INSTANCE = Repository(remoteDataSource, localDataSource)
-                }
-                INSTANCE!!
+
+companion object {
+    @Volatile
+    private var INSTANCE: Repository? = null
+    fun getInstance(
+         productRemoteDataSource: InterfaceRemoteDataSource,
+        productLocalDataSource: InterfaceLocalDataSource,
+        ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
+    ): Repository {
+        return INSTANCE ?: synchronized(this) {
+            if (INSTANCE == null) {
+//                val remoteDataSource = RemoteDataSource(
+//                    RetrofitHelper.retrofit.create(WeatherService::class.java)
+//                )
+//                val localDataSource = LocalDataSource(
+//                    AppDataBase.getInstance(context).getWeatherDao(),
+//                    AppDataBase.getInstance(context).getLocationDao(),
+//                    AppDataBase.getInstance(context).getAlertsDao()
+//                )
+                INSTANCE = Repository(productRemoteDataSource, productLocalDataSource)
             }
+            INSTANCE!!
         }
     }
-
+}
     override suspend fun getWeather(
         latitude: Double,
         longitude: Double,
