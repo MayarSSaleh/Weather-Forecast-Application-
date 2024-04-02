@@ -25,7 +25,7 @@ class FavLocationDaoTest {
     lateinit var dao: FavLocationsDao
 
 
-  @Before
+    @Before
     fun setUp() {
         //to avoid change the real data
         database = Room.inMemoryDatabaseBuilder(
@@ -53,12 +53,14 @@ class FavLocationDaoTest {
     }
 
     @Test
-    fun insertionFavLocation_FavLocation_getALLReturn() = runTest {
+    fun insertionFavLocation_FavLocation_getALLReturnTheAddedObject() = runTest {
         // Given
         val favLocations = FavLocation("alex", 0.0, 0.0)
         dao.insert(favLocations)
+        //then
         val getResult = dao.getAll()
         val result = getResult.first()
+        //assert
         assertThat(result.size, `is`(1))
         assertThat(result.get(0).locationName, `is`("alex"))
         assertThat(result.get(0).longitude, `is`(0.0))
@@ -66,14 +68,16 @@ class FavLocationDaoTest {
     }
 
     @Test
-    fun deleteFavLocation_FavLocation_getNull() = runTest {
+    fun deleteFavLocation_AddFavLocationThenDeleteIT_getNull() = runTest {
         // Given
         val favLocations = FavLocation("alex", 0.0, 0.0)
         dao.insert(favLocations)
         dao.delete(favLocations)
+        //when
         val getResult = dao.getAll()
         val result = getResult.first()
+        //assert
         assertNotNull(result)
-        assertThat(result, `is`(emptyList<FavLocation>()))
+        assertThat(result, `is`(emptyList()))
     }
 }

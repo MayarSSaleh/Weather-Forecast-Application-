@@ -30,9 +30,6 @@ class AlertViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-//    @get:Rule
-//    val mainCoroutineRule = MainCoroutineRule()
-
     @Before
     fun setUp() {
         repo = FakeRepository()
@@ -42,31 +39,37 @@ class AlertViewModelTest {
 
     @Test
     fun `get alerts return emptyList`() = runTest {
-            viewModel.getAlerts()
-            launch {
-                viewModel.alertsList.collectLatest {
-                    when (it) {
-                        is LocalStateAlerts.SuccessLocalAlert -> {
-                            MatcherAssert.assertThat(it.data.size, `is`(0))
-                            cancel()
-                        }
-                        else -> {}
+        //when
+        viewModel.getAlerts()
+        launch {
+            viewModel.alertsList.collectLatest {
+                when (it) {
+                    is LocalStateAlerts.SuccessLocalAlert -> {
+                        // assert
+
+                        MatcherAssert.assertThat(it.data.size, `is`(0))
+                        cancel()
                     }
+
+                    else -> {}
                 }
             }
         }
+    }
 
     @Test
-    fun `insert alert return the inserted alert details and not null`() = runTest {
+    fun `insert alert return the inserted alert details and not null and the inserted object details`() =
+        runTest {
             //give
-            val alert = Alert("Alex",0.0,0.0,"","","Alarm")
-                // When
+            val alert = Alert("Alex", 0.0, 0.0, "", "", "Alarm")
+            // When
             viewModel.insertALert(alert)
             viewModel.getAlerts()
             launch {
                 viewModel.alertsList.collectLatest {
                     when (it) {
                         is LocalStateAlerts.SuccessLocalAlert -> {
+                            // assert
                             assertThat(it.data.size, `is`(1))
                             assertThat(it.data.get(0).alertlocationName, `is`("Alex"))
                             assertThat(it.data.get(0).alertlatitude, `is`(0.0))
@@ -76,6 +79,7 @@ class AlertViewModelTest {
                             assertThat(it.data.get(0).typeOfAlarm, `is`("Alarm"))
                             cancel()
                         }
+
                         else -> {}
                     }
                 }
@@ -87,7 +91,7 @@ class AlertViewModelTest {
     fun `delete the inserted alarm , first insert object then delete return list size is 0`() =
         runBlockingTest {
             //give
-            val alert = Alert("Alex",0.0,0.0,"","","Alarm")
+            val alert = Alert("Alex", 0.0, 0.0, "", "", "Alarm")
             // When
             viewModel.insertALert(alert)
             viewModel.deleteALLAlarms()
@@ -96,9 +100,11 @@ class AlertViewModelTest {
                 viewModel.alertsList.collectLatest {
                     when (it) {
                         is LocalStateAlerts.SuccessLocalAlert -> {
+                            // assert
                             assertThat(it.data.size, `is`(0))
                             cancel()
                         }
+
                         else -> {}
                     }
                 }
@@ -109,7 +115,7 @@ class AlertViewModelTest {
     fun `delete the inserted notification , first insert object then delete return list size is 0`() =
         runBlockingTest {
             //give
-            val alert = Alert("Alex",0.0,0.0,"","","Notification")
+            val alert = Alert("Alex", 0.0, 0.0, "", "", "Notification")
             // When
             viewModel.insertALert(alert)
             viewModel.deleteALLNotification()
@@ -118,9 +124,11 @@ class AlertViewModelTest {
                 viewModel.alertsList.collectLatest {
                     when (it) {
                         is LocalStateAlerts.SuccessLocalAlert -> {
+                            // assert
                             assertThat(it.data.size, `is`(0))
                             cancel()
                         }
+
                         else -> {}
                     }
                 }
