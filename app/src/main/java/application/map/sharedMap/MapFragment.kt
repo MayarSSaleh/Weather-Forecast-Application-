@@ -1,6 +1,5 @@
-package application
+package application.map.sharedMap
 
-import SearchRepository
 import application.model.FavLocation
 import android.app.AlertDialog
 import android.content.SharedPreferences
@@ -19,6 +18,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import application.MyConstant
 import application.alerts.view.AlertDialogFragment
 import application.data.localDataBase.AppDataBase
 import application.data.localDataBase.LocalDataSource
@@ -31,8 +31,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
-import application.fav.viewModel.stateFlow.FavViewModel
-import application.fav.viewModel.stateFlow.FavViewModelFactory
+import application.fav.viewModel.FavViewModel
+import application.fav.viewModel.FavViewModelFactory
 import application.model.Repository
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -231,7 +231,6 @@ class MapFragment(
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
                 if (query.isNotEmpty()) {
@@ -241,7 +240,6 @@ class MapFragment(
                     searchResultsAdapter.notifyDataSetChanged()
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {
             }
         })

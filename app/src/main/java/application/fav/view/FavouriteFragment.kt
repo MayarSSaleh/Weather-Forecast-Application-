@@ -11,15 +11,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import application.MapFragment
+import application.map.sharedMap.MapFragment
 import application.data.localDataBase.AppDataBase
 import application.data.localDataBase.LocalDataSource
 import application.data.network.RemoteDataSource
 import application.data.network.RetrofitHelper
 import application.data.network.WeatherService
 import application.fav.viewModel.Communication
-import application.fav.viewModel.stateFlow.FavViewModel
-import application.fav.viewModel.stateFlow.FavViewModelFactory
+import application.fav.viewModel.FavViewModel
+import application.fav.viewModel.FavViewModelFactory
 import application.model.FavLocation
 import application.model.LocalStateFavouriteLocations
 import application.model.Repository
@@ -67,7 +67,7 @@ class FavouriteFragment : Fragment() {
         }
         comm = activity as Communication
         val showFavLocation = { favLocation: FavLocation ->
-            comm.setFavLocaionAtHome(favLocation)
+            comm.setFaLocationAtHome(favLocation)
         }
 
         fav_locationsAdaptor = FavouriteAdaptor(requireContext(), removeFromFav,showFavLocation)

@@ -147,7 +147,8 @@ class MainActivity : AppCompatActivity(), Communication,
         editor.apply()
     }
 
-    override fun setFavLocaionAtHome(favLocation: FavLocation) {
+    //apply function is used to execute a series of operations on an object
+    override fun setFaLocationAtHome(favLocation: FavLocation) {
         val homeFragment = HomeFragment().apply {
             arguments = Bundle().apply {
                 putParcelable("favLocation", favLocation)

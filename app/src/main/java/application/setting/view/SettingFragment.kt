@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
-import application.MapFragment
+import application.map.sharedMap.MapFragment
 import application.MyConstant
 import application.MyConstant.SHARED_PREFS
 

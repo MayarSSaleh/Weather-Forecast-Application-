@@ -11,6 +11,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.assertThat
@@ -29,8 +30,8 @@ class AlertViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+//    @get:Rule
+//    val mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
@@ -40,7 +41,7 @@ class AlertViewModelTest {
 
 
     @Test
-    fun `get alerts return emptyList`() = runBlockingTest {
+    fun `get alerts return emptyList`() = runTest {
             viewModel.getAlerts()
             launch {
                 viewModel.alertsList.collectLatest {
@@ -56,8 +57,7 @@ class AlertViewModelTest {
         }
 
     @Test
-    fun `insert alert return the inserted alert details and not null`() =
-        runBlockingTest {
+    fun `insert alert return the inserted alert details and not null`() = runTest {
             //give
             val alert = Alert("Alex",0.0,0.0,"","","Alarm")
                 // When
@@ -126,5 +126,4 @@ class AlertViewModelTest {
                 }
             }
         }
-
 }

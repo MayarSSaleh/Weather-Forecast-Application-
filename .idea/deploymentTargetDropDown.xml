@@ -2,7 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="FavLocationDaoTest">
+        <State />
+      </entry>
+      <entry key="LocalDataSourceTest">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="getALL_ReturnNull()">
+        <State />
+      </entry>
+      <entry key="insertionFavLocation_FavLocation_getALLReturn()">
         <State />
       </entry>
     </value>

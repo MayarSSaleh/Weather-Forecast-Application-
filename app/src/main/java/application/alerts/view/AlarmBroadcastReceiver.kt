@@ -27,14 +27,11 @@ import kotlinx.coroutines.withContext
 
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
-
     private var typeOfAlarm = ""
     lateinit var repository: Repository
 
-
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onReceive(context: Context, intent: Intent) {
-
         val remoteDataSource = RemoteDataSource(
             RetrofitHelper.retrofit.create(WeatherService::class.java)
         )

@@ -1,4 +1,4 @@
-package application.fav.viewModel.stateFlow
+package application.fav.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

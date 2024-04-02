@@ -1,4 +1,4 @@
-package application.fav.viewModel.stateFlow
+package application.fav.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +18,9 @@ class FavViewModel(private var repo: InterfaceRepository) : ViewModel() {
 
     val favLocations: StateFlow<LocalStateFavouriteLocations> = _favLocations
 
+    init {
+        getFavLocations()
+    }
 
     fun getFavLocations() {
         //Preventing UI Thread Blocking
@@ -31,9 +34,7 @@ class FavViewModel(private var repo: InterfaceRepository) : ViewModel() {
         }
     }
 
-    init {
-        getFavLocations()
-    }
+
     fun deleteFavLocation(favLocation: FavLocation) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.deleteFavLocation(favLocation)

@@ -2,8 +2,6 @@ package application.fav.viewModel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import application.application.MainCoroutineRule
-import application.fav.viewModel.stateFlow.FavViewModel
 import application.getOrAwaitValue
 import application.model.FakeRepository
 import application.model.FavLocation
@@ -25,7 +23,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 
 @RunWith(AndroidJUnit4::class)
 class FavouriteViewModelTest {
@@ -36,8 +33,8 @@ class FavouriteViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    @get:Rule
-    val mainCoroutineRule = MainCoroutineRule()
+//    @get:Rule
+//    val mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
@@ -66,20 +63,21 @@ class FavouriteViewModelTest {
 
 
     @Test
-    fun `insert favourite location return the inserted allocation details and not null`() =
-        runBlockingTest {
+    fun `insert favourite location return the inserted allocation details and not null`() =  runBlockingTest {
+          // given
             val favLocation = FavLocation("Egypt", 0.0, 0.0)
             // When
             viewModel.insertFavLocation(favLocation)
             viewModel.getFavLocations()
-            launch {
+            launch { // without it the test is not completed yet
                 viewModel.favLocations.collect {
                     when (it) {
                         is LocalStateFavouriteLocations.SuccessLocal -> {
+                            //assert
                             assertThat(it.data.get(0).locationName, `is`("Egypt"))
                             assertThat(it.data.get(0).longitude, `is`(0.0))
                             assertThat(it.data.get(0).latitude, `is`(0.0))
-                            cancel()
+                            cancel() // without it Test finished with active jobs:
                         }
                         else -> {}
                     }
@@ -110,16 +108,35 @@ class FavouriteViewModelTest {
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Test
     fun getFavLocations_withTimeoutOrNull_() = runBlockingTest {
         val fav = FavLocation(("testGet"), 0.0, 0.0)
         repo.insert(fav)
-
         // when
         var result = viewModel.favLocations.getOrAwaitValue { }
         val succ = result as LocalStateFavouriteLocations.SuccessLocal
         assertThat(result, notNullValue())
-
         assertThat(succ.data, `is`(listOf(fav)))
     }
 

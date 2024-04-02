@@ -25,7 +25,7 @@ class FakeLocalDataSource(
         weatherResponsList?.add(weatherResponse)
     }
 
-    override suspend fun getLestWeathear(): Flow<WeatherResponse> {
+    override suspend fun getLestWeather(): Flow<WeatherResponse> {
         return flow {
             // Create a copy of the list to avoid exposing the mutable reference
             val weatherListCopy = weatherResponsList?.toList() ?: emptyList()

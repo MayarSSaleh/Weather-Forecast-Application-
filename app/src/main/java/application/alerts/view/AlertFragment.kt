@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import application.MapFragment
+import application.map.sharedMap.MapFragment
 import application.MyConstant
 import application.MyConstant.alarmNumbers
 import application.alerts.viewModel.AlertViewModel
@@ -134,42 +134,41 @@ class AlertFragment : Fragment() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    fun observeOnAlertsList() {
-        var isAlarmDataHandled = false
-        lifecycleScope.launch {
-            viewModel.alertsList.collectLatest {
-                when (it) {
-                    is LocalStateAlerts.LoadingLocaAlertl -> {
-                        loading_view.visibility = View.VISIBLE
-                    }
-
-                    is LocalStateAlerts.SuccessLocalAlert -> {
-                        alertAdaptor.submitList(it.data)
-                        loading_view.visibility = View.GONE
-                        //to stop  subsequent calls.
-                        if (!isAlarmDataHandled) {
-                            upDataAlarm(it.data)
-                            isAlarmDataHandled = true
-                        }
-                    }
-
-                    else -> {
-                        loading_view.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.sorry_can_not_get_them),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
-    }
+//    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+//    fun observeOnAlertsList() {
+//        var isAlarmDataHandled = false
+//        lifecycleScope.launch {
+//            viewModel.alertsList.collectLatest {
+//                when (it) {
+//                    is LocalStateAlerts.LoadingLocaAlertl -> {
+//                        loading_view.visibility = View.VISIBLE
+//                    }
+//
+//                    is LocalStateAlerts.SuccessLocalAlert -> {
+//                        alertAdaptor.submitList(it.data)
+//                        loading_view.visibility = View.GONE
+//                        //to stop  subsequent calls.
+//                        if (!isAlarmDataHandled) {
+//                            upDataAlarm(it.data)
+//                            isAlarmDataHandled = true
+//                        }
+//                    }
+//
+//                    else -> {
+//                        loading_view.visibility = View.GONE
+//                        Toast.makeText(
+//                            requireContext(),
+//                            getString(R.string.sorry_can_not_get_them),
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private fun upDataAlarm(data: List<Alert>) {
-
         // Remove previous alarms
         val requestCodeListSize = sharedPreferences.getInt(alarmNumbers, 0)
         Log.d("t", "Previous alarm count: $requestCodeListSize")
@@ -191,13 +190,11 @@ class AlertFragment : Fragment() {
         for (alert in data) {
             Log.d("t", "data: ${data.size}")
             requestCodeCounter++
-
             // Serialize Alert object into JSON string
             val alertJson = Gson().toJson(alert)
             val alertUri = Uri.parse("custom_scheme://alert").buildUpon()
                 .appendQueryParameter("alert_data", alertJson)
                 .build()
-
             val intent = Intent(requireContext(), AlarmBroadcastReceiver::class.java)
             intent.data = alertUri
 // i can replace requestCodeCounter with id which  final int id = (int) System.currentTimeMillis();
@@ -207,10 +204,7 @@ class AlertFragment : Fragment() {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
-//If you try to set an alarm for a time that has already passed,the AlarmManager will trigger the alarm immediately.
-// It will essentially treat the past time as if it were in the future and execute the alarm as soon as possible.
-// This behavior is consistent with the AlarmManager's purpose,which is to schedule tasks at specific times,
-// regardless of whether those times have already occurred.
+//If you try to set an alarm for a time that has already passed,the AlarmManager will trigger the alarm immediately. It will essentially treat the past time as if it were in the future and execute the alarm as soon as possible.// This behavior is consistent with the AlarmManager's purpose,which is to schedule tasks at specific times,// regardless of whether those times have already occurred.
             val scheduledTimeMillis = convertDateTimeToMillis(alert.day, alert.time)
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
@@ -218,7 +212,6 @@ class AlertFragment : Fragment() {
                 pendingIntent
             )
         }
-//        // Update the stored alarm count
         editor.putInt(alarmNumbers, requestCodeCounter)
         editor.apply()
     }
@@ -287,7 +280,7 @@ class AlertFragment : Fragment() {
                         .setMessage(getString(R.string.are_your_stop_the_alarms))
                         .setPositiveButton(getString(R.string.ok)) { dialog, id ->
                             viewModel.deleteALLAlarms()
-                            observeOnAlertsList()
+//                            observeOnAlertsList()
                         }
                     val dialog = builder.create()
                     dialog.show()
@@ -300,7 +293,7 @@ class AlertFragment : Fragment() {
                         .setMessage(getString(R.string.are_your_stop_the_notifications))
                         .setPositiveButton(getString(R.string.ok)) { dialog, id ->
                             viewModel.deleteALLNotification()
-                            observeOnAlertsList()
+//                            observeOnAlertsList()
                         }
                     val dialog = builder.create()
                     dialog.show()

@@ -1,3 +1,5 @@
+package application.map.sharedMap
+
 import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

@@ -31,8 +31,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.squareup.picasso.Picasso
 import application.MyConstant
-import application.showWeatherDetailsViewModel.WeatherShowViewModel
-import application.showWeatherDetailsViewModel.WeatherShowModelFactory
 import application.data.localDataBase.AppDataBase
 import application.data.localDataBase.LocalDataSource
 import application.data.network.RemoteDataSource
@@ -40,10 +38,11 @@ import application.data.network.RetrofitHelper
 import application.data.network.WeatherService
 import application.model.APiStateOrLocalStateFromLastWeather
 import application.model.FavLocation
-
 import application.model.Repository
 import application.model.WeatherItem
 import application.model.WeatherResponse
+import application.showWeatherDetailsViewModel.WeatherShowModelFactory
+import application.showWeatherDetailsViewModel.WeatherShowViewModel
 import com.weather.application.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -100,14 +99,13 @@ class HomeFragment : Fragment() {
         geocoder = Geocoder(requireContext())
         sharedPreferences = context?.getSharedPreferences(MyConstant.SHARED_PREFS, 0)!!
         getGpsLocationPermision()
+
         val favLocation: FavLocation? = arguments?.getParcelable("favLocation")
         if (favLocation != null) {
             homeViewModel.getWeather(requireContext(), favLocation.latitude, favLocation.longitude)
         } else {
             if (homeViewModel.isNetworkAvailable(context)) {
-
                 var openLocationFrom=sharedPreferences.getString(MyConstant.User_CURRENT_LOCATION, "isGps")
-
                 if ( openLocationFrom == "isMap") {
                     homeViewModel.getWeather(
                         requireContext(),
@@ -321,7 +319,6 @@ class HomeFragment : Fragment() {
                 "Be sure you open your location",
                 Toast.LENGTH_SHORT
             ).show()
-            //check interent an get according
             getFreshLocation()
         }
     }

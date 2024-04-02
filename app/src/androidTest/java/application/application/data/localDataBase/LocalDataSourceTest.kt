@@ -29,7 +29,6 @@ class LocalDataSourceTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-
     @Before
     fun setUp() {
         //to avoid change the real data
@@ -53,15 +52,15 @@ class LocalDataSourceTest {
         val result = getResult.first()
         //assert
         assertNotNull(result)
-        assertThat(result, `is`(emptyList<FavLocation>()))
+        assertThat(result, `is`(emptyList()))
     }
 
     @Test
     fun getTheInserted_insertFav_getHisDetails() = runTest {
         // Given
         val favLocations = FavLocation("alex", 0.0, 0.0)
-        localDataSource.insertAlert(favLocations)
         //when
+        localDataSource.insertAlert(favLocations)
         val getResult = localDataSource.getAllFavLocations()
         val result = getResult.first()
         //assert
@@ -92,7 +91,7 @@ class LocalDataSourceTest {
         localDataSource.insertWeather(WeatherResponse(emptyList(), City("Alexandria")))
         localDataSource.deleteWeather()
         //when
-        val getResult = localDataSource.getLestWeathear()
+        val getResult = localDataSource.getLestWeather()
         val result = getResult.first()
         //assert
         assertNull(result)
@@ -104,7 +103,7 @@ class LocalDataSourceTest {
         localDataSource.deleteWeather()
         localDataSource.insertWeather(WeatherResponse(emptyList(), City("Alexandria")))
         //when
-        val getResult = localDataSource.getLestWeathear()
+        val getResult = localDataSource.getLestWeather()
         val result = getResult.first()
         //assert
         assertNotNull(result)

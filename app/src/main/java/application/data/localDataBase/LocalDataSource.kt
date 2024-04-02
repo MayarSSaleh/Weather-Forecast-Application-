@@ -35,7 +35,7 @@ class LocalDataSource(
     }
 
 
-    override suspend fun getLestWeathear(): Flow<WeatherResponse> {
+    override suspend fun getLestWeather(): Flow<WeatherResponse> {
         return weatherDAO.getTodayWeather()
     }
 

@@ -40,11 +40,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
-        <activity android:name="application.application.SplashScreen" />
-        <activity android:name="application.alerts.view.AlarmActivity" />
-
         <activity
-            android:name="application.application.MainActivity"
+
+            android:name="application.application.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +50,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="application.alerts.view.AlarmActivity" />
+        <activity
+            android:name="application.application.MainActivity"
+            />
     </application>
 
 </manifest>

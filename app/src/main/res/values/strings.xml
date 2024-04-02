@@ -43,11 +43,11 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="conformation">Conformation</string>
-    <string name="are_your_stop_the_alarms">Are your stop the alarms?</string>
-    <string name="are_your_stop_the_notifications">Are your stop the Notifications?</string>
+    <string name="are_your_stop_the_alarms">Are you sure? Do you want to stop the alarms?</string>
+    <string name="are_your_stop_the_notifications">Are you sure? Do you want to stop the Notifications?</string>
     <string name="sorry_can_not_get_them">Sorry Can not get them</string>
     <string name="stop">Stop</string>
-    <string name="search">Search</string>
+    <string name="search">Search and Add to Favourite </string>
     <string name="add_alert">Add Alert</string>
     <string name="stop_alarm">Stop Alarms</string>
     <string name="stop_notification">Stop Notifications</string>

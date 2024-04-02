@@ -17,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-//@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @SmallTest // unit test
 class FavLocationDaoTest {
@@ -32,7 +31,9 @@ class FavLocationDaoTest {
         database = Room.inMemoryDatabaseBuilder(
             getApplicationContext(),
             AppDataBase::class.java
-        ).build()
+        )
+            .allowMainThreadQueries()
+            .build()
         dao = database.getLocationDao()
     }
 
@@ -48,7 +49,7 @@ class FavLocationDaoTest {
         val result = getResult.first()
         //assert
         assertNotNull(result)
-        assertThat(result, `is`(emptyList<FavLocation>()))
+        assertThat(result, `is`(emptyList()))
     }
 
     @Test
