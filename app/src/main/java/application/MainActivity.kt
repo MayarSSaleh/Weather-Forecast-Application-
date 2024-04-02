@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
 import application.MyConstant
 import application.alerts.view.AlertFragment
-import application.fav.view.FavouriteFragment
-import application.fav.viewModel.Communication
+import application.favorite.view.FavouriteFragment
+import application.favorite.viewModel.Communication
 import application.home.view.HomeFragment
 import application.showWeatherDetailsViewModel.WeatherShowViewModel
 import application.showWeatherDetailsViewModel.WeatherShowModelFactory

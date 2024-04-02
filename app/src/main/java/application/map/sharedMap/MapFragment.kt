@@ -31,8 +31,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
-import application.fav.viewModel.FavViewModel
-import application.fav.viewModel.FavViewModelFactory
+import application.favorite.viewModel.FavViewModel
+import application.favorite.viewModel.FavViewModelFactory
 import application.model.Repository
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
